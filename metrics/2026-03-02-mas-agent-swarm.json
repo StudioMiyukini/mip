@@ -1,0 +1,155 @@
+{
+  "project": {
+    "title": "MASS -- Miyukini Agent Swarm System",
+    "description": "Architecture en 3 couches (Orchestrateur/Pool Workers/Synchronisation) pour paralleliser les agents MIP v2 via DAG, vagues et merge coordination.",
+    "class": "T5",
+    "slug": "mas-agent-swarm",
+    "mip_sequence_number": 1,
+    "autonomy_mode": "FULL"
+  },
+  "timestamps": {
+    "p0_start": "2026-03-02T00:00:00Z",
+    "p0_temps1_end": "2026-03-02T11:55:00Z",
+    "p0_temps2_end": "2026-03-02T12:05:00Z",
+    "p0_temps3_end": "2026-03-02T12:10:00Z",
+    "p0_temps4_end": "2026-03-02T12:15:00Z",
+    "p0_temps5_end": "2026-03-02T12:18:00Z",
+    "p0_temps6_end": "2026-03-02T12:25:00Z",
+    "p0_temps7_end": "2026-03-02T12:30:00Z",
+    "p0_temps8_end": "2026-03-02T12:33:00Z",
+    "p0_temps9_end": "2026-03-02T12:35:00Z",
+    "p0_temps10_end": "2026-03-02T12:40:00Z",
+    "p0_end": "2026-03-02T12:40:00Z",
+    "autopilot_start": null,
+    "p3_start": "2026-03-02T13:00:00Z",
+    "p3_end": "2026-03-02T14:30:00Z",
+    "p4_start": "2026-03-02T14:30:00Z",
+    "p4_end": "2026-03-02T15:00:00Z",
+    "p5_start": "2026-03-02T15:00:00Z",
+    "p5_end": "2026-03-02T15:30:00Z",
+    "p5_test_start": null,
+    "p5_test_end": null,
+    "p6_start": "2026-03-02T15:30:00Z",
+    "p6_end": "2026-03-02T15:30:00Z",
+    "total_end": "2026-03-02T15:30:00Z"
+  },
+  "p0_contributions": {
+    "temps1": {
+      "agent": "Maria",
+      "summary": "Classification T5. 21 questions brainstorming. 4 reponses cles: perimetre complet, mode FULL, Agent Teams, Loi 9."
+    },
+    "temps2": {
+      "agents": ["Maria", "Lise"],
+      "summary": "3 approches (A:inline, B:DAG JSON, C:Markdown). Recommandation B. Representation ASCII vagues. Metriques visuelles."
+    },
+    "temps3": {
+      "agent": "Fabrice",
+      "summary": "4 frameworks (OpenAI Swarm, AutoGen, CrewAI, Kimi K2). 8 differenciateurs MASS. Aucun concurrent n'offre DAG+vagues+merge+metriques."
+    },
+    "temps4": {
+      "agents": ["Denis", "Hugo", "Francois", "Lise"],
+      "summary": "5 competences, 4 outils, 11 etapes. Infra: 0 impact. 1 manquant (template metriques)."
+    },
+    "temps5": {
+      "agent": "Victor",
+      "summary": "4 surfaces, 3 recommandations, 0 dep. Niveau standard. Certifications: aucune."
+    },
+    "temps6": {
+      "agent": "Francois",
+      "summary": "12 fichiers, ~600 lignes. Schema DAG JSON. 3 modes dispatch. Loi 9. Metriques swarm. 0 breaking change."
+    },
+    "temps7": {
+      "agent": "Denis",
+      "summary": "24 taches atomiques en 7 vagues. Parallelisme max 5. Estimation 1.5-3h."
+    },
+    "temps8": {
+      "agent": "Arianne",
+      "summary": "CONFORME. 8 agents verifies, 6 deps confirmees, 4 risques mitiges, 0 manque critique."
+    },
+    "temps9": {
+      "agent": "Hugo",
+      "summary": "Aucune CI/CD. 0 impact. Recommandation future: step validation DAG."
+    },
+    "temps10": {
+      "agent": "Maria",
+      "summary": "Brief final compile. Plan exhaustif produit. Metriques mises a jour. Gate P0 ouverte."
+    }
+  },
+  "counters": {
+    "lines_written": 650,
+    "lines_deleted": 0,
+    "crates_touched": [],
+    "crates_created": [],
+    "files_created": 3,
+    "files_modified": 11,
+    "commits": 0,
+    "agents_engaged": ["Maria", "Lise", "Fabrice", "Denis", "Hugo", "Francois", "Victor", "George", "Arianne"],
+    "mip_loops": 1,
+    "unit_tests_total": 0,
+    "unit_tests_failed": 0,
+    "integration_tests_total": 0,
+    "integration_tests_failed": 0,
+    "global_tests_total": 0,
+    "global_tests_failed": 0,
+    "auto_corrections": 0,
+    "audits": 2,
+    "audit_defects": [],
+    "security_score": 97,
+    "security_defects": [],
+    "infra_checks_passed": null,
+    "emergency_brakes": 0
+  },
+  "plan": {
+    "total_tasks": 24,
+    "total_waves": 7,
+    "max_parallelism": 5,
+    "dispatch_mode_planned": "subagent_burst",
+    "approach": "B (DAG JSON separe)",
+    "files_to_modify": 11,
+    "files_to_create": 1,
+    "estimated_lines": "550-700"
+  },
+  "decisions": {
+    "D1": "Approche B (DAG JSON separe)",
+    "D2": "Loi 9 seuil = >3 taches independantes",
+    "D3": "3 modes dispatch (subagent burst / worktree swarm / team swarm)",
+    "D4": "Denis = Merge Coordinator",
+    "D5": "Flag Agent Teams active en experimental",
+    "D6": "Metriques swarm dans JSON existant (pas de fichier separe)",
+    "D7": "Fallback worktree swarm si Agent Teams non dispo"
+  },
+  "swarm": {
+    "enabled": true,
+    "dispatch_mode": "subagent_burst",
+    "dag_file": ".mip/dags/",
+    "total_waves": 7,
+    "waves_completed": 7,
+    "total_parallel_tasks": 19,
+    "total_serial_tasks": 5,
+    "max_parallelism_achieved": 5,
+    "merge_conflicts": 0,
+    "serial_collapses_prevented": 1,
+    "wave_details": [
+      {"wave": 1, "tasks_planned": 4, "tasks_completed": 4, "parallelism_effective": 1, "duration_seconds": null, "merge_conflicts": 0},
+      {"wave": 2, "tasks_planned": 3, "tasks_completed": 3, "parallelism_effective": 1, "duration_seconds": null, "merge_conflicts": 0},
+      {"wave": 3, "tasks_planned": 3, "tasks_completed": 3, "parallelism_effective": 3, "duration_seconds": null, "merge_conflicts": 0},
+      {"wave": 4, "tasks_planned": 5, "tasks_completed": 5, "parallelism_effective": 5, "duration_seconds": null, "merge_conflicts": 0},
+      {"wave": 5, "tasks_planned": 4, "tasks_completed": 4, "parallelism_effective": 4, "duration_seconds": null, "merge_conflicts": 0},
+      {"wave": 6, "tasks_planned": 3, "tasks_completed": 3, "parallelism_effective": 1, "duration_seconds": null, "merge_conflicts": 0},
+      {"wave": 7, "tasks_planned": 2, "tasks_completed": 2, "parallelism_effective": 1, "duration_seconds": null, "merge_conflicts": 0}
+    ]
+  },
+  "human_interventions": [],
+  "agent_questions": [
+    {
+      "timestamp": "2026-03-02T00:00:00Z",
+      "agent": "Maria",
+      "phase": "P0",
+      "nature": "brainstorming",
+      "question": "Questionnaire de brainstorming standard T5 -- 21 questions en 5 sections (Comprendre/Cadrer/Imaginer/Evaluer/Decider)",
+      "response_summary": "Perimetre: 5 livrables complets. Mode: FULL. Agent Teams: oui (flag + doc). Anti-serial: Loi 9 obligatoire seuil >3."
+    }
+  ],
+  "satisfaction": null,
+  "notes": "Chantier de PROTOCOLE et DOCUMENTATION -- pas de code Rust. Enrichissement de MIP v2 avec le pattern Agent Swarm. P0 complet en 10 temps. Gate P0 ouverte, en attente d'approbation utilisateur."
+}

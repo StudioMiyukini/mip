@@ -1,0 +1,16 @@
+{
+  "_comment": "Template metriques swarm MASS. A copier dans le fichier metriques de chaque sequence MIP T3+ utilisant le swarm.",
+  "swarm": {
+    "enabled": false,
+    "dispatch_mode": null,
+    "dag_file": null,
+    "total_waves": 0,
+    "waves_completed": 0,
+    "total_parallel_tasks": 0,
+    "total_serial_tasks": 0,
+    "max_parallelism_achieved": 0,
+    "merge_conflicts": 0,
+    "serial_collapses_prevented": 0,
+    "wave_details": []
+  }
+}
