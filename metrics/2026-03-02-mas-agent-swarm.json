@@ -80,9 +80,9 @@
     "lines_deleted": 0,
     "crates_touched": [],
     "crates_created": [],
-    "files_created": 3,
+    "files_created": 7,
     "files_modified": 11,
-    "commits": 0,
+    "commits": 6,
     "agents_engaged": ["Maria", "Lise", "Fabrice", "Denis", "Hugo", "Francois", "Victor", "George", "Arianne"],
     "mip_loops": 1,
     "unit_tests_total": 0,
@@ -151,5 +151,5 @@
     }
   ],
   "satisfaction": null,
-  "notes": "Chantier de PROTOCOLE et DOCUMENTATION -- pas de code Rust. Enrichissement de MIP v2 avec le pattern Agent Swarm. P0 complet en 10 temps. Gate P0 ouverte, en attente d'approbation utilisateur."
+  "notes": "Chantier de PROTOCOLE et DOCUMENTATION -- pas de code Rust. Enrichissement de MIP v2 avec le pattern Agent Swarm. 24 taches / 7 vagues / 6 commits. Audit 97/100 CONFORME. Livre en P5, en attente de validation utilisateur."
 }
