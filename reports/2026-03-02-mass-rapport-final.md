@@ -33,91 +33,72 @@ Chantier T5 strategique de PROTOCOLE et DOCUMENTATION livre en mode FULL. 24 tac
 
 ---
 
-## Trace d'execution chronologique
+## Trace d'execution
 
-> Deroulement reel de la mission, etape par etape. Chaque entree documente l'agent lance, l'action effectuee, les outils utilises, et le resultat obtenu.
+> **Source de verite** : Le plan annote `.mip/plans/2026-03-02-mas-agent-swarm.md` et le brief annote `.mip/briefs/2026-03-02-mas-agent-swarm.md`. Note : ce chantier est anterieur a la regle 36 (annotation obligatoire du plan) — les donnees ci-dessous sont reconstituees depuis les metriques et le contexte de session.
 
-### Phase P0 — Cadrage (10 temps)
+### Resume du deroulement
 
-| # | Heure (est.) | Agent(s) | Action | Resultat |
-|---|-------------|----------|--------|----------|
-| T1 | 12:00 | **Maria** | Lancement agent Maria via `Agent(subagent_type=maria)`. Classification de la demande. Administration du questionnaire brainstorming standard T5 (21 questions, 5 sections : Comprendre/Cadrer/Imaginer/Evaluer/Decider). | Classification **T5** confirmee. 4 questions cles posees a l'utilisateur via `AskUserQuestion`. |
-| T1b | 12:05 | *Utilisateur* | Reponses aux 4 questions brainstorming. | Perimetre : 5 livrables complets. Autonomie : FULL. Agent Teams : les deux (documenter + activer). Anti-serial-collapse : regle dure (obligation). |
-| T2 | 12:05 | **Maria + Lise** | Ideation parallele. 3 approches generees : A (inline dans SKILL.md), B (DAG JSON separe), C (Markdown). Lise produit representation ASCII des vagues et metriques visuelles. | Recommandation **approche B** (DAG JSON separe). |
-| T3 | 12:10 | **Fabrice** | Analyse concurrentielle (en parallele avec T2). Benchmark de 4 frameworks : OpenAI Swarm/Agents SDK, Microsoft AutoGen, CrewAI, Kimi K2.5 PARL. | 8 differenciateurs MASS identifies. Aucun concurrent ne combine DAG + vagues + merge + metriques. |
-| T4 | 12:15 | **Denis** (lead) + **Hugo** + **Francois** + **Lise** | Inventaire des prerequis : 5 competences requises, 4 outils disponibles, 11 etapes generales. Hugo evalue l'impact infra. | 0 impact infrastructure. 1 manquant identifie (template metriques swarm). |
-| T5 | 12:18 | **Victor** | Analyse de securite. Identification de 4 surfaces d'attaque potentielles, 3 recommandations de durcissement. | Niveau de risque **standard**. 0 dependance externe. Aucune certification speciale requise. |
-| T6 | 12:25 | **Francois** | Specification technique + Context7. Schema DAG JSON defini (nodes, edges, waves). 3 modes dispatch specifies. Integration Loi 9. Metriques swarm. | 12 fichiers identifies, ~600 lignes estimees. 0 breaking change. |
-| T7 | 12:30 | **Denis** | Plan exhaustif + guide d'implementation. Decomposition en 24 taches atomiques reparties en 7 vagues. | Plan `.mip/plans/2026-03-02-mas-agent-swarm.md` produit (825 lignes). Parallelisme max : 5. Estimation : 1.5-3h. |
-| T8 | 12:33 | **Arianne** | Audit de faisabilite. Verification croisee : 8 agents, 6 dependances, 4 risques, memoire, outils. | **CONFORME**. 8 agents verifies, 6 deps confirmees, 4 risques mitiges, 0 manque critique. |
-| T9 | 12:35 | **Hugo** | Verification pipeline CI/CD. | Aucune CI/CD en place. 0 impact. Recommandation future : step de validation DAG dans CI. |
-| T10 | 12:40 | **Maria** | Synthese finale et compilation du brief. Initialisation metriques `.mip/metrics/2026-03-02-mas-agent-swarm.json`. | Brief `.mip/briefs/2026-03-02-mas-agent-swarm.md` produit (206 lignes). **Gate P0 ouverte**. |
+**P0 (11:55 → 12:40, ~45 min)** — Maria a classifie T5 et administre le brainstorming (21 questions). L'utilisateur a repondu : perimetre complet, mode FULL, Agent Teams oui, anti-serial-collapse obligatoire. Ideation Maria+Lise : 3 approches, recommandation B (DAG JSON). Fabrice en parallele : benchmark 4 frameworks, 8 differenciateurs. Denis+Hugo : inventaire prerequis, 0 impact infra. Victor : 4 surfaces, risque standard. Francois : spec technique + schema DAG JSON. Denis : plan 24 taches en 7 vagues. Arianne : audit CONFORME. Hugo : 0 CI/CD. Maria : brief final + metriques init. Gate P0 approuvee par l'utilisateur.
 
-### Gate P0
+**P3 (13:00 → 14:30, ~90 min)** — 7 vagues executees en mode subagent_burst. V1-V2 : Denis ajoute 283 lignes dans SKILL.md (7 sous-sections MASS). V3 : Denis met a jour CLAUDE.md (Loi 9, reference MASS) et cree settings.local.json (Agent Teams). V4 : parallelisme 5 — 5 agents .md enrichis simultanement. V5 : parallelisme 4 — 3 agents .md + swarm-template.json cree. Interruption rate limit API vers 14:15, reprise apres verification integrite.
 
-| Heure | Action | Resultat |
-|-------|--------|----------|
-| 12:40 | Question a l'utilisateur via `AskUserQuestion` : approbation du brief + choix mode autonomie. | **"Approuve — lancer l'execution"** (mode FULL confirme). |
+**P4 (14:25 → 15:00, ~35 min)** — Double audit George : conformite 97/100 + coherence 94/100. 6 defauts mineurs corriges (references LOI-N, accents). Renommage MAS → MASS sur 16 fichiers (demande utilisateur mid-delivery, 3 patterns sed).
 
-### Phase P3 — Implementation (7 vagues)
+**P5 (15:00 → 15:20)** — Livraison presentee. Verdict : ACCEPTE.
 
-| Vague | Heure (est.) | Agent(s) | Outil | Action concrete | Fichiers touches | Resultat |
-|-------|-------------|----------|-------|-----------------|-----------------|----------|
-| **V1** | 13:00 | **Denis** (via `Agent(subagent_type=denis)`) | Edit, Write | Ajout des 4 premieres sous-sections MASS dans SKILL.md : architecture 3 couches, format DAG JSON (schema complet avec nodes/edges/waves), modes de dispatch (subagent burst/worktree swarm/team swarm), protocole merge coordination. | `.cursor/skills/.../SKILL.md` | ~150 lignes ajoutees. 4/7 sous-sections SKILL.md livrees. |
-| **V2** | 13:15 | **Denis** (meme agent) | Edit | Ajout des 3 dernieres sous-sections MASS dans SKILL.md : Loi 9 anti-serial-collapse, metriques swarm (indicateurs derives), integration MASS dans workflow MIP standard. | `.cursor/skills/.../SKILL.md` | ~133 lignes ajoutees. 7/7 sous-sections SKILL.md livrees. Total ~283 lignes. |
-| **V3** | 13:30 | **Denis** (via `Agent(subagent_type=denis)`) | Edit, Write | 3 actions : (1) Ajout Loi 9 dans CLAUDE.md section "Lois d'Autonomie", (2) Ajout reference MASS + `.mip/dags/` dans CLAUDE.md section "Protocole MIP", (3) Creation `.claude/settings.local.json` avec `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: "1"`. | `CLAUDE.md`, `.claude/settings.local.json` | 3 lignes ajoutees dans CLAUDE.md. Config Agent Teams activee. |
-| **V4** | 13:45 | **Denis** (5 agents en parallele via `Agent(subagent_type=denis)`) | Edit | Enrichissement simultane de 5 fichiers agents disjoints : maria.md (DAG Generator, Loi 9, dispatch mode selection), denis.md (Merge Coordinator before/during/after wave, worktree management), francois.md (Worker isolation, 3 modes, TDD cycle), lise.md (Worker idem), george.md (Audit post-merge swarm coherence). Chaque agent recoit section `## MASS — Responsabilites Swarm` avec annotations MSCM `@id: mass.agent.<name>`. | `.claude/agents/{maria,denis,francois,lise,george}.md` | **Parallelisme effectif : 5**. 5 fichiers enrichis en parallele. ~105 lignes ajoutees. |
-| **V5** | 14:00 | **Denis** (4 agents en parallele) | Edit, Write | Enrichissement simultane de 3 agents restants : arianne.md (capitalisation P6, indicateurs derives, extraction patterns), victor.md (spot-check securite multi-agent), hugo.md (infrastructure worktree, disk space, CI/CD future). + Creation `swarm-template.json` (template metriques pour futurs chantiers T3+). | `.claude/agents/{arianne,victor,hugo}.md`, `.mip/metrics/swarm-template.json` | **Parallelisme effectif : 4**. 3 fichiers enrichis + 1 fichier cree. ~60 lignes ajoutees. |
+**P6 (15:20 → 15:30)** — Rapport Arianne 18.6/20. Capitalisation MEMORY.md. Feedback utilisateur : rapport incomplet → correction + renforcement protocole.
 
-#### Interruption — Rate limit API
+### Incidents
 
-| Heure | Evenement | Impact |
-|-------|-----------|--------|
-| ~14:15 | **Rate limit atteint** (API Anthropic). Agent George (P4 audit) interrompu avant completion. | Execution suspendue. Aucune perte de donnees — tous les fichiers V1-V5 deja ecrits sur disque. |
-| ~14:20 | Utilisateur envoie **"reprend"**. | Verification de l'integrite des fichiers (grep MASS dans les 12 fichiers cibles — tous presents et corrects). Reprise de l'execution. |
+| Evenement | Impact | Resolution |
+|-----------|--------|------------|
+| Rate limit API (~14:15) | P4 audit interrompu | Utilisateur "reprend". Verification integrite OK. Reprise. |
+| Renommage MAS → MASS (~14:50) | Demande mid-delivery | 3 patterns sed sur 16 fichiers. 0 occurrence residuelle. |
+| Rapport P6 incomplet (~15:30) | Feedback utilisateur | Ajout trace + metriques + renforcement protocole (regles 36-38). |
 
-### Phase P4 — Integration, Audit & Securite
+### Totaux consommation
 
-| Etape | Heure (est.) | Agent(s) | Action | Resultat |
-|-------|-------------|----------|--------|----------|
-| P4-1 | 14:25 | **George** (via `Agent(subagent_type=george)`) | Audit de conformite complet : verification de la coherence MASS dans 12 fichiers, validation Loi 9 (10 occurrences), verification MSCM (8 annotations), comparaison plan vs livraison (24/24 taches). | Score **97/100 CONFORME**. 0 defaut bloquant. 3 defauts mineurs (references LOI-N obsoletes). |
-| P4-2 | 14:35 | **George** (meme agent ou second lancement) | Audit de coherence inter-fichiers : terminologie, seuils, accents, formats, references croisees. | Score **94/100 CONFORME**. 3 defauts mineurs supplementaires (incoherences typographiques accents/sans-accents). |
-| P4-3 | 14:40 | **Denis** | Corrections des 6 defauts mineurs identifies par George : mise a jour des references "LOI-1 a LOI-8" en "LOI-1 a LOI-9", harmonisation accents. | 6/6 defauts corriges. |
+| Metrique | Valeur |
+|----------|--------|
+| Tokens total (estime) | ~225 000 |
+| Duree totale (11:55 → 15:30) | ~3h35 |
+| Duree effective (hors attentes) | ~3h15 |
+| Taches completees | 24/24 |
 
-### Renommage MAS → MASS (demande utilisateur mid-delivery)
+---
 
-| Heure | Evenement | Action | Scope |
-|-------|-----------|--------|-------|
-| ~14:50 | Utilisateur demande : **"Change 'Miyukini Agent Swarm (MAS)' par 'Miyukini Agent Swarm System (MASS)'"** | Application de 3 patterns sed sur 16 fichiers : (1) `Miyukini Agent Swarm` → `Miyukini Agent Swarm System`, (2) `\bMAS\b` → `MASS` (avec placeholder anti-double-remplacement), (3) `@id: mas.` → `@id: mass.`. Verification grep : 0 occurrence residuelle "MAS" isole. | 16 fichiers (SKILL.md, CLAUDE.md, 8 agents .md, brief, plan, metriques, 2 audits, settings). |
+## Ressources & Consommation
 
-### Phase P5 — Livraison & Test
+| Metrique | Valeur |
+|----------|--------|
+| **Modele LLM** | Claude Sonnet 4.6 (claude-sonnet-4-6) |
+| **Tokens entree (prompt)** | ~180 000 (estimation — incluant contexte CLAUDE.md, SKILL.md, fichiers lus) |
+| **Tokens sortie (completion)** | ~45 000 (estimation — incluant agents Maria, Denis, Fabrice, George, Arianne) |
+| **Tokens total** | ~225 000 |
+| **Tokens agents (sub-agents cumul)** | ~120 000 (estimation — 12 lancements Agent) |
+| **Cout estime** | ~$2.50 (basé sur pricing Sonnet 4.6) |
 
-| Etape | Heure (est.) | Action | Resultat |
-|-------|-------------|--------|----------|
-| P5-1 | 15:00 | Presentation du resume de livraison a l'utilisateur. Liste des 12 fichiers livres, metriques cles, scores audits. | Utilisateur informe. |
-| P5-2 | 15:10 | Verdict utilisateur. | **ACCEPTE** (implicite — pas de refus, demande de passage a P6). |
+| Metrique duree | Valeur |
+|----------------|--------|
+| **Premier prompt utilisateur** | 2026-03-02 ~11:55 |
+| **Rapport final P6 genere** | 2026-03-02 ~15:30 |
+| **Duree totale mission** | **~3h35** |
+| **Duree P0 (cadrage)** | ~45 min (11:55 - 12:40) |
+| **Duree P3 (implementation)** | ~90 min (13:00 - 14:30) |
+| **Duree P4 (audit)** | ~30 min (14:30 - 15:00) |
+| **Duree P5 (livraison)** | ~20 min (15:00 - 15:20) |
+| **Duree P6 (rapport)** | ~10 min (15:20 - 15:30) |
+| **Temps d'attente (rate limits, pauses)** | ~20 min (rate limit API + pause utilisateur "reprend") |
+| **Duree effective** | **~3h15** (total - attente) |
 
-### Phase P6 — Rapport & Capitalisation
+| Indicateur efficacite | Formule | Valeur |
+|-----------------------|---------|--------|
+| Tokens par ligne produite | 225 000 / 650 | **~346 tokens/ligne** |
+| Lignes par heure effective | 650 / 3.25 | **~200 lignes/h** |
+| Taches par heure effective | 24 / 3.25 | **~7.4 taches/h** |
 
-| Etape | Heure (est.) | Agent | Action | Resultat |
-|-------|-------------|-------|--------|----------|
-| P6-1 | 15:15 | **Arianne** | Generation du rapport final `.mip/reports/2026-03-02-mass-rapport-final.md`. Notation 8 criteres /20. | Rapport 229 lignes. Note 18.6/20. |
-| P6-2 | 15:20 | **Arianne** | Mise a jour metriques finales (compteurs, timestamps, swarm wave_details). | `.mip/metrics/2026-03-02-mas-agent-swarm.json` mis a jour. |
-| P6-3 | 15:25 | **Arianne** | Capitalisation dans MEMORY.md : ajout section "MASS — Miyukini Agent Swarm System" avec architecture, Loi 9, fichiers livres, decisions verrouillees. | MEMORY.md mis a jour. |
-| P6-4 | 15:30 | *Utilisateur* | Feedback : **"Rapport P6 incomplet — aucune trace des etapes effectuees."** | Declenchement correction rapport + renforcement protocole. |
-
-### Resume des outils Claude Code utilises
-
-| Outil | Occurrences (est.) | Usage principal |
-|-------|-------------------|-----------------|
-| `Agent(subagent_type=...)` | ~12 | Delegation aux agents Maria, Denis, Fabrice, George, Arianne |
-| `Edit` | ~35 | Modifications ciblees dans les 12 fichiers |
-| `Write` | ~3 | Creation fichiers neufs (swarm-template.json, settings.local.json, brief) |
-| `Read` | ~20 | Lecture fichiers existants avant modification |
-| `Grep` | ~15 | Verification des occurrences (MASS, Loi 9, MSCM, MAS residuel) |
-| `AskUserQuestion` | 2 | Brainstorming P0 (4 questions) + Gate P0 (approbation) |
-| `TodoWrite` | ~10 | Suivi progression en temps reel |
-| `Bash(sed)` | ~6 | Renommage MAS → MASS sur 16 fichiers |
+> **Note** : Les valeurs de tokens sont des estimations. Claude Code ne fournit pas de compteur natif de tokens par session. Les estimations sont basees sur la taille des prompts et completions observes.
 
 ---
 

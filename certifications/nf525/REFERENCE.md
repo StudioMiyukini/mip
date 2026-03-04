@@ -1,133 +1,87 @@
+<!-- @id cert.victor.nf525 -->
+<!-- @do provide_nf525_reference_knowledge -->
+<!-- @role fiscal_compliance -->
+<!-- @layer reference -->
+<!-- @human Referentiel NF525 pour Victor -->
+
 # NF525 — Logiciel de Gestion d'Encaissement — Reference Victor
 
-> Certification des logiciels de caisse et systemes d'encaissement
+**TL;DR** : Certification **obligatoire** (depuis 01/01/2018) pour tout logiciel de caisse. 4 conditions ISCA : inalterabilite, securisation, conservation, archivage. Chainage cryptographique, GT cumulatif, clotures obligatoires. Art. 286 bis CGI. Amende 7500 EUR/logiciel non conforme.
 
-**Organisme** : INFOCERT / LNE (Laboratoire National de Metrologie et d'Essais) / AFNOR Certification
-**Base legale** : Article 286 bis du Code General des Impots (CGI)
-**Loi fondatrice** : Article 88 de la Loi de Finances 2016 (n° 2015-1785)
-**Validite** : Continue (re-certification a chaque version majeure)
-**Obligation legale** : **OUI — OBLIGATOIRE** depuis le 1er janvier 2018 pour tout logiciel de caisse
-**Prerequis** : Aucun
-**Evolution 2026** : Article 125 LdF 2026 reintroduit l'option d'auto-certification
+**Organisme** : INFOCERT / LNE / AFNOR | **Base** : Art. 286 bis CGI, Art. 88 LdF 2016
+**Obligation** : **OBLIGATOIRE** | **Validite** : Continue (re-certification version majeure)
+**Evolution 2026** : Art. 125 LdF 2026 reintroduit option auto-certification editeur
 
 ---
 
 ## 1. Champ d'application
 
-### Qui est concerne ?
+Tout assujetti TVA utilisant un logiciel/systeme de caisse -> conditions ISCA obligatoires.
 
-Tout assujetti a la TVA qui enregistre les paiements de ses clients au moyen d'un **logiciel ou systeme de caisse** doit utiliser un logiciel satisfaisant aux conditions d'**inalterabilite, de securisation, de conservation et d'archivage** (conditions ISCA).
+**Exemptions** : Micro-entrepreneurs sous seuil TVA, organismes exoneres TVA, pas de logiciel caisse (facturation manuelle).
 
-### Exemptions
-
-- Micro-entrepreneurs en dessous du seuil de TVA (sous certaines conditions)
-- Organismes exoneres de TVA
-- Entreprises qui n'utilisent pas de logiciel de caisse (facturation manuelle)
-
-### Preuve de conformite (2 options)
-
-1. **Certification NF525** par INFOCERT ou certification LNE
-2. **Attestation individuelle de l'editeur** (auto-certification, reintroduite Art. 125 LdF 2026)
+**Preuve conformite** : 1) Certification NF525 (INFOCERT/LNE), ou 2) Attestation editeur (auto-certification, Art. 125 LdF 2026).
 
 ---
 
 ## 2. Les 4 conditions ISCA
 
-### Condition 1 — Inalterabilite
+### Inalterabilite (INAL-01 a 10)
 
-> Les donnees de reglement enregistrees ne peuvent etre alterees, supprimees ou masquees.
+| Ref | Exigence |
+|-----|----------|
+| INAL-01/02/03 | Aucune modification/suppression sans trace, corrections par ecriture nouvelle, annulations tracees |
+| INAL-04/05/06 | Numerotation sequentielle continue, **chainage cryptographique** (hash chain), tickets numerotes |
+| INAL-07/08 | **Grand Total (GT) cumulatif non reinitilisable**, compteurs perpetuels |
+| INAL-09/10 | Pas de fonction dissimulation, journal technique complet |
 
-| Ref | Exigence | Detail |
-|-----|----------|--------|
-| INAL-01 | Interdiction de modification | Aucune modification ou suppression de transaction enregistree sans trace |
-| INAL-02 | Corrections par ecriture nouvelle | Toute correction genere une nouvelle ecriture avec reference a l'originale |
-| INAL-03 | Annulations tracees | Les annulations sont enregistrees comme nouvelles operations |
-| INAL-04 | Numerotation sequentielle | Numerotation continue et ininterrompue des transactions |
-| INAL-05 | Chaine cryptographique | Chainage par empreinte cryptographique de chaque transaction |
-| INAL-06 | Tickets numerotes | Chaque ticket porte un numero unique sequentiel |
-| INAL-07 | Grand Total (GT) cumulatif | GT irreversible et non reinitilisable |
-| INAL-08 | Compteurs perpetuels | Compteurs cumulatifs non remis a zero |
-| INAL-09 | Pas de fonction de dissimulation | Aucune fonction permettant de cacher ou supprimer des donnees de paiement |
-| INAL-10 | Journal technique | Journal enregistrant tous les evenements systeme |
+### Securisation (SECU-01 a 09)
 
-### Condition 2 — Securisation
+| Ref | Exigence |
+|-----|----------|
+| SECU-01/02/03 | Signature/hash par transaction, chainage signatures, verification integrite |
+| SECU-04/05/06 | Protection code source, authentification utilisateurs, gestion roles (admin/caissier/manager) |
+| SECU-07/08/09 | Journal technique protege, cles cryptographiques securisees, **pas de porte derobee** |
 
-> Les donnees sont securisees par des mecanismes cryptographiques garantissant leur integrite.
+### Conservation (CONS-01 a 10)
 
-| Ref | Exigence | Detail |
-|-----|----------|--------|
-| SECU-01 | Signature/empreinte par transaction | Signature electronique ou hash cryptographique sur chaque transaction |
-| SECU-02 | Chainage des signatures | Chaque signature inclut le hash de la transaction precedente |
-| SECU-03 | Verification d'integrite | Fonction de verification a tout moment |
-| SECU-04 | Protection du code source | Protection contre la modification non autorisee du code |
-| SECU-05 | Authentification des utilisateurs | Identification et authentification avant utilisation |
-| SECU-06 | Gestion des roles | Roles differencies (administrateur, caissier, manager) |
-| SECU-07 | Protection du journal technique | Journal non modifiable et non supprimable |
-| SECU-08 | Protection des cles cryptographiques | Stockage securise des cles |
-| SECU-09 | Absence de porte derobee | Pas de backdoor ni de fonction cachee pour alterer les donnees |
+| Ref | Exigence |
+|-----|----------|
+| CONS-01/02 | **6 exercices fiscaux min** (7 ans si non calendaire) |
+| CONS-03/04 | Accessibilite/lisibilite, format structure |
+| CONS-05/06/07 | **Cloture journaliere** (Ticket Z), **mensuelle**, **annuelle** |
+| CONS-08/09/10 | Gel donnees par cloture, cumuls par cloture, conservation donnees brutes (pas seulement agregats) |
 
-### Condition 3 — Conservation
+### Archivage (ARCH-01 a 10)
 
-> Les donnees sont conservees de facon perenne et accessible pendant la duree legale.
-
-| Ref | Exigence | Detail |
-|-----|----------|--------|
-| CONS-01 | Conservation 6 exercices fiscaux minimum | Toutes les donnees transactionnelles conservees |
-| CONS-02 | 7 ans si exercice non calendaire | Extension si l'exercice fiscal ne coincide pas avec l'annee civile |
-| CONS-03 | Accessibilite et lisibilite | Donnees consultables et lisibles pendant toute la duree |
-| CONS-04 | Format structure | Donnees exploitables par l'administration fiscale |
-| CONS-05 | **Cloture journaliere** (Ticket Z) | Obligatoire en fin de journee |
-| CONS-06 | **Cloture mensuelle** | Obligatoire en fin de mois |
-| CONS-07 | **Cloture annuelle** | Obligatoire en fin d'exercice |
-| CONS-08 | Gel des donnees | La cloture fige toutes les donnees de la periode |
-| CONS-09 | Cumuls par cloture | Chaque cloture genere des totaux cumulatifs |
-| CONS-10 | Conservation des donnees brutes | Pas seulement les agrégats, mais les donnees detaillees |
-
-### Condition 4 — Archivage
-
-> Les donnees sont archivees de facon periodique, horodatee et integre.
-
-| Ref | Exigence | Detail |
-|-----|----------|--------|
-| ARCH-01 | Archivage automatique periodique | Journalier, mensuel, annuel |
-| ARCH-02 | Horodatage des archives | Chaque archive est horodatee |
-| ARCH-03 | Integrite des archives | Hash de verification sur chaque archive |
-| ARCH-04 | Format lisible et structure | Archive dans un format exploitable |
-| ARCH-05 | Fonction d'export | Export a destination de l'administration fiscale |
-| ARCH-06 | Transactions originales incluses | L'archive contient toutes les transactions d'origine |
-| ARCH-07 | Clotures incluses | L'archive contient tous les tickets Z |
-| ARCH-08 | Journal technique inclus | L'archive contient le journal des evenements systeme |
-| ARCH-09 | Archive non modifiable | Protection contre l'alteration |
-| ARCH-10 | Reversibilite | Archives lisibles sans logiciel proprietaire |
+| Ref | Exigence |
+|-----|----------|
+| ARCH-01/02/03 | Archivage automatique periodique, horodatage, hash integrite |
+| ARCH-04/05 | Format lisible/structure, export pour administration fiscale |
+| ARCH-06/07/08 | Transactions + clotures + journal technique inclus |
+| ARCH-09/10 | Archive non modifiable, lisible sans logiciel proprietaire |
 
 ---
 
 ## 3. Controles techniques complementaires
 
-| Ref | Exigence | Detail |
-|-----|----------|--------|
-| TECH-01 | Ticket Z avec GT cumulatif | La cloture journaliere inclut le grand total cumulatif |
-| TECH-02 | Revue du code source | INFOCERT/LNE examinent le code source |
-| TECH-03 | Tests fonctionnels complets | Toutes les operations de caisse testees |
-| TECH-04 | Documentation des algorithmes | Hash, chainage, signature documentes |
-| TECH-05 | Gestion des versions | Tracabilite des modifications logicielles |
-| TECH-06 | Pas de mode formation masquant | Le mode demo/formation ne doit pas creer de transactions reelles cachees |
+Ticket Z avec GT cumulatif, revue code source (INFOCERT/LNE), tests fonctionnels complets, documentation algorithmes (hash/chainage/signature), gestion versions, mode formation ne cree pas de transactions reelles cachees.
 
 ---
 
-## 4. Processus de certification NF525
+## 4. Certification
 
-1. **Candidature** : Depot du dossier aupres d'INFOCERT ou LNE
-2. **Revue du code source** : Analyse du code par les auditeurs certifies
-3. **Tests fonctionnels** : Tests de toutes les fonctionnalites certifiees
-4. **Revue de la documentation** : Algorithmes, architecture, administration
-5. **Decision de certification** : Attribution de la certification NF525
-6. **Surveillance** : Annuelle (verification des mises a jour)
-7. **Re-certification** : Obligatoire pour les changements de version majeurs
+| Etape | Description |
+|-------|-------------|
+| 1 | Candidature INFOCERT/LNE |
+| 2 | Revue code source |
+| 3 | Tests fonctionnels |
+| 4 | Revue documentation (algorithmes, architecture) |
+| 5 | Decision certification NF525 |
+| 6 | Surveillance annuelle (verification MAJ) |
+| 7 | Re-certification obligatoire pour versions majeures |
 
-### Auto-certification (Art. 125 LdF 2026)
-
-Depuis fevrier 2026, l'editeur peut delivrer une **attestation individuelle** de conformite. L'editeur reste responsable penalement de la veracite de l'attestation.
+**Auto-certification (Art. 125 LdF 2026)** : Attestation individuelle editeur. Responsabilite penale.
 
 ---
 
@@ -135,66 +89,26 @@ Depuis fevrier 2026, l'editeur peut delivrer une **attestation individuelle** de
 
 | Infraction | Sanction |
 |------------|---------|
-| Utilisation d'un logiciel non conforme | **7 500 EUR d'amende** par logiciel (Art. 1770 duodecies CGI) |
-| Delai de mise en conformite | 60 jours apres PV de constat |
-| Recidive dans les 60 jours | Nouvelle amende de 7 500 EUR |
-| Rejet de comptabilite | L'administration peut rejeter toute la comptabilite |
-| Rappel TVA majore | Majoration de 80% sur les montants de TVA dus |
-| Faux certificat de conformite | **3 ans d'emprisonnement + 45 000 EUR d'amende** (delit penal) |
+| Logiciel non conforme | **7 500 EUR/logiciel** (Art. 1770 duodecies CGI) |
+| Recidive dans 60 jours | Nouvelle amende 7 500 EUR |
+| Rejet comptabilite | Administration peut rejeter toute la comptabilite |
+| Rappel TVA majore | Majoration 80% TVA due |
+| Faux certificat | **3 ans prison + 45 000 EUR** (delit penal) |
 
 ---
 
 ## 6. Non-conformites courantes
 
-1. **Grand Total (GT) reinitilisable ou modifiable** — non-conformite critique
-2. **Chaine de hash interrompue** (ecart dans le chainage cryptographique)
-3. **Fonction de suppression de transactions** accessible
-4. **Ticket Z incomplet** (cumuls manquants)
-5. **Algorithme cryptographique faible** (MD5, SHA-1 insuffisants)
-6. **Journal technique absent** ou non protege
-7. **Archives non horodatees** ou non protegees en integrite
-8. **Mode demo/formation creant des transactions reelles** sans trace
-9. **Documentation du code source insuffisante**
-10. **Gestion des roles utilisateurs absente** ou incomplete
+GT reinitilisable/modifiable (**critique**), chaine hash interrompue, suppression transactions accessible, Ticket Z incomplet, algo crypto faible (MD5/SHA-1), journal technique absent/non protege, archives non horodatees, mode demo creant transactions reelles, documentation code insuffisante, gestion roles absente.
 
 ---
 
-## 7. Checklist Victor — Audit NF525
+## 7. Checklist Victor
 
-### Inalterabilite
-- [ ] Aucune suppression/modification de transaction possible sans trace
-- [ ] Corrections par ecriture nouvelle avec reference
-- [ ] Numerotation sequentielle continue et ininterrompue
-- [ ] Chainage cryptographique de chaque transaction (hash chain)
-- [ ] Grand Total (GT) cumulatif et non reinitilisable
-- [ ] Compteurs perpetuels non remis a zero
-- [ ] Pas de fonction de dissimulation ou suppression
-
-### Securisation
-- [ ] Signature/hash sur chaque transaction
-- [ ] Chainage des signatures/hash
-- [ ] Fonction de verification d'integrite disponible
-- [ ] Authentification des utilisateurs
-- [ ] Roles differencies (admin, caissier, manager)
-- [ ] Journal technique protege en integrite
-- [ ] Cles cryptographiques stockees de facon securisee
-- [ ] Pas de porte derobee (verification code source)
-
-### Conservation
-- [ ] Conservation 6 exercices fiscaux minimum
-- [ ] Cloture journaliere (Ticket Z) avec GT cumulatif
-- [ ] Cloture mensuelle
-- [ ] Cloture annuelle
-- [ ] Donnees brutes conservees (pas seulement agregats)
-- [ ] Donnees lisibles et accessibles pendant la duree legale
-
-### Archivage
-- [ ] Archivage automatique periodique
-- [ ] Archives horodatees
-- [ ] Integrite des archives verifiee (hash)
-- [ ] Export pour controle fiscal disponible
-- [ ] Archives incluent transactions, clotures et journal technique
-- [ ] Archives lisibles sans logiciel proprietaire
+**Inalterabilite** : [ ] Pas de suppression/modification sans trace [ ] Corrections par ecriture nouvelle [ ] Numerotation sequentielle [ ] Chainage crypto (hash chain) [ ] GT cumulatif non reinitilisable [ ] Compteurs perpetuels [ ] Pas de fonction dissimulation
+**Securisation** : [ ] Hash/signature par transaction [ ] Chainage [ ] Verification integrite [ ] Auth utilisateurs [ ] Roles differencies [ ] Journal technique protege [ ] Cles securisees [ ] Pas de backdoor
+**Conservation** : [ ] 6 exercices min [ ] Cloture journaliere (Ticket Z) + GT [ ] Cloture mensuelle + annuelle [ ] Donnees brutes conservees [ ] Lisibles pendant duree legale
+**Archivage** : [ ] Archivage auto periodique [ ] Archives horodatees [ ] Hash integrite [ ] Export fiscal [ ] Transactions + clotures + journal inclus [ ] Lisible sans logiciel proprietaire
 
 ---
 
@@ -202,14 +116,14 @@ Depuis fevrier 2026, l'editeur peut delivrer une **attestation individuelle** de
 
 | Point | Pertinence projet |
 |-------|-------------------|
-| **JayKonta** | Si JayKonta inclut une fonctionnalite d'encaissement → NF525 **obligatoire** |
-| **Chaine de hash** | Le pattern de chainage cryptographique est similaire a MiyuCloud (integrity chain) |
-| **Algorithmes** | SHA-256 minimum recommande (SHA-1/MD5 insuffisants) |
-| **GT et compteurs** | Implementation d'un registre cumulatif persistant dans KindMother |
-| **Clotures** | Automatisation des clotures journalieres/mensuelles/annuelles |
-| **Export fiscal** | Fonction d'export structuree pour l'administration fiscale |
-| **LOI-3** | L'etat local souverain (LOI-3) est compatible avec les exigences de conservation |
+| JayKonta | Si encaissement -> NF525 **obligatoire** |
+| Chaine hash | Pattern similaire MiyuCloud (integrity chain) |
+| Algorithmes | SHA-256 minimum (SHA-1/MD5 insuffisants) |
+| GT et compteurs | Registre cumulatif persistant dans KindMother |
+| Clotures | Automatisation journalieres/mensuelles/annuelles |
+| Export fiscal | Fonction export structuree administration fiscale |
+| LOI-3 | Etat local souverain compatible exigences conservation |
 
 ---
 
-*Sources : Art. 286 bis CGI, Art. 1770 duodecies CGI, Art. 88 LdF 2016, BOI-TVA-DECLA-30-10-30, regles INFOCERT NF525, Art. 125 LdF 2026*
+*Sources : Art. 286 bis CGI, Art. 1770 duodecies CGI, Art. 88 LdF 2016, BOI-TVA-DECLA-30-10-30, INFOCERT NF525, Art. 125 LdF 2026*

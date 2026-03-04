@@ -1,10 +1,11 @@
 # Analyse PR — MiyuCloud (Cloud Prive Auto-Heberge)
 
 **Analyste** : Fabrice (PR Analyst)
-**Date** : 2026-03-01
+**Date** : 2026-03-01 (Mise a jour : 2026-03-03)
 **Phase** : P0 — Cadrage
 **Classification estimee** : T5 (Chantier strategique)
 **Destinataires** : Maria (validation) -> Denis (exploitation technique)
+**MAJ 2026-03-03** : Ajout de Tresorit (section 1.5), ajout lignes Self-hosting et Audit securite dans la matrice 3.1, renumerotation sections 1.6-1.8.
 
 ---
 
@@ -182,7 +183,54 @@ MiyuCloud vise a offrir un cloud prive ou le COG de l'utilisateur sert de serveu
 
 ---
 
-### 1.5 Resilio Sync — P2P commercial
+### 1.5 Tresorit — Reference securite E2E (commercial)
+
+| Critere | Detail |
+|---------|--------|
+| **Stack** | C++ / .NET (clients natifs), infrastructure cloud proprietaire (Azure-backed), protocole proprietaire |
+| **Licence** | Proprietaire (closed-source) |
+| **Prix** | Personal Lite 4,75 USD/mois (50 GB, 2 appareils) / Personal Essential 11,99 USD/mois (1 TB, 10 appareils) / Business a partir de 20 EUR/user/mois (1 TB/user) |
+| **Architecture** | Client-serveur classique avec serveurs cloud (heberges en Suisse/UE). Chiffrement E2E zero-knowledge cote client avant upload. Le serveur ne voit jamais les donnees en clair |
+
+**Forces :**
+- **Chiffrement E2E zero-knowledge certifie** : AES-256 pour les fichiers, RSA-4096 pour l'echange de cles. Verifie par audit independant Ernst & Young (pentest + code review). L'entreprise ne peut techniquement pas acceder aux contenus
+- **Certification ISO 27001:2022** validee par TUV Rheinland — le gold standard du management de la securite de l'information
+- **Conformite RGPD et HIPAA** native, ce qui en fait la reference pour les entreprises reglementees
+- **Juridiction suisse** : Protection forte de la vie privee sous le droit suisse (pas de Cloud Act americain)
+- **UX polished** : Interface desktop et web propre, intuitive, comparable a Dropbox en simplicite
+- **Versionning et recovery** : Historique des versions et recuperation de fichiers supprimes
+- **Partage securise** : Liens de partage avec mot de passe, expiration, et controle d'acces granulaire
+- **DRM-like controls** : Possibilite de revoquer l'acces a un fichier partage meme apres telechargement (via le viewer integre)
+
+**Faiblesses :**
+- **Pas de self-hosting** : Les donnees sont sur l'infrastructure cloud de Tresorit (Azure). Impossible d'heberger soi-meme. C'est l'antithese du modele COG
+- **Prix eleve** : Le plan le moins cher (4,75 USD/mois, 50 GB) offre peu de stockage. Pour une famille de 5, le cout annuel depasse 700 USD en Business
+- **Pas de P2P** : Architecture client-serveur uniquement. Pas de sync directe entre appareils
+- **Collaboration limitee** : Pas de co-edition en temps reel comparable a Google Docs. Les outils collaboratifs sont fonctionnels mais basiques
+- **Closed-source** : Malgre les audits, le code n'est pas verifiable par la communaute
+- **Sync plus lente** : Le chiffrement E2E ajoute une etape supplementaire qui ralentit les transferts par rapport aux concurrents non-chiffres
+- **Pas de calendrier/contacts/mail** : C'est un cloud de fichiers uniquement, pas une suite
+
+**Points de friction UX :**
+- Le plan Personal Lite est limite a 2 appareils, ce qui est contraignant pour une famille multi-devices
+- La co-edition de documents est tres limitee comparee a Google Workspace
+- Le prix monte vite des qu'on a plusieurs utilisateurs ou besoin de plus de stockage
+- Pas de client Linux officiel (uniquement en beta/snap depuis peu)
+- Les fichiers ne sont pas accessibles hors-ligne par defaut — il faut marquer explicitement les fichiers pour le mode offline
+
+**Pertinence pour MiyuCloud :**
+Tresorit est la reference absolue en matiere de securite E2E et de conformite, mais son modele est l'exact oppose de MiyuCloud : cloud centralise, proprietaire, payant, pas de self-hosting. Son interet pour nous est **pedagogique** : il demontre qu'un chiffrement E2E solide est possible sans sacrifier l'UX, et que les certifications de securite (ISO 27001, audits independants) sont un atout marketing decisif. MiyuCloud doit atteindre le meme niveau de confiance crypto que Tresorit tout en restant self-hosted, open-source et gratuit.
+
+**Sources :**
+- [Tresorit Review 2026 - CyberInsider](https://cyberinsider.com/cloud-storage/reviews/tresorit/)
+- [Tresorit Review 2025 - SaaStrac](https://hosting.saastrac.com/tresorit-review/)
+- [Tresorit Review 2026 - iFeeltech](https://ifeeltech.com/blog/tresorit-review-secure-cloud-storage)
+- [Tresorit Security](https://tresorit.com/security)
+- [Tresorit Review 2026 - Cloudwards](https://www.cloudwards.net/tresorit-review/)
+
+---
+
+### 1.6 Resilio Sync — P2P commercial
 
 | Critere | Detail |
 |---------|--------|
@@ -221,7 +269,7 @@ MiyuCloud vise a offrir un cloud prive ou le COG de l'utilisateur sert de serveu
 
 ---
 
-### 1.6 IPFS et solutions decentralisees
+### 1.7 IPFS et solutions decentralisees
 
 | Critere | Detail |
 |---------|--------|
@@ -262,7 +310,7 @@ MiyuCloud vise a offrir un cloud prive ou le COG de l'utilisateur sert de serveu
 
 ---
 
-### 1.7 Concurrents complementaires (mention rapide)
+### 1.8 Concurrents complementaires (mention rapide)
 
 | Produit | Pertinence pour MiyuCloud | Note |
 |---------|---------------------------|------|
@@ -318,25 +366,27 @@ MiyuCloud vise a offrir un cloud prive ou le COG de l'utilisateur sert de serveu
 
 ### 3.1 Tableau comparatif des fonctionnalites
 
-| Fonctionnalite | Indispensable | Differenciateur | Nextcloud | Syncthing | Seafile | ownCloud | Resilio | IPFS |
-|----------------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Sync fichiers entre machines | OUI | NON | OK | OK | OK | OK | OK | -- |
-| Chiffrement E2E par defaut | OUI | OUI | Partiel | TLS only | OK (par lib) | NON | Partiel | NON |
-| Partage par lien web (sans compte) | OUI | NON | OK | -- | OK | OK | -- | -- |
-| Backup photos mobile + liberation espace | OUI | OUI | Partiel | -- | -- | -- | -- | -- |
-| Sync P2P (sans serveur central tiers) | OUI | OUI | -- | OK | -- | -- | OK | OK |
-| Interface web de gestion fichiers | OUI | NON | OK | -- | OK | OK | -- | -- |
-| Fonctionne hors-ligne | OUI | OUI | Partiel | OK | Partiel | Partiel | OK | Partiel |
-| Zero configuration serveur | NON | OUI | -- | Partiel | -- | -- | Partiel | -- |
-| Delta sync (blocs modifies) | NON | NON | -- | OK | OK | -- | OK | OK |
-| Versionning fichiers | NON | NON | OK | OK | OK | OK | -- | Natif |
-| Gestion multi-utilisateurs | NON | NON | OK | -- | OK | OK | -- | -- |
-| App mobile native | OUI | NON | OK | Android | OK | OK | OK | -- |
-| Preview/thumbnails | NON | NON | OK | -- | OK | OK | -- | -- |
-| Integration suite bureautique | NON | NON | OK | -- | Partiel | OK | -- | -- |
-| Surface web pour partage externe | OUI | OUI | OK (tout via web) | -- | OK | OK | -- | -- |
-| Chiffrement metadonnees | NON | OUI | -- | N/A | -- | -- | -- | -- |
-| Reprise sur interruption (resume) | OUI | NON | Partiel | OK | OK | Partiel | OK | Partiel |
+| Fonctionnalite | Indispensable | Differenciateur | Nextcloud | Syncthing | Seafile | ownCloud | Tresorit | Resilio | IPFS |
+|----------------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Sync fichiers entre machines | OUI | NON | OK | OK | OK | OK | OK | OK | -- |
+| Chiffrement E2E par defaut | OUI | OUI | Partiel | TLS only | OK (par lib) | NON | OK | Partiel | NON |
+| Partage par lien web (sans compte) | OUI | NON | OK | -- | OK | OK | OK | -- | -- |
+| Backup photos mobile + liberation espace | OUI | OUI | Partiel | -- | -- | -- | Partiel | -- | -- |
+| Sync P2P (sans serveur central tiers) | OUI | OUI | -- | OK | -- | -- | -- | OK | OK |
+| Interface web de gestion fichiers | OUI | NON | OK | -- | OK | OK | OK | -- | -- |
+| Fonctionne hors-ligne | OUI | OUI | Partiel | OK | Partiel | Partiel | Partiel | OK | Partiel |
+| Zero configuration serveur | NON | OUI | -- | Partiel | -- | -- | OK (cloud) | Partiel | -- |
+| Delta sync (blocs modifies) | NON | NON | -- | OK | OK | -- | -- | OK | OK |
+| Versionning fichiers | NON | NON | OK | OK | OK | OK | OK | -- | Natif |
+| Gestion multi-utilisateurs | NON | NON | OK | -- | OK | OK | OK | -- | -- |
+| App mobile native | OUI | NON | OK | Android | OK | OK | OK | OK | -- |
+| Preview/thumbnails | NON | NON | OK | -- | OK | OK | OK | -- | -- |
+| Integration suite bureautique | NON | NON | OK | -- | Partiel | OK | Partiel | -- | -- |
+| Surface web pour partage externe | OUI | OUI | OK (tout via web) | -- | OK | OK | OK | -- | -- |
+| Chiffrement metadonnees | NON | OUI | -- | N/A | -- | -- | OK | -- | -- |
+| Reprise sur interruption (resume) | OUI | NON | Partiel | OK | OK | Partiel | OK | OK | Partiel |
+| Self-hosting | OUI | NON | OK | OK | OK | OK | -- | OK | OK |
+| Audit securite independant | NON | OUI | Partiel | -- | -- | -- | OK (E&Y) | -- | -- |
 
 **Legende :** OK = present et fonctionnel, Partiel = present mais limite/instable, -- = absent, N/A = non applicable
 

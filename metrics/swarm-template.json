@@ -1,5 +1,20 @@
 {
-  "_comment": "Template metriques swarm MASS. A copier dans le fichier metriques de chaque sequence MIP T3+ utilisant le swarm.",
+  "_comment": "Template metriques MASS + consommation. A copier dans le fichier metriques de chaque sequence MIP T3+.",
+  "consumption": {
+    "first_prompt_timestamp": null,
+    "p6_report_timestamp": null,
+    "total_duration_minutes": null,
+    "effective_duration_minutes": null,
+    "wait_duration_minutes": null,
+    "tokens_input_estimate": null,
+    "tokens_output_estimate": null,
+    "tokens_total_estimate": null,
+    "tokens_agents_estimate": null,
+    "cost_estimate_usd": null,
+    "tokens_per_line": null,
+    "lines_per_hour": null,
+    "tasks_per_hour": null
+  },
   "swarm": {
     "enabled": false,
     "dispatch_mode": null,

@@ -1,0 +1,117 @@
+{
+  "project": "audit-cog-global",
+  "classification": "T5",
+  "slug": "audit-cog-global",
+  "autonomy_mode": "FULL",
+  "mip_loops": 0,
+
+  "timestamps": {
+    "p0_start": "2026-03-02T14:00:00Z",
+    "p0_t1_exploration": "2026-03-02T14:00:00Z",
+    "p0_t2_ideation": "2026-03-02T14:30:00Z",
+    "p0_t4_inventaire_denis": "2026-03-02T14:30:00Z",
+    "p0_t5_securite_victor": "2026-03-02T14:30:00Z",
+    "p0_t7_plan_denis": "2026-03-02T15:00:00Z",
+    "p0_t8_audit_arianne": "2026-03-02T15:30:00Z",
+    "p0_t10_synthese_maria": "2026-03-02T16:00:00Z",
+    "p0_end": "2026-03-02T16:30:00Z",
+    "gate_p0_approved": "2026-03-02T16:45:00Z",
+    "prep_start": null,
+    "prep_end": null,
+    "p3_phase1_start": null,
+    "p3_phase1_end": null,
+    "p3_phase2_l1_start": null,
+    "p3_phase2_l1_end": null,
+    "p3_phase2_l2_start": null,
+    "p3_phase2_l2_end": null,
+    "p3_phase2_l3_start": null,
+    "p3_phase2_l3_end": null,
+    "p3_phase2_l4_start": null,
+    "p3_phase2_l4_end": null,
+    "p3_phase2_l5_start": null,
+    "p3_phase2_l5_end": null,
+    "p3_phase3_start": null,
+    "p3_phase3_end": null,
+    "p4_start": null,
+    "p4_end": null,
+    "p5_start": null,
+    "p5_end": null,
+    "p6_start": null,
+    "p6_end": null,
+    "total_end": null
+  },
+
+  "agents_involved": [
+    "maria", "fabrice", "denis", "francois", "lise", "arianne", "george", "victor", "hugo"
+  ],
+
+  "counters": {
+    "packages_in_scope": 117,
+    "crates_in_scope": 99,
+    "apps_in_scope": 13,
+    "tools_in_scope": 5,
+    "rs_files_total": 1307,
+    "rs_lines_total": 233020,
+    "rs_files_with_mscm": 687,
+    "mscm_coverage_pct": 52.6,
+    "unwrap_in_apps_prod": 111,
+    "unwrap_in_crates_prod": 743,
+    "unwrap_total_prod": 854,
+    "unwrap_total_with_tests": 972,
+    "panic_total": 37,
+    "cargo_warnings": 1511,
+    "cargo_errors_clippy": 70,
+    "packages_zero_tests": 40,
+    "cargo_toml_missing_unsafe_forbid": 18,
+    "compilation_status": "OK",
+    "certifications_applied": 34,
+    "agents_auditing": 9,
+    "audit_domains": 7,
+    "micro_tasks_total": 97,
+    "micro_tasks_completed": 0,
+    "findings_total": 0,
+    "findings_critical": 0,
+    "findings_major": 0,
+    "findings_minor": 0,
+    "findings_info": 0,
+    "errors_count": 0,
+    "corrections_count": 0,
+    "score_baseline_estimate": 38
+  },
+
+  "checkpoints": {
+    "cp01_phase1": null,
+    "cp02_l1": null,
+    "cp03_l2": null,
+    "cp04_l3": null,
+    "cp05_l4": null,
+    "cp06_l5": null,
+    "cp07_phase3": null
+  },
+
+  "gates": {
+    "p0_brief_approved": true,
+    "p0_gate_approved": true,
+    "p3_phase1_complete": false,
+    "p3_phase2_complete": false,
+    "p3_phase3_complete": false,
+    "p4_audit_passed": false,
+    "p5_user_validated": false,
+    "p6_report_generated": false
+  },
+
+  "errors_archive": [],
+
+  "agent_questions": [],
+
+  "issues": [
+    {
+      "id": "RB-1",
+      "description": "Metriques initiales erronees de 66% a 1600%",
+      "status": "CORRIGE",
+      "date_detected": "2026-03-02T15:30:00Z",
+      "date_fixed": "2026-03-02T16:45:00Z",
+      "agent": "arianne"
+    }
+  ]
+}

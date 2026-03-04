@@ -7,6 +7,21 @@
     "mip_sequence_number": 1,
     "autonomy_mode": "FULL"
   },
+  "consumption": {
+    "first_prompt_timestamp": "2026-03-02T11:55:00Z",
+    "p6_report_timestamp": "2026-03-02T15:30:00Z",
+    "total_duration_minutes": 215,
+    "effective_duration_minutes": 195,
+    "wait_duration_minutes": 20,
+    "tokens_input_estimate": 180000,
+    "tokens_output_estimate": 45000,
+    "tokens_total_estimate": 225000,
+    "tokens_agents_estimate": 120000,
+    "cost_estimate_usd": 2.50,
+    "tokens_per_line": 346,
+    "lines_per_hour": 200,
+    "tasks_per_hour": 7.4
+  },
   "timestamps": {
     "p0_start": "2026-03-02T00:00:00Z",
     "p0_temps1_end": "2026-03-02T11:55:00Z",
