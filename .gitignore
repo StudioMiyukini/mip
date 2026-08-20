@@ -1,0 +1,16 @@
+# Dépendances
+node_modules/
+
+# Sortie de l'extraction : régénérable par `npm run extraire`, et le dossier
+# pèse 19 Mo de certifications. Ce qui se reconstruit d'une commande n'a rien
+# à faire dans l'historique.
+pack/
+
+# Construction
+web/dist/
+*.tsbuildinfo
+
+# Local
+.env
+.env.*
+!.env.exemple

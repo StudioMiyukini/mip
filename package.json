@@ -1,0 +1,19 @@
+{
+  "name": "mip-studio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Le protocole MIP et le balisage MSCM, extraits en application de cadrage.",
+  "type": "module",
+  "workspaces": ["extraction", "serveur", "web"],
+  "scripts": {
+    "extraire": "npm run -w extraction extraire",
+    "bd:monter": "docker compose up -d",
+    "bd:schema": "npm run -w serveur schema",
+    "ingerer": "npm run -w serveur ingerer",
+    "serveur": "npm run -w serveur dev",
+    "web": "npm run -w web dev",
+    "verifier": "npm run -w extraction verifier && npm run -w serveur verifier && npm run -w web verifier",
+    "installer": "npm run extraire && npm run bd:schema && npm run ingerer"
+  },
+  "engines": { "node": ">=22" }
+}

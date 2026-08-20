@@ -1,0 +1,25 @@
+{
+  "name": "@mip/serveur",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "schema": "tsx src/appliquer-schema.ts",
+    "ingerer": "tsx src/ingerer.ts",
+    "verifier": "tsc --noEmit",
+    "empreinte": "tsx src/empreinte.ts"
+  },
+  "dependencies": {
+    "fastify": "^5.2.0",
+    "pg": "^8.13.0",
+    "@fastify/static": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

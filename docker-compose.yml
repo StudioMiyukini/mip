@@ -1,0 +1,38 @@
+# @id mip.bd.conteneur
+# @do fournir_une_base_postgresql_dediee
+# @role config
+# @layer infra
+# @human La base : dédiée, sur un port qui n'entre en conflit avec rien
+
+# Un PostgreSQL **à part**, et pas un schéma de plus dans une base existante.
+# La machine en héberge déjà quatre — Catakana, Immich, CV, Nextcloud — et les
+# mêler ferait dépendre le cadrage d'un service qui n'a rien à voir : une
+# migration Immich ne doit pas pouvoir empêcher d'ouvrir un formulaire.
+#
+# Le port 54329 est choisi hors des ports déjà pris (54322 pour Catakana) et
+# hors du 5432 par défaut, qui est le premier qu'un scan essaie.
+
+services:
+  mip-bd:
+    image: postgres:17-alpine
+    container_name: mip-studio-bd
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PGUSER:-mip}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-mip}
+      POSTGRES_DB: ${PGDATABASE:-mip_studio}
+      # Le tri et la comparaison de chaînes en français : « école » doit se
+      # ranger avec « ecole », pas après « zèbre ».
+      LANG: fr_FR.utf8
+    ports:
+      - "127.0.0.1:${PGPORT:-54329}:5432"
+    volumes:
+      - mip-bd-donnees:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-mip} -d ${PGDATABASE:-mip_studio}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mip-bd-donnees:

@@ -1,0 +1,160 @@
+/* @id mip.web.style
+   @role ui
+   @layer ui
+   @human La feuille de style : deux colonnes, le formulaire et son résultat
+   @do habiller_le_formulaire_et_l_apercu */
+
+/* Le formulaire est long — trente questions et quatre grilles de tags. Tout le
+   parti pris tient là : rendre la longueur lisible plutôt que la masquer. Les
+   sections sont des cartes séparées, la colonne de saisie est bornée en largeur
+   pour rester lisible, et le prompt reste visible à droite pendant qu'on écrit
+   — c'est lui qui donne le sens de ce qu'on remplit. */
+
+:root {
+  --fond: #0e1420;
+  --carte: #161f2e;
+  --trait: #26334a;
+  --texte: #e6edf7;
+  --doux: #8ea0bd;
+  --accent: #6d8cff;
+  --alerte: #ff7a7a;
+  --mono: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  --rayon: 10px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --fond: #f6f8fc;
+    --carte: #ffffff;
+    --trait: #dde4ef;
+    --texte: #16202e;
+    --doux: #5e6f8a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.page { max-width: 1600px; margin: 0 auto; padding: 20px; }
+
+.entete {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.entete h1 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
+
+.avancement { text-align: right; }
+.avancement strong { display: block; font-size: 22px; font-variant-numeric: tabular-nums; }
+.avancement span { color: var(--doux); font-size: 12px; }
+
+/* Deux colonnes tant que l'écran le permet. En dessous, l'aperçu passe sous le
+   formulaire — jamais dans un onglet : un prompt qu'on ne voit plus est un
+   prompt qu'on ne relit pas. */
+.colonnes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 1100px) { .colonnes { grid-template-columns: 1fr; } }
+
+.formulaire { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.bloc {
+  background: var(--carte); border: 1px solid var(--trait);
+  border-radius: var(--rayon); padding: 16px;
+}
+.bloc h3 { margin: 0 0 4px; font-size: 15px; }
+.bloc-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.compte { color: var(--doux); font-size: 12px; font-family: var(--mono); }
+.explication { color: var(--doux); font-size: 13px; margin: 4px 0 12px; }
+.note { color: var(--doux); font-size: 12px; margin: 6px 0 0; }
+
+.ligne { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.ligne > span { font-size: 13px; color: var(--doux); }
+
+.question { display: flex; flex-direction: column; gap: 6px; padding: 12px 0; border-top: 1px solid var(--trait); }
+.question:first-of-type { border-top: none; }
+.libelle { font-size: 14px; }
+.numero {
+  display: inline-block; min-width: 30px; color: var(--doux);
+  font-family: var(--mono); font-size: 12px;
+}
+.option { color: var(--doux); font-size: 12px; font-style: normal; }
+.aide { color: var(--doux); font-size: 12px; }
+
+.controle {
+  width: 100%; font: inherit; color: var(--texte); background: var(--fond);
+  border: 1px solid var(--trait); border-radius: 8px; padding: 9px 10px;
+}
+.controle:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.zone { resize: vertical; min-height: 42px; font-family: inherit; }
+
+.echelle { display: flex; gap: 6px; flex-wrap: wrap; }
+.cran {
+  font: inherit; cursor: pointer; padding: 7px 14px; border-radius: 8px;
+  border: 1px solid var(--trait); background: var(--fond); color: var(--texte);
+}
+.cran.actif { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.cases { display: flex; flex-direction: column; gap: 6px; }
+.case { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+
+/* Les tags. Le poids en jetons est en petit à droite : présent pour qui le
+   cherche, discret pour qui parcourt. */
+.tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  font: inherit; font-size: 13px; cursor: pointer;
+  padding: 6px 11px; border-radius: 999px;
+  border: 1px solid var(--trait); background: var(--fond); color: var(--texte);
+}
+.tag:hover { border-color: var(--accent); }
+.tag.actif { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tag-reserve { font-size: 11px; opacity: 0.75; font-style: italic; }
+.tag-poids { font-size: 11px; opacity: 0.65; font-family: var(--mono); }
+
+/* L'aperçu colle en haut : on écrit à gauche, on voit à droite. */
+.apercu {
+  position: sticky; top: 20px; min-width: 0;
+  background: var(--carte); border: 1px solid var(--trait);
+  border-radius: var(--rayon); padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  max-height: calc(100vh - 40px);
+}
+.apercu h3 { margin: 0; font-size: 15px; }
+
+.boutons { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.boutons button {
+  font: inherit; cursor: pointer; padding: 8px 14px; border-radius: 8px;
+  border: 1px solid var(--trait); background: var(--fond); color: var(--texte);
+}
+.boutons .principal { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.prompt {
+  flex: 1; overflow: auto; margin: 0; padding: 14px;
+  background: var(--fond); border: 1px solid var(--trait); border-radius: 8px;
+  font-family: var(--mono); font-size: 12px; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-word;
+}
+
+.alerte {
+  background: var(--carte); border: 1px solid var(--alerte);
+  border-radius: var(--rayon); padding: 18px;
+}
+.alerte code { font-family: var(--mono); font-size: 12px; }
+
+/* La porte. Centrée, courte, et sans rien d'autre à l'écran : il n'y a qu'une
+   chose à faire ici, et proposer le reste serait proposer ce qui ne marche pas. */
+.porte {
+  max-width: 380px; margin: 15vh auto 0;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.porte h1 { margin: 0; font-size: 20px; }
+.porte .principal {
+  font: inherit; cursor: pointer; padding: 10px 14px; border-radius: 8px;
+  background: var(--accent); border: 1px solid var(--accent); color: #fff;
+}
+.porte .principal:disabled { opacity: 0.5; cursor: default; }
+.refus { color: var(--alerte); font-size: 13px; margin: 0; }
