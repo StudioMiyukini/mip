@@ -48,12 +48,45 @@ export interface Protocole {
   modes: Array<{ mode: string; libelle: string; description: string }>;
 }
 
+/**
+ * L'état d'une réponse.
+ *
+ * **`suggere` n'est pas une réponse.** Mesuré le 2026-08-20 : sur le premier
+ * essai réel, le modèle local a inventé le sens de deux acronymes et un public
+ * inexistant, malgré une consigne explicite de ne rien inventer. Une invention
+ * est plausible, bien écrite, et occupe le champ exactement comme une réponse —
+ * d'où une distinction dans **le modèle de données**, pas dans la couleur du
+ * champ. Le style se perd d'une refonte à l'autre ; la règle non.
+ */
+export type Etat = "repondu" | "suggere";
+
+export interface Reponse {
+  valeur: string;
+  etat: Etat;
+}
+
+/** Une réponse en texte nu vaut « répondu » : les cadrages déjà enregistrés
+ *  n'ont pas d'état, et un humain les a écrits. */
+export type ReponseBrute = string | Reponse;
+
+/**
+ * Ce qu'on retient d'une réponse — la chaîne vide si rien n'est confirmé.
+ *
+ * C'est le seul endroit où la règle s'applique, et c'est voulu : la répéter à
+ * chaque lecture, c'est se donner l'occasion de l'oublier une fois.
+ */
+export function valeurRetenue(reponse: ReponseBrute | undefined): string {
+  if (reponse === undefined) return "";
+  if (typeof reponse === "string") return reponse;
+  return reponse.etat === "suggere" ? "" : reponse.valeur;
+}
+
 export interface Cadrage {
   titre: string;
   demande: string;
   classe: string;
   mode: string;
-  reponses: Record<string, string>;
+  reponses: Record<string, ReponseBrute>;
   agents: string[];
   skills: string[];
   modules: string[];
@@ -70,9 +103,50 @@ export interface Matiere {
 
 const CLASSES = ["T1", "T2", "T3", "T4", "T5"];
 
+/**
+ * Les quatre questions de l'étage 1. **Déclarées, jamais déduites.**
+ *
+ * Prendre « les quatre premières » donnerait quatre questions de la même
+ * section — donc quatre fois le même angle, et un cadrage qui ne cadre rien.
+ * Celles-ci couvrent quatre angles distincts :
+ *
+ * - `1.1` quel problème --------- le *pourquoi*
+ * - `1.3` qui est l'utilisateur - le *pour qui*
+ * - `2.2` périmètre inclus/exclus le *jusqu'où*
+ * - `5.1` fonctionnalité minimale le *par où commencer*
+ *
+ * C'est le minimum sous lequel un prompt cesse d'être meilleur qu'une
+ * discussion libre.
+ */
+export const QUESTIONS_ESSENTIELLES = ["1.1", "1.3", "2.2", "5.1"];
+
 /** La question est-elle posée à cette classe ? « depuis T4 » veut dire T4 et T5. */
 export function retenue(question: Question, classe: string): boolean {
   return CLASSES.indexOf(classe) >= CLASSES.indexOf(question.depuis);
+}
+
+/**
+ * L'étage d'une question, ou `null` si elle n'est pas posée à cette classe.
+ *
+ * ```
+ * 1  l'essentiel : les quatre déclarées — un prompt déjà utilisable
+ * 2  le cadrage  : posée à cette classe, non optionnelle
+ * 3  le détail   : posée à cette classe, optionnelle
+ * ```
+ *
+ * **L'ordre des tests compte.** L'appartenance aux essentielles se vérifie
+ * *avant* le drapeau `optionnelle` : une question essentielle marquée
+ * optionnelle par le protocole tomberait sinon à l'étage 3, c'est-à-dire hors
+ * du prompt minimal — qui est justement ce qu'on construit.
+ *
+ * **Le serveur décide, le client rend.** L'étage part avec chaque question ;
+ * le client ne le recalcule pas. Deux calculs séparés divergent, et c'est déjà
+ * arrivé dans ce dépôt avec `retenue()`.
+ */
+export function etageDe(question: Question, classe: string): 1 | 2 | 3 | null {
+  if (QUESTIONS_ESSENTIELLES.includes(question.numero)) return 1;
+  if (!retenue(question, classe)) return null;
+  return question.optionnelle ? 3 : 2;
 }
 
 /**
@@ -167,7 +241,7 @@ export function assembler(cadrage: Cadrage, matiere: Matiere): string {
     }
 
     for (const question of questions) {
-      const reponse = (cadrage.reponses[question.numero] ?? "").trim();
+      const reponse = valeurRetenue(cadrage.reponses[question.numero]).trim();
       corps.push(`**${question.numero} · ${question.texte}**`);
       if (reponse) {
         // Une réponse multiligne se cite en bloc, sinon la deuxième ligne se
