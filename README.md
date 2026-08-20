@@ -6,14 +6,65 @@
 
 # MIP Studio
 
-On remplit un formulaire de conception, il en sort le **prompt initial** — celui
-qu'on colle à un agent pour qu'il sache quoi construire, dans quel ordre, et à
-quoi il n'a pas le droit de toucher.
+**Répondez à quelques questions sur ce que vous voulez construire. Repartez avec
+un prompt qui fait travailler votre IA correctement.**
 
-Le protocole et le balisage viennent de `miyukini-cog`, où ils vivaient mêlés à
-un monorepo. Ce dépôt les en sort.
+[mip.miyukini.org](https://mip.miyukini.org) · MIT · TypeScript
 
-## Pourquoi
+---
+
+## Le problème
+
+On ouvre une IA, on décrit son projet en trois phrases, elle part sur une
+mauvaise piste, on rattrape, on refait. Le défaut n'est pas dans le modèle : il
+est dans ce qu'on lui a donné.
+
+Un chef de projet expérimenté pose une vingtaine de questions avant d'écrire une
+ligne de code — à quoi ça sert, pour qui, qu'est-ce qui est hors périmètre, quel
+est le risque, qu'est-ce qu'on abandonne. **MIP Studio pose ces questions à votre
+place, et met vos réponses dans la forme qu'un agent suit.**
+
+## Ce que ça donne
+
+Un document en Markdown, prêt à coller, qui dit à votre agent :
+
+- ce qu'il faut construire, et pour qui ;
+- ce qui a été décidé — et **ce qui ne l'a pas été**, pour qu'il le demande au
+  lieu de le deviner ;
+- où s'arrêter et demander votre accord ;
+- ce qu'il doit produire, et à quel format.
+
+Les questions ne sont pas inventées. Elles viennent de méthodes de conception
+éprouvées — Design Thinking, 5 Whys, Six Thinking Hats, SCAMPER, Lightning
+Decision Jam — regroupées en six sections. Le protocole complet, dit **MIP**,
+existe et tourne sur des projets réels depuis mars 2026.
+
+## Ce que ça n'est pas
+
+Ce n'est pas un générateur de code, ni un agent. **MIP Studio prépare le
+travail ; c'est votre IA qui le fait.** Il ne remplace ni Claude Code, ni Cursor,
+ni Copilot — il leur donne de quoi ne pas se tromper de projet.
+
+## Le balisage MSCM
+
+Le second morceau du dépôt. Chaque unité de sens du code porte cinq annotations
+en commentaire, et un index se reconstruit à partir d'elles :
+
+```
+@id     identifiant unique et hiérarchique
+@do     ce que fait l'unité
+@role   securite | donnee | orchestration | ui | config | rule
+@layer  core | domain | infra | outil | ui | doc
+@human  une phrase lisible, pour qui n'a pas le code sous les yeux
+```
+
+L'index se vérifie : identifiant unique, aucun bloc orphelin, aucun cycle. Un
+agent qui doit modifier un projet balisé sait où il met les pieds sans relire
+tout le code.
+
+---
+
+## Pourquoi ce dépôt existe
 
 Le protocole MIP pèse **23 Mo**. Personne ne peut le donner à la main à un
 agent, et personne ne relit vingt-cinq questions de cadrage avant chaque
@@ -21,10 +72,10 @@ séquence. Résultat prévisible : on saute le cadrage, ou on en fait une versio
 appauvrie de mémoire.
 
 Une deuxième raison, moins visible et plus décisive : **le balisage MSCM existait
-déjà en deux exemplaires divergents** — une version Rust dans `miyukini-cog` qui
-ne scannait que les fichiers `.rs`, une version Python dans `alicia` qui lisait
-cinq langages et vérifiait l'intégrité. Deux copies d'un même outil qui dérivent
-depuis mars. C'est le symptôme qu'une extraction règle.
+déjà en deux exemplaires divergents** — une version Rust qui ne scannait que les
+fichiers `.rs`, une version Python qui lisait cinq langages et vérifiait
+l'intégrité. Deux copies d'un même outil qui dérivent depuis mars. Un protocole
+qu'on ne sait pas distribuer se fragmente chez son propre auteur.
 
 ## Ce qu'on obtient
 
