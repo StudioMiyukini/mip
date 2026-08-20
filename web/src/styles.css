@@ -158,3 +158,66 @@ body {
 }
 .porte .principal:disabled { opacity: 0.5; cursor: default; }
 .refus { color: var(--alerte); font-size: 13px; margin: 0; }
+
+/* ── les étages ──────────────────────────────────────────────────────────
+   La barre de progression est cliquable dans les deux sens : on peut avancer,
+   mais aussi revenir. Un formulaire qui ne laisse pas revenir en arrière se
+   remplit une fois, avec prudence — donc mal. */
+.etages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+@media (max-width: 700px) { .etages { grid-template-columns: 1fr; } }
+
+.etage {
+  display: flex; align-items: center; gap: 11px; text-align: left;
+  font: inherit; cursor: pointer; padding: 11px 13px; border-radius: var(--rayon);
+  border: 1px solid var(--trait); background: var(--carte); color: var(--doux);
+}
+.etage:hover { border-color: var(--accent); }
+.etage.atteint { color: var(--texte); border-color: var(--accent); }
+.etage-rang {
+  flex: none; width: 25px; height: 25px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 12px; font-family: var(--mono);
+  background: var(--fond); border: 1px solid var(--trait);
+}
+.etage.atteint .etage-rang { background: var(--accent); border-color: var(--accent); color: #fff; }
+.etage-corps { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.etage-corps strong { font-size: 14px; font-weight: 600; }
+.etage-gain { font-size: 12px; color: var(--doux); }
+.etage-reste {
+  flex: none; margin-left: auto; font-family: var(--mono); font-size: 11px;
+  color: var(--doux); background: var(--fond); border-radius: 999px; padding: 2px 7px;
+}
+
+/* Le palier de fin d'étage. Il dit « c'est utilisable maintenant » — sans lui,
+   personne ne sait qu'il peut s'arrêter, et qui ne sait pas qu'il peut
+   s'arrêter abandonne au lieu de finir. */
+.palier {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  background: var(--carte); border: 1px solid var(--accent);
+  border-radius: var(--rayon); padding: 15px 16px;
+}
+.palier .explication { margin: 3px 0 0; }
+
+/* ── une suggestion n'est pas une réponse ────────────────────────────────
+   Elle est hachurée, pas colorée : une couleur seule ne se voit pas en
+   daltonisme, et rien dans le texte d'une invention ne la distingue d'une
+   réponse. */
+.controle.suggere,
+.cran.actif.suggere {
+  border-style: dashed;
+  border-color: var(--accent);
+  background-image: repeating-linear-gradient(
+    -45deg, transparent, transparent 7px,
+    color-mix(in srgb, var(--accent) 8%, transparent) 7px,
+    color-mix(in srgb, var(--accent) 8%, transparent) 14px
+  );
+}
+.question.a-relire { border-left: 2px solid var(--accent); padding-left: 11px; }
+
+.suggestion {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-top: 7px;
+  font-size: 12px; color: var(--doux);
+}
+.suggestion .boutons button { padding: 5px 11px; font-size: 13px; min-height: 32px; }
+.suggestion-dit { flex: 1; min-width: 220px; }

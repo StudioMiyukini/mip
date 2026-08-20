@@ -12,7 +12,7 @@ import Fastify from "fastify";
 
 import { bassin, matiere, RACINE } from "./bd.js";
 import { BISCUIT, duTunnel, jetonDe, Porte } from "./porte.js";
-import { assembler, retenue, type Cadrage } from "./prompt.js";
+import { assembler, etagesDe, QUESTIONS_ESSENTIELLES, retenue, type Cadrage } from "./prompt.js";
 
 // 8976 : 8971, 8974 et 8975 sont deja pris sur cette machine. Le port est
 // surchargeable par MIP_PORT — le codage en dur d'un port libre aujourd'hui est
@@ -96,7 +96,13 @@ serveur.get("/api/formulaire", async () => {
   const agents = await bassin.query(
     "SELECT code, nom, role, phases, optionnel, jetons FROM agent ORDER BY optionnel, code",
   );
-  return { ...donnees, agents: agents.rows };
+  // L'etage part avec la question, pour toutes les classes. Le client lit
+  // dedans ; il ne recalcule rien.
+  const sections = donnees.sections.map((section) => ({
+    ...section,
+    questions: section.questions.map((q) => ({ ...q, etages: etagesDe(q) })),
+  }));
+  return { ...donnees, sections, agents: agents.rows, essentielles: QUESTIONS_ESSENTIELLES };
 });
 
 /** Ce qu'un formulaire rempli envoie. */

@@ -150,6 +150,18 @@ export function etageDe(question: Question, classe: string): 1 | 2 | 3 | null {
 }
 
 /**
+ * L'étage de la question **à chaque classe**, calculé une fois.
+ *
+ * Le client choisit la classe en cours de saisie ; recalculer chez lui, ou
+ * redemander au serveur à chaque changement, sont deux façons de se tromper.
+ * On envoie la table entière — cinq entiers par question, quelques centaines
+ * d'octets pour tout le formulaire.
+ */
+export function etagesDe(question: Question): Record<string, 1 | 2 | 3 | null> {
+  return Object.fromEntries(CLASSES.map((classe) => [classe, etageDe(question, classe)]));
+}
+
+/**
  * Le prompt initial, en Markdown.
  *
  * Le Markdown n'est pas un choix esthétique : c'est le seul format qu'un modèle

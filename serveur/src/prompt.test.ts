@@ -23,6 +23,7 @@ import { describe, it } from "node:test";
 import {
   assembler,
   etageDe,
+  etagesDe,
   QUESTIONS_ESSENTIELLES,
   retenue,
   valeurRetenue,
@@ -136,6 +137,23 @@ describe("l'étagement", () => {
     // avant l'appartenance aux essentielles, 2.2 tomberait à l'étage 3.
     const essentielle = QUESTIONS_ESSENTIELLES[0];
     assert.equal(etageDe(question(essentielle, "T3", true), "T3"), 1);
+  });
+});
+
+describe("l'étage voyage avec la question", () => {
+  it("chaque classe a son étage, calculé une fois pour toutes", () => {
+    // Le client ne recalcule pas : il reçoit la table et lit dedans. Un
+    // recalcul côté client diverge — c'est déjà arrivé avec `retenue()`.
+    const table = etagesDe(question("4.4", "T4", true));
+    assert.deepEqual(table, { T1: null, T2: null, T3: null, T4: 3, T5: 3 });
+  });
+
+  it("une essentielle est à l'étage 1 à toutes les classes", () => {
+    // Y compris T1 et T2, où le protocole ne pose presque rien : l'étage 1
+    // est le socle du prompt, pas une option de la classe.
+    assert.deepEqual(etagesDe(question("1.1", "T3")), {
+      T1: 1, T2: 1, T3: 1, T4: 1, T5: 1,
+    });
   });
 });
 
