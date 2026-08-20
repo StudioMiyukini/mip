@@ -221,3 +221,12 @@ body {
 }
 .suggestion .boutons button { padding: 5px 11px; font-size: 13px; min-height: 32px; }
 .suggestion-dit { flex: 1; min-width: 220px; }
+
+/* Le bandeau des suggestions en attente. Il est en haut, avant les étages :
+   savoir que des champs sont proposés change la façon de lire le formulaire. */
+.a-relire-bandeau {
+  margin: 0 0 14px; padding: 11px 14px; font-size: 13px;
+  background: var(--carte); color: var(--doux);
+  border: 1px dashed var(--accent); border-radius: var(--rayon);
+}
+.a-relire-bandeau strong { color: var(--texte); }

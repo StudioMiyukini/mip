@@ -67,6 +67,52 @@ export function App() {
       .catch((e) => setErreur(String(e)));
   }, [ouverte]);
 
+  /**
+   * Les suggestions, demandées quand la demande cesse de bouger.
+   *
+   * **Elles ne remplacent jamais rien.** Une suggestion ne se pose que sur un
+   * champ vide : si l'on a déjà répondu — ou déjà confirmé une suggestion
+   * précédente — elle est écartée en silence. Écraser une réponse humaine par
+   * une proposition de modèle serait le pire défaut possible de cette fonction.
+   *
+   * **Le formulaire ne l'attend pas.** 7 s à chaud, 55 s à froid : bloquer la
+   * saisie sur cette réponse rendrait l'outil pénible pour un gain de confort.
+   * Une panne du modèle ne produit ni message ni bandeau — la liste est vide, et
+   * c'est tout.
+   */
+  const suggestionEnCours = useRef<string>("");
+  useEffect(() => {
+    if (!formulaire) return;
+    const demande = cadrage.demande.trim();
+    if (demande.length < 25 || demande === suggestionEnCours.current) return;
+
+    const attente = window.setTimeout(() => {
+      suggestionEnCours.current = demande;
+      fetch("/api/suggerer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ demande }),
+      })
+        .then((r) => r.json())
+        .then((d: { suggestions: Record<string, { valeur: string; etat: "suggere" }> }) => {
+          const proposees = Object.entries(d.suggestions ?? {});
+          if (!proposees.length) return;
+          setCadrage((c) => {
+            const reponses = { ...c.reponses };
+            for (const [numero, suggestion] of proposees) {
+              if (texteDe(reponses[numero]).trim()) continue; // déjà rempli : on ne touche pas
+              reponses[numero] = suggestion;
+            }
+            return { ...c, reponses };
+          });
+        })
+        .catch(() => {
+          // Muet, volontairement : le pré-remplissage est un confort.
+        });
+    }, 1200);
+    return () => window.clearTimeout(attente);
+  }, [cadrage.demande, formulaire]);
+
   // L'aperçu se recalcule au fil de la frappe, mais pas à chaque touche : le
   // prompt fait plusieurs milliers de caractères, et le reconstruire vingt fois
   // par seconde ferait sauter le curseur dans les zones de texte.
@@ -113,6 +159,9 @@ export function App() {
     }
     return par;
   }, [formulaire, cadrage.classe, cadrage.reponses]);
+
+  /** Combien de suggestions attendent une relecture. */
+  const aRelire = Object.values(cadrage.reponses).filter((r) => etatDe(r) === "suggere").length;
 
   if (ouverte === null) return <main className="page"><p className="explication">…</p></main>;
   if (ouverte === false) return <Porte surOuverture={() => setOuverte(true)} />;
@@ -216,6 +265,15 @@ export function App() {
           </p>
         </div>
       </header>
+
+      {aRelire > 0 && (
+        <p className="a-relire-bandeau">
+          <strong>{aRelire}</strong> réponse{aRelire > 1 ? "s" : ""} proposée
+          {aRelire > 1 ? "s" : ""} à partir de votre demande —{" "}
+          <em>à relire avant de compter</em>. Une proposition n'est pas une réponse : elle
+          n'entre pas dans le prompt tant que vous ne l'avez pas confirmée.
+        </p>
+      )}
 
       <Etages etage={etage} surChangement={setEtage} restantes={restantes} />
 

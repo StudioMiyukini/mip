@@ -13,6 +13,7 @@ import Fastify from "fastify";
 import { bassin, matiere, RACINE } from "./bd.js";
 import { BISCUIT, duTunnel, jetonDe, Porte } from "./porte.js";
 import { assembler, etagesDe, QUESTIONS_ESSENTIELLES, retenue, type Cadrage } from "./prompt.js";
+import { consigne, lireSuggestions } from "./suggestion.js";
 
 // 8976 : 8971, 8974 et 8975 sont deja pris sur cette machine. Le port est
 // surchargeable par MIP_PORT — le codage en dur d'un port libre aujourd'hui est
@@ -134,6 +135,75 @@ function normaliser(corps: CorpsCadrage): Cadrage {
 serveur.post("/api/apercu", async (requete) => {
   const cadrage = normaliser(requete.body as CorpsCadrage);
   return { prompt: assembler(cadrage, await matiere()) };
+});
+
+/** Le modèle local. Jamais distant : rien de ce qui est saisi ne sort d'ici. */
+const MODELE = process.env.MIP_MODELE ?? "qwen/qwen3.5-9b";
+const MODELE_URL = process.env.MIP_MODELE_URL ?? "http://127.0.0.1:1234/v1";
+
+/**
+ * Le délai du modèle.
+ *
+ * Mesuré : 23,5 s à chaud sur une vraie demande, 55 s au chargement à froid. Le
+ * premier plafond était à 25 s — une marge d'une seconde et demie, c'est-à-dire
+ * aucune. Comme l'appel ne bloque rien, attendre plus longtemps ne coûte rien ;
+ * couper trop tôt, si.
+ */
+const DELAI_MODELE = 45_000;
+
+/**
+ * Propose des réponses à partir de la demande libre.
+ *
+ * **Rien ici ne peut produire une réponse** — seulement des suggestions, que
+ * l'interface affiche hachurées et que l'assembleur ignore tant qu'un humain
+ * ne les a pas confirmées. Le modèle invente : c'est mesuré, et c'est pourquoi
+ * la garantie est structurelle plutôt que d'être demandée dans la consigne.
+ *
+ * **La panne est un cas normal, pas une erreur.** Modèle éteint, occupé par
+ * Alicia, ou trop lent : on rend une liste vide et le formulaire continue. Un
+ * code d'erreur ferait afficher un bandeau rouge pour une fonction de confort.
+ */
+serveur.post("/api/suggerer", async (requete) => {
+  const { demande } = (requete.body ?? {}) as { demande?: string };
+  const texte = (demande ?? "").trim();
+  // Sous quelques mots, il n'y a rien à déduire — et le modèle comblerait le
+  // vide en inventant, ce qu'il fait déjà quand il a de la matière.
+  if (texte.length < 25) return { suggestions: {} };
+
+  const questions = (await matiere()).sections.flatMap((s) => s.questions);
+
+  try {
+    const reponse = await fetch(`${MODELE_URL}/chat/completions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(DELAI_MODELE),
+      body: JSON.stringify({
+        model: MODELE,
+        temperature: 0,
+        max_tokens: 500,
+        messages: [
+          { role: "system", content: consigne() },
+          { role: "user", content: texte },
+          // Le bloc de raisonnement **déjà fermé**. Aucun levier de l'API ne
+          // l'éteint — `enable_thinking`, `reasoning.enabled` et
+          // `reasoning_effort` ont été essayés, tous sans effet. Sans cette
+          // amorce, le raisonnement mange le plafond de jetons et le contenu
+          // revient vide ([D54] d'Alicia, reproduit ici à l'identique).
+          { role: "assistant", content: "<think></think>" },
+        ],
+      }),
+    });
+    if (!reponse.ok) return { suggestions: {} };
+
+    const charge = (await reponse.json()) as {
+      choices?: Array<{ message?: { content?: string } }>;
+    };
+    const brut = charge.choices?.[0]?.message?.content ?? "";
+    return { suggestions: lireSuggestions(brut, questions) };
+  } catch {
+    // Volontairement muet. Le formulaire ne dépend pas de cette réponse.
+    return { suggestions: {} };
+  }
 });
 
 serveur.get("/api/cadrages", async () => {
