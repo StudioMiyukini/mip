@@ -1,0 +1,402 @@
+[
+  {
+    "id": "mip",
+    "file": "README.md",
+    "start_line": 1,
+    "end_line": 114,
+    "role": "orchestration",
+    "layer": "doc",
+    "do": "cadrer_une_sequence_de_developpement_et_en_produire_le_prompt",
+    "human": "MIP Studio : le protocole MIP et le balisage MSCM, extraits en application de cadrage"
+  },
+  {
+    "id": "mip.bd",
+    "file": "serveur/src/bd.ts",
+    "start_line": 1,
+    "end_line": 87,
+    "role": "donnee",
+    "layer": "infra",
+    "do": "ouvrir_la_base_et_lire_le_protocole",
+    "human": "La connexion PostgreSQL, et la lecture du protocole"
+  },
+  {
+    "id": "mip.bd.conteneur",
+    "file": "docker-compose.yml",
+    "start_line": 1,
+    "end_line": 38,
+    "role": "config",
+    "layer": "infra",
+    "do": "fournir_une_base_postgresql_dediee",
+    "human": "La base : dédiée, sur un port qui n'entre en conflit avec rien"
+  },
+  {
+    "id": "mip.bd.ingestion",
+    "file": "serveur/src/ingerer.ts",
+    "start_line": 1,
+    "end_line": 151,
+    "role": "orchestration",
+    "layer": "infra",
+    "do": "ingerer_le_pack_extrait_dans_la_base",
+    "human": "L'ingestion : du pack extrait vers la base"
+  },
+  {
+    "id": "mip.bd.migration",
+    "file": "serveur/src/appliquer-schema.ts",
+    "start_line": 1,
+    "end_line": 12,
+    "role": "orchestration",
+    "layer": "infra",
+    "do": "appliquer_le_schema_sur_la_base",
+    "human": "Poser le schéma sur une base neuve ou existante"
+  },
+  {
+    "id": "mip.comptes",
+    "file": "serveur/src/comptes.ts",
+    "start_line": 1,
+    "end_line": 131,
+    "role": "securite",
+    "layer": "core",
+    "do": "identifier_un_utilisateur_et_borner_l_acces_a_ses_cadrages",
+    "human": "Les comptes : s'identifier, et ne voir que ses propres cadrages"
+  },
+  {
+    "id": "mip.comptes.essais",
+    "file": "serveur/src/comptes.test.ts",
+    "start_line": 1,
+    "end_line": 104,
+    "role": "rule",
+    "layer": "core",
+    "do": "eprouver_l_identification_et_l_appartenance_des_cadrages",
+    "human": "Les essais des comptes : l'adresse, le mot de passe, et à qui appartient un cadrage"
+  },
+  {
+    "id": "mip.confidentialite",
+    "file": "CONFIDENTIALITE.md",
+    "start_line": 1,
+    "end_line": 95,
+    "role": "rule",
+    "layer": "doc",
+    "do": "dire_ce_qui_est_collecte_ou_c_est_heberge_et_comment_l_effacer",
+    "human": "La politique de confidentialité : courte, parce qu'on collecte peu"
+  },
+  {
+    "id": "mip.decisions",
+    "file": "README.md",
+    "start_line": 115,
+    "end_line": 184,
+    "role": "rule",
+    "layer": "doc",
+    "do": "consigner_les_decisions_et_leur_raison",
+    "human": "Les décisions prises pendant l'extraction, avec leur motif"
+  },
+  {
+    "id": "mip.doc",
+    "file": "docs/README.md",
+    "start_line": 1,
+    "end_line": 25,
+    "role": "config",
+    "layer": "doc",
+    "do": "orienter_la_lecture_de_la_documentation",
+    "human": "La carte de la documentation : quatre portes selon ce qu'on cherche"
+  },
+  {
+    "id": "mip.doc.developpement",
+    "file": "docs/developpement.md",
+    "start_line": 1,
+    "end_line": 160,
+    "role": "config",
+    "layer": "doc",
+    "do": "expliquer_l_architecture_et_comment_contribuer",
+    "human": "La documentation développeur : monter le projet, le comprendre, y contribuer"
+  },
+  {
+    "id": "mip.doc.guide",
+    "file": "docs/guide.md",
+    "start_line": 1,
+    "end_line": 130,
+    "role": "config",
+    "layer": "doc",
+    "do": "expliquer_l_usage_de_mip_studio_a_quelqu_un_qui_arrive",
+    "human": "Le guide d'utilisation : à quoi ça sert, comment s'en servir, et ce que ça ne fait pas"
+  },
+  {
+    "id": "mip.doc.protocole",
+    "file": "docs/protocole.md",
+    "start_line": 1,
+    "end_line": 125,
+    "role": "config",
+    "layer": "doc",
+    "do": "expliquer_le_protocole_mip_a_qui_recoit_un_prompt",
+    "human": "Le protocole MIP : les classes, les phases, les gates et les rôles"
+  },
+  {
+    "id": "mip.extraction",
+    "file": "extraction/src/extraire.ts",
+    "start_line": 1,
+    "end_line": 412,
+    "role": "orchestration",
+    "layer": "outil",
+    "do": "extraire_le_protocole_mip_depuis_le_depot_d_origine",
+    "human": "L'extraction : lire .mip/ dans miyukini-cog et en faire un pack exploitable"
+  },
+  {
+    "id": "mip.extraction.champ",
+    "file": "extraction/src/champs.ts",
+    "start_line": 1,
+    "end_line": 81,
+    "role": "donnee",
+    "layer": "outil",
+    "do": "deduire_le_controle_de_saisie_depuis_le_libelle",
+    "human": "Le contrôle de saisie, déduit de la question elle-même"
+  },
+  {
+    "id": "mip.extraction.encodage",
+    "file": "extraction/src/encodage.ts",
+    "start_line": 1,
+    "end_line": 104,
+    "role": "donnee",
+    "layer": "outil",
+    "do": "lire_un_fichier_en_reparant_son_double_encodage",
+    "human": "La lecture qui répare le double encodage plutôt que de le propager"
+  },
+  {
+    "id": "mip.extraction.markdown",
+    "file": "extraction/src/markdown.ts",
+    "start_line": 1,
+    "end_line": 69,
+    "role": "donnee",
+    "layer": "outil",
+    "do": "lire_les_tableaux_markdown_en_lignes_exploitables",
+    "human": "Les tableaux Markdown, qui portent l'essentiel du protocole"
+  },
+  {
+    "id": "mip.porte",
+    "file": "serveur/src/porte.ts",
+    "start_line": 1,
+    "end_line": 119,
+    "role": "securite",
+    "layer": "core",
+    "do": "proteger_l_acces_venu_du_tunnel_par_un_mot_de_passe",
+    "human": "La porte : ce qui vient du tunnel doit donner le mot de passe"
+  },
+  {
+    "id": "mip.porte.empreinte",
+    "file": "serveur/src/empreinte.ts",
+    "start_line": 1,
+    "end_line": 23,
+    "role": "securite",
+    "layer": "outil",
+    "do": "calculer_l_empreinte_d_un_mot_de_passe",
+    "human": "Calculer l'empreinte d'un mot de passe, sans qu'il touche un fichier"
+  },
+  {
+    "id": "mip.prompt",
+    "file": "serveur/src/prompt.ts",
+    "start_line": 1,
+    "end_line": 412,
+    "role": "orchestration",
+    "layer": "core",
+    "do": "assembler_le_prompt_initial_depuis_les_reponses_de_cadrage",
+    "human": "L'assembleur : des réponses de formulaire vers un prompt qu'on colle"
+  },
+  {
+    "id": "mip.prompt.essais",
+    "file": "serveur/src/prompt.test.ts",
+    "start_line": 1,
+    "end_line": 237,
+    "role": "rule",
+    "layer": "core",
+    "do": "eprouver_l_etagement_et_le_traitement_des_suggestions",
+    "human": "Les essais de l'assembleur : l'étagement, et la suggestion qui n'est pas une réponse"
+  },
+  {
+    "id": "mip.publication",
+    "file": "README.md",
+    "start_line": 185,
+    "end_line": 241,
+    "role": "config",
+    "layer": "infra",
+    "do": "publier_l_application_derriere_un_tunnel_cloudflare",
+    "human": "La publication : le tunnel, la porte, et l'enregistrement PM2"
+  },
+  {
+    "id": "mip.serveur",
+    "file": "serveur/src/index.ts",
+    "start_line": 1,
+    "end_line": 586,
+    "role": "ui",
+    "layer": "ui",
+    "do": "servir_le_formulaire_et_assembler_les_prompts",
+    "human": "Le serveur : le formulaire, les cadrages, et le prompt assemblé"
+  },
+  {
+    "id": "mip.suggestion",
+    "file": "serveur/src/suggestion.ts",
+    "start_line": 1,
+    "end_line": 233,
+    "role": "securite",
+    "layer": "core",
+    "do": "proposer_des_reponses_sans_jamais_les_faire_passer_pour_des_reponses",
+    "human": "Le pré-remplissage : ce que le modèle propose, et ce qu'on en laisse passer"
+  },
+  {
+    "id": "mip.suggestion.essais",
+    "file": "serveur/src/suggestion.test.ts",
+    "start_line": 1,
+    "end_line": 172,
+    "role": "rule",
+    "layer": "core",
+    "do": "eprouver_les_garde_fous_du_pre_remplissage",
+    "human": "Les essais du pré-remplissage : surtout ce qu'il n'a pas le droit de faire"
+  },
+  {
+    "id": "mip.web",
+    "file": "web/src/App.tsx",
+    "start_line": 1,
+    "end_line": 484,
+    "role": "ui",
+    "layer": "ui",
+    "do": "remplir_un_cadrage_par_etages_et_en_voir_sortir_le_prompt",
+    "human": "Le formulaire de cadrage, par étages, et le prompt qu'il produit"
+  },
+  {
+    "id": "mip.web.champ",
+    "file": "web/src/Champ.tsx",
+    "start_line": 1,
+    "end_line": 154,
+    "role": "ui",
+    "layer": "ui",
+    "do": "rendre_le_controle_de_saisie_adapte_a_la_question",
+    "human": "Un champ de formulaire, choisi selon la question — et son état"
+  },
+  {
+    "id": "mip.web.compte",
+    "file": "web/src/Compte.tsx",
+    "start_line": 1,
+    "end_line": 261,
+    "role": "ui",
+    "layer": "ui",
+    "do": "gerer_l_inscription_la_connexion_et_l_effacement_du_compte",
+    "human": "Le compte : s'inscrire pour sauvegarder, et pouvoir tout effacer"
+  },
+  {
+    "id": "mip.web.document",
+    "file": "web/src/Document.tsx",
+    "start_line": 1,
+    "end_line": 56,
+    "role": "ui",
+    "layer": "ui",
+    "do": "rendre_un_document_markdown_du_depot",
+    "human": "Les pages en Markdown : confidentialité, licence, documentation"
+  },
+  {
+    "id": "mip.web.entree",
+    "file": "web/src/main.tsx",
+    "start_line": 1,
+    "end_line": 17,
+    "role": "ui",
+    "layer": "ui",
+    "do": "monter_l_application_react",
+    "human": "Le point d'entrée du client React"
+  },
+  {
+    "id": "mip.web.etages",
+    "file": "web/src/Etages.tsx",
+    "start_line": 1,
+    "end_line": 108,
+    "role": "ui",
+    "layer": "ui",
+    "do": "montrer_la_progression_par_etages_et_ce_que_chacun_apporte",
+    "human": "Les trois étages : où l'on en est, et ce qu'on gagne à continuer"
+  },
+  {
+    "id": "mip.web.pied",
+    "file": "web/src/Pied.tsx",
+    "start_line": 1,
+    "end_line": 30,
+    "role": "ui",
+    "layer": "ui",
+    "do": "rendre_la_documentation_atteignable_depuis_l_application",
+    "human": "Le pied de page : où trouver le guide, le protocole, et le reste"
+  },
+  {
+    "id": "mip.web.porte",
+    "file": "web/src/Porte.tsx",
+    "start_line": 1,
+    "end_line": 72,
+    "role": "securite",
+    "layer": "ui",
+    "do": "demander_le_mot_de_passe_quand_la_porte_est_fermee",
+    "human": "L'écran de mot de passe, quand la demande vient du tunnel"
+  },
+  {
+    "id": "mip.web.tags",
+    "file": "web/src/Tags.tsx",
+    "start_line": 1,
+    "end_line": 75,
+    "role": "ui",
+    "layer": "ui",
+    "do": "activer_ou_desactiver_des_elements_par_pertinence",
+    "human": "Les tags : ce qu'on active selon la pertinence"
+  },
+  {
+    "id": "mip.web.types",
+    "file": "web/src/types.ts",
+    "start_line": 1,
+    "end_line": 132,
+    "role": "donnee",
+    "layer": "ui",
+    "do": "decrire_les_donnees_echangees_avec_le_serveur",
+    "human": "Le contrat entre le serveur et le formulaire"
+  },
+  {
+    "id": "mscm",
+    "file": "mscm/src/mscm.ts",
+    "start_line": 2,
+    "end_line": 214,
+    "role": "orchestration",
+    "layer": "outil",
+    "do": "parcourir_un_projet_et_generer_ou_verifier_son_index",
+    "human": "Le générateur d'index MSCM : un outil, cinq familles de langages"
+  },
+  {
+    "id": "mscm.balisage",
+    "file": "mscm/src/balisage.ts",
+    "start_line": 1,
+    "end_line": 307,
+    "role": "donnee",
+    "layer": "outil",
+    "do": "extraire_les_blocs_mscm_d_un_fichier_source",
+    "human": "L'extraction : repérer les commentaires, puis y lire les champs"
+  },
+  {
+    "id": "mscm.essais",
+    "file": "mscm/src/mscm.test.ts",
+    "start_line": 1,
+    "end_line": 286,
+    "role": "rule",
+    "layer": "outil",
+    "do": "eprouver_l_extraction_et_les_controles_d_integrite",
+    "human": "Les essais du balisage : ce qu'on lit, et ce qu'on refuse"
+  },
+  {
+    "id": "mscm.index",
+    "file": "mscm/src/index-mscm.ts",
+    "start_line": 1,
+    "end_line": 149,
+    "role": "donnee",
+    "layer": "outil",
+    "do": "construire_les_dix_fichiers_de_l_index",
+    "human": "La construction des dix fichiers de l'index, au schéma canonique"
+  },
+  {
+    "id": "mscm.integrite",
+    "file": "mscm/src/integrite.ts",
+    "start_line": 1,
+    "end_line": 68,
+    "role": "rule",
+    "layer": "outil",
+    "do": "verifier_les_regles_d_integrite_de_l_index",
+    "human": "Les contrôles : unicité, filiation, domaine, absence de cycle"
+  }
+]

@@ -6,6 +6,9 @@
 
 export type TypeChamp = "texte" | "ligne" | "liste" | "cases" | "echelle" | "oui_non";
 
+/** Les trois étages du formulaire. `null` : la question n'est pas posée ici. */
+export type Etage = 1 | 2 | 3;
+
 export interface Question {
   numero: string;
   section: string;
@@ -17,6 +20,13 @@ export interface Question {
   options: string[];
   aide: string;
   rang: number;
+  /**
+   * L'étage de la question **à chaque classe**, calculé par le serveur.
+   *
+   * Le client lit dedans, il ne recalcule pas. Deux calculs séparés divergent,
+   * et c'est déjà arrivé dans ce dépôt avec `retenue()`.
+   */
+  etages: Record<string, Etage | null>;
 }
 
 export interface Section {
@@ -72,23 +82,51 @@ export interface Formulaire {
   skills: Skill[];
   modules: Module[];
   certifications: Certification[];
+  essentielles: string[];
 }
+
+/**
+ * L'état d'une réponse.
+ *
+ * **`suggere` n'est pas une réponse.** Le modèle qui pré-remplit invente — c'est
+ * mesuré, pas supposé — et une invention est plausible, bien écrite, et occupe
+ * le champ exactement comme une réponse. Tant que personne ne l'a confirmée,
+ * elle ne compte pas.
+ */
+export type Etat = "repondu" | "suggere";
+
+export interface Reponse {
+  valeur: string;
+  etat: Etat;
+}
+
+export type ReponseBrute = string | Reponse;
 
 export interface Cadrage {
   titre: string;
   demande: string;
   classe: string;
   mode: string;
-  reponses: Record<string, string>;
+  reponses: Record<string, ReponseBrute>;
   agents: string[];
   skills: string[];
   modules: string[];
   certifications: string[];
 }
 
-const CLASSES = ["T1", "T2", "T3", "T4", "T5"];
+/** Le texte d'une réponse, quel que soit son état. */
+export function texteDe(reponse: ReponseBrute | undefined): string {
+  if (reponse === undefined) return "";
+  return typeof reponse === "string" ? reponse : reponse.valeur;
+}
 
-/** La question est-elle posée à cette classe ? « depuis T4 » veut dire T4 et T5. */
-export function retenue(question: Question, classe: string): boolean {
-  return CLASSES.indexOf(classe) >= CLASSES.indexOf(question.depuis);
+/** L'état d'une réponse. Une chaîne nue a été écrite par un humain. */
+export function etatDe(reponse: ReponseBrute | undefined): Etat | null {
+  if (reponse === undefined) return null;
+  return typeof reponse === "string" ? "repondu" : reponse.etat;
+}
+
+/** La réponse compte-t-elle ? Une suggestion non confirmée, non. */
+export function compte(reponse: ReponseBrute | undefined): boolean {
+  return etatDe(reponse) === "repondu" && texteDe(reponse).trim() !== "";
 }

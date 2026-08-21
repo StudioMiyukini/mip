@@ -4,7 +4,12 @@
   "version": "0.1.0",
   "description": "Le protocole MIP et le balisage MSCM, extraits en application de cadrage.",
   "type": "module",
-  "workspaces": ["extraction", "serveur", "web"],
+  "workspaces": [
+    "extraction",
+    "mscm",
+    "serveur",
+    "web"
+  ],
   "scripts": {
     "extraire": "npm run -w extraction extraire",
     "bd:monter": "docker compose up -d",
@@ -12,8 +17,13 @@
     "ingerer": "npm run -w serveur ingerer",
     "serveur": "npm run -w serveur dev",
     "web": "npm run -w web dev",
-    "verifier": "npm run -w extraction verifier && npm run -w serveur verifier && npm run -w web verifier",
-    "installer": "npm run extraire && npm run bd:schema && npm run ingerer"
+    "verifier": "npm run -w extraction verifier && npm run -w mscm verifier && npm run -w serveur verifier && npm run -w web verifier",
+    "installer": "npm run extraire && npm run bd:schema && npm run ingerer",
+    "mscm": "tsx mscm/src/mscm.ts --ignorer pack",
+    "essais": "npm run -w mscm essais && npm run -w serveur essais",
+    "mscm:verifier": "tsx mscm/src/mscm.ts --ignorer pack --verifier"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }

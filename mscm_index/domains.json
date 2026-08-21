@@ -1,0 +1,78 @@
+{
+  "balisage": [
+    "mscm.balisage"
+  ],
+  "bd": [
+    "mip.bd",
+    "mip.bd.conteneur",
+    "mip.bd.ingestion",
+    "mip.bd.migration"
+  ],
+  "comptes": [
+    "mip.comptes",
+    "mip.comptes.essais"
+  ],
+  "confidentialite": [
+    "mip.confidentialite"
+  ],
+  "decisions": [
+    "mip.decisions"
+  ],
+  "doc": [
+    "mip.doc",
+    "mip.doc.developpement",
+    "mip.doc.guide",
+    "mip.doc.protocole"
+  ],
+  "essais": [
+    "mscm.essais"
+  ],
+  "extraction": [
+    "mip.extraction",
+    "mip.extraction.champ",
+    "mip.extraction.encodage",
+    "mip.extraction.markdown"
+  ],
+  "index": [
+    "mscm.index"
+  ],
+  "integrite": [
+    "mscm.integrite"
+  ],
+  "mip": [
+    "mip"
+  ],
+  "mscm": [
+    "mscm"
+  ],
+  "porte": [
+    "mip.porte",
+    "mip.porte.empreinte"
+  ],
+  "prompt": [
+    "mip.prompt",
+    "mip.prompt.essais"
+  ],
+  "publication": [
+    "mip.publication"
+  ],
+  "serveur": [
+    "mip.serveur"
+  ],
+  "suggestion": [
+    "mip.suggestion",
+    "mip.suggestion.essais"
+  ],
+  "web": [
+    "mip.web",
+    "mip.web.champ",
+    "mip.web.compte",
+    "mip.web.document",
+    "mip.web.entree",
+    "mip.web.etages",
+    "mip.web.pied",
+    "mip.web.porte",
+    "mip.web.tags",
+    "mip.web.types"
+  ]
+}

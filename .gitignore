@@ -14,3 +14,9 @@ web/dist/
 .env
 .env.*
 !.env.exemple
+mscm/dist/
+
+# Le cadrage de la séquence : brief, décisions et spécifications.
+# Il reste local — il porte la stratégie, l'analyse des concurrents et des
+# références à des dépôts internes.
+.mip/

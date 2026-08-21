@@ -1,0 +1,118 @@
+{
+  "CONFIDENTIALITE.md": [
+    "mip.confidentialite"
+  ],
+  "README.md": [
+    "mip",
+    "mip.decisions",
+    "mip.publication"
+  ],
+  "docker-compose.yml": [
+    "mip.bd.conteneur"
+  ],
+  "docs/README.md": [
+    "mip.doc"
+  ],
+  "docs/developpement.md": [
+    "mip.doc.developpement"
+  ],
+  "docs/guide.md": [
+    "mip.doc.guide"
+  ],
+  "docs/protocole.md": [
+    "mip.doc.protocole"
+  ],
+  "extraction/src/champs.ts": [
+    "mip.extraction.champ"
+  ],
+  "extraction/src/encodage.ts": [
+    "mip.extraction.encodage"
+  ],
+  "extraction/src/extraire.ts": [
+    "mip.extraction"
+  ],
+  "extraction/src/markdown.ts": [
+    "mip.extraction.markdown"
+  ],
+  "mscm/src/balisage.ts": [
+    "mscm.balisage"
+  ],
+  "mscm/src/index-mscm.ts": [
+    "mscm.index"
+  ],
+  "mscm/src/integrite.ts": [
+    "mscm.integrite"
+  ],
+  "mscm/src/mscm.test.ts": [
+    "mscm.essais"
+  ],
+  "mscm/src/mscm.ts": [
+    "mscm"
+  ],
+  "serveur/src/appliquer-schema.ts": [
+    "mip.bd.migration"
+  ],
+  "serveur/src/bd.ts": [
+    "mip.bd"
+  ],
+  "serveur/src/comptes.test.ts": [
+    "mip.comptes.essais"
+  ],
+  "serveur/src/comptes.ts": [
+    "mip.comptes"
+  ],
+  "serveur/src/empreinte.ts": [
+    "mip.porte.empreinte"
+  ],
+  "serveur/src/index.ts": [
+    "mip.serveur"
+  ],
+  "serveur/src/ingerer.ts": [
+    "mip.bd.ingestion"
+  ],
+  "serveur/src/porte.ts": [
+    "mip.porte"
+  ],
+  "serveur/src/prompt.test.ts": [
+    "mip.prompt.essais"
+  ],
+  "serveur/src/prompt.ts": [
+    "mip.prompt"
+  ],
+  "serveur/src/suggestion.test.ts": [
+    "mip.suggestion.essais"
+  ],
+  "serveur/src/suggestion.ts": [
+    "mip.suggestion"
+  ],
+  "web/src/App.tsx": [
+    "mip.web"
+  ],
+  "web/src/Champ.tsx": [
+    "mip.web.champ"
+  ],
+  "web/src/Compte.tsx": [
+    "mip.web.compte"
+  ],
+  "web/src/Document.tsx": [
+    "mip.web.document"
+  ],
+  "web/src/Etages.tsx": [
+    "mip.web.etages"
+  ],
+  "web/src/Pied.tsx": [
+    "mip.web.pied"
+  ],
+  "web/src/Porte.tsx": [
+    "mip.web.porte"
+  ],
+  "web/src/Tags.tsx": [
+    "mip.web.tags"
+  ],
+  "web/src/main.tsx": [
+    "mip.web.entree"
+  ],
+  "web/src/types.ts": [
+    "mip.web.types"
+  ]
+}

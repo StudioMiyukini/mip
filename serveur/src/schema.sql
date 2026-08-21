@@ -94,6 +94,27 @@ CREATE TABLE protocole (
   valeur JSONB NOT NULL
 );
 
+-- ── les comptes ─────────────────────────────────────────────────────────
+
+-- **Le minimum de données possible.** Une adresse et une empreinte. Pas de nom,
+-- pas de téléphone, pas de traceur, pas de date de dernière visite. Ce qu'on ne
+-- collecte pas ne fuit pas, ne se supprime pas, et ne se déclare pas.
+--
+-- Le compte sert à **sauvegarder**, jamais à entrer : le formulaire fonctionne
+-- sans inscription, et c'est le critère de sortie du produit.
+
+CREATE TABLE IF NOT EXISTS utilisateur (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  -- Normalisée en minuscules avant insertion : sans ça « Jean@Exemple.FR » et
+  -- « jean@exemple.fr » sont deux comptes, et le second échoue en disant que
+  -- l'adresse est prise.
+  adresse    TEXT NOT NULL UNIQUE,
+  -- `sel$empreinte`. Le sel est propre au compte : un sel fixe permettrait de
+  -- casser tous les comptes d'un coup avec une seule table précalculée.
+  empreinte  TEXT NOT NULL,
+  cree_le    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- ── le travail, qui ne se régénère pas ──────────────────────────────────
 
 CREATE TABLE IF NOT EXISTS cadrage (
@@ -116,6 +137,21 @@ CREATE TABLE IF NOT EXISTS cadrage (
   -- l'assembleur a changé entre-temps.
   prompt         TEXT NOT NULL DEFAULT '',
   cree_le        TIMESTAMPTZ NOT NULL DEFAULT now(),
-  modifie_le     TIMESTAMPTZ NOT NULL DEFAULT now()
+  modifie_le     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  -- **`ON DELETE CASCADE`, et c'est une obligation, pas une commodité.**
+  -- Supprimer un compte doit supprimer ce qu'il a écrit — pour de bon, pas
+  -- marqué effacé. Un cadrage décrit un projet, parfois avant qu'il existe.
+  --
+  -- `NULL` couvre deux cas : les cadrages d'avant les comptes, et ceux d'un
+  -- visiteur qui n'en a pas. Ni les uns ni les autres ne sont publics — ils
+  -- n'appartiennent à personne, donc personne ne les lit par l'interface.
+  utilisateur    UUID REFERENCES utilisateur(id) ON DELETE CASCADE
 );
+-- **L'ordre compte, et il a été appris en le cassant.** Sur une base existante,
+-- le `CREATE TABLE IF NOT EXISTS` ci-dessus ne fait rien : la colonne
+-- `utilisateur` n'existe donc pas encore, et un index qui la référence échoue
+-- avant que le `ALTER` ait pu l'ajouter. La migration passe d'abord.
+ALTER TABLE cadrage ADD COLUMN IF NOT EXISTS utilisateur UUID REFERENCES utilisateur(id) ON DELETE CASCADE;
+
 CREATE INDEX IF NOT EXISTS cadrage_recents ON cadrage(modifie_le DESC);
+CREATE INDEX IF NOT EXISTS cadrage_par_utilisateur ON cadrage(utilisateur, modifie_le DESC);

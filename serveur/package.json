@@ -9,7 +9,8 @@
     "schema": "tsx src/appliquer-schema.ts",
     "ingerer": "tsx src/ingerer.ts",
     "verifier": "tsc --noEmit",
-    "empreinte": "tsx src/empreinte.ts"
+    "empreinte": "tsx src/empreinte.ts",
+    "essais": "node --import tsx --test src/*.test.ts"
   },
   "dependencies": {
     "fastify": "^5.2.0",
