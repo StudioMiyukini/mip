@@ -233,7 +233,7 @@
     "id": "mip.publication",
     "file": "README.md",
     "start_line": 185,
-    "end_line": 247,
+    "end_line": 253,
     "role": "config",
     "layer": "infra",
     "do": "publier_l_application_derriere_un_tunnel_cloudflare",
@@ -273,11 +273,31 @@
     "id": "mip.web",
     "file": "web/src/App.tsx",
     "start_line": 1,
-    "end_line": 484,
+    "end_line": 178,
+    "role": "ui",
+    "layer": "ui",
+    "do": "assembler_les_pages_dans_la_coque_et_router_entre_elles",
+    "human": "L'assemblage : la porte, le compte, le routeur et la coque"
+  },
+  {
+    "id": "mip.web.accueil",
+    "file": "web/src/Accueil.tsx",
+    "start_line": 1,
+    "end_line": 167,
+    "role": "ui",
+    "layer": "ui",
+    "do": "presenter_le_mip_a_quelqu_un_qui_arrive_sans_rien_savoir",
+    "human": "La présentation : le problème, ce qu'on y gagne, et par où commencer"
+  },
+  {
+    "id": "mip.web.cadrage",
+    "file": "web/src/Cadrage.tsx",
+    "start_line": 1,
+    "end_line": 416,
     "role": "ui",
     "layer": "ui",
     "do": "remplir_un_cadrage_par_etages_et_en_voir_sortir_le_prompt",
-    "human": "Le formulaire de cadrage, par étages, et le prompt qu'il produit"
+    "human": "La page de cadrage : le formulaire par étages, et le prompt qu'il produit"
   },
   {
     "id": "mip.web.champ",
@@ -293,17 +313,27 @@
     "id": "mip.web.compte",
     "file": "web/src/Compte.tsx",
     "start_line": 1,
-    "end_line": 261,
+    "end_line": 239,
     "role": "ui",
     "layer": "ui",
     "do": "gerer_l_inscription_la_connexion_et_l_effacement_du_compte",
     "human": "Le compte : s'inscrire pour sauvegarder, et pouvoir tout effacer"
   },
   {
+    "id": "mip.web.coque",
+    "file": "web/src/Coque.tsx",
+    "start_line": 1,
+    "end_line": 131,
+    "role": "ui",
+    "layer": "ui",
+    "do": "encadrer_les_pages_dans_une_navigation_laterale",
+    "human": "La coque du tableau de bord : la barre latérale, et ce qu'elle contient"
+  },
+  {
     "id": "mip.web.document",
     "file": "web/src/Document.tsx",
     "start_line": 1,
-    "end_line": 56,
+    "end_line": 52,
     "role": "ui",
     "layer": "ui",
     "do": "rendre_un_document_markdown_du_depot",
@@ -330,14 +360,14 @@
     "human": "Les trois étages : où l'on en est, et ce qu'on gagne à continuer"
   },
   {
-    "id": "mip.web.pied",
-    "file": "web/src/Pied.tsx",
+    "id": "mip.web.mes_cadrages",
+    "file": "web/src/MesCadrages.tsx",
     "start_line": 1,
-    "end_line": 30,
+    "end_line": 158,
     "role": "ui",
     "layer": "ui",
-    "do": "rendre_la_documentation_atteignable_depuis_l_application",
-    "human": "Le pied de page : où trouver le guide, le protocole, et le reste"
+    "do": "lister_les_cadrages_enregistres_et_permettre_de_les_reprendre",
+    "human": "La liste des cadrages enregistrés, et de quoi en reprendre un"
   },
   {
     "id": "mip.web.porte",
@@ -348,6 +378,16 @@
     "layer": "ui",
     "do": "demander_le_mot_de_passe_quand_la_porte_est_fermee",
     "human": "L'écran de mot de passe, quand la demande vient du tunnel"
+  },
+  {
+    "id": "mip.web.routeur",
+    "file": "web/src/routeur.ts",
+    "start_line": 1,
+    "end_line": 62,
+    "role": "orchestration",
+    "layer": "ui",
+    "do": "naviguer_entre_les_pages_sans_recharger",
+    "human": "Le routeur : trois lignes plutôt qu'une dépendance"
   },
   {
     "id": "mip.web.tags",

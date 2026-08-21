@@ -12,50 +12,28 @@ export interface EtatCompte {
 }
 
 /**
- * Le bandeau de compte, en haut à droite.
+ * La fenêtre de compte : s'identifier, ou gérer ce qu'on a.
  *
- * **Il ne barre jamais la route.** Le formulaire fonctionne sans compte, et
+ * **Elle ne barre jamais la route.** Le formulaire fonctionne sans compte, et
  * c'est le critère de sortie du produit : un néophyte arrive et repart en dix
- * minutes avec un prompt. Demander une adresse avant de commencer échangerait
- * la seule chose qui compte contre une ligne dans une table.
+ * minutes avec un prompt. Demander une adresse avant de commencer échangerait la
+ * seule chose qui compte contre une ligne dans une table.
  *
- * Le compte apparaît donc comme une offre — *pour retrouver vos cadrages* — et
- * jamais comme une porte.
+ * La coque décide quand l'ouvrir ; le compte ne s'invite pas de lui-même.
  */
 export function Compte({
   etat,
+  surFermeture,
   surChangement,
 }: {
   etat: EtatCompte;
+  surFermeture: () => void;
   surChangement: () => void;
 }) {
-  const [ouvert, setOuvert] = useState(false);
-
-  if (etat.connecte) {
-    return (
-      <div className="compte">
-        <span className="compte-adresse">{etat.adresse}</span>
-        <button
-          type="button"
-          className="lien"
-          onClick={() => setOuvert(true)}
-          title="Vos données et la suppression du compte"
-        >
-          mon compte
-        </button>
-        {ouvert && <Reglages etat={etat} surFermeture={() => setOuvert(false)} surChangement={surChangement} />}
-      </div>
-    );
-  }
-
-  return (
-    <div className="compte">
-      <span className="compte-offre">Créez un compte pour retrouver vos cadrages</span>
-      <button type="button" className="lien" onClick={() => setOuvert(true)}>
-        se connecter
-      </button>
-      {ouvert && <Identification surFermeture={() => setOuvert(false)} surChangement={surChangement} />}
-    </div>
+  return etat.connecte ? (
+    <Reglages etat={etat} surFermeture={surFermeture} surChangement={surChangement} />
+  ) : (
+    <Identification surFermeture={surFermeture} surChangement={surChangement} />
   );
 }
 

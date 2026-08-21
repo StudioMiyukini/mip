@@ -33,7 +33,6 @@ export function Document({ nom }: { nom: string }) {
     return (
       <main className="page document">
         <p className="explication">Ce document n'existe pas.</p>
-        <a href="/">← revenir au formulaire</a>
       </main>
     );
   }
@@ -47,9 +46,6 @@ export function Document({ nom }: { nom: string }) {
 
   return (
     <main className="page document">
-      <a className="retour" href="/">
-        ← MIP Studio
-      </a>
       <article dangerouslySetInnerHTML={{ __html: html }} />
     </main>
   );

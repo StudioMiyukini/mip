@@ -91,8 +91,14 @@
   "serveur/src/suggestion.ts": [
     "mip.suggestion"
   ],
+  "web/src/Accueil.tsx": [
+    "mip.web.accueil"
+  ],
   "web/src/App.tsx": [
     "mip.web"
+  ],
+  "web/src/Cadrage.tsx": [
+    "mip.web.cadrage"
   ],
   "web/src/Champ.tsx": [
     "mip.web.champ"
@@ -100,14 +106,17 @@
   "web/src/Compte.tsx": [
     "mip.web.compte"
   ],
+  "web/src/Coque.tsx": [
+    "mip.web.coque"
+  ],
   "web/src/Document.tsx": [
     "mip.web.document"
   ],
   "web/src/Etages.tsx": [
     "mip.web.etages"
   ],
-  "web/src/Pied.tsx": [
-    "mip.web.pied"
+  "web/src/MesCadrages.tsx": [
+    "mip.web.mes_cadrages"
   ],
   "web/src/Porte.tsx": [
     "mip.web.porte"
@@ -117,6 +126,9 @@
   ],
   "web/src/main.tsx": [
     "mip.web.entree"
+  ],
+  "web/src/routeur.ts": [
+    "mip.web.routeur"
   ],
   "web/src/types.ts": [
     "mip.web.types"

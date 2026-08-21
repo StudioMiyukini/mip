@@ -69,13 +69,17 @@
   ],
   "web": [
     "mip.web",
+    "mip.web.accueil",
+    "mip.web.cadrage",
     "mip.web.champ",
     "mip.web.compte",
+    "mip.web.coque",
     "mip.web.document",
     "mip.web.entree",
     "mip.web.etages",
-    "mip.web.pied",
+    "mip.web.mes_cadrages",
     "mip.web.porte",
+    "mip.web.routeur",
     "mip.web.tags",
     "mip.web.types"
   ]
