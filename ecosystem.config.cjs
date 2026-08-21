@@ -6,6 +6,15 @@
 
 // Usage : pm2 start ecosystem.config.cjs && pm2 save
 //
+// **Depuis un terminal élevé.** Sur cette machine, PM2 tourne en service
+// Windows sous LocalSystem (`C:\ProgramData\pm2-service`), avec
+// `PM2_HOME=C:\Users\Van Jean\.pm2`. Le tube nommé `\\.\pipe\rpc.sock` du démon
+// appartient donc à SYSTEM : un shell non élevé — même celui d'un
+// administrateur, dont le groupe est alors « utilisé pour les refus
+// uniquement » — se voit refuser la connexion avec `EPERM`, et PM2 croit devoir
+// démarrer un second démon, qui échoue à son tour. Neuf démons fantômes ont été
+// engendrés ainsi avant qu'on comprenne. Élever le terminal règle tout.
+//
 // Deux processus, et **rien d'autre** : PostgreSQL vit dans Docker avec
 // `restart: unless-stopped`, il se relève seul et n'a pas besoin de PM2.
 //
@@ -20,12 +29,19 @@ const chemin = require("node:path");
 
 const RACINE = __dirname;
 const TSX = chemin.join(RACINE, "node_modules", "tsx", "dist", "cli.mjs");
-const CLOUDFLARED = "C:\Program Files (x86)\cloudflared\cloudflared.exe";
-const CONFIG_TUNNEL = chemin.join(
-  process.env.USERPROFILE || "C:\Users\Van Jean",
-  ".cloudflared",
-  "mip-config.yml",
-);
+// **Les barres obliques sont volontaires.** Dans un littéral JavaScript,
+// « C:\Program Files » perd ses barres inverses : `\P` n'est pas une séquence
+// d'échappement connue, et le moteur la réduit silencieusement à `P`. Le chemin
+// valait `C:Program Files (x86)cloudflaredcloudflared.exe` — PM2 aurait échoué
+// au lancement sans que rien dans ce fichier ne le laisse voir. Windows accepte
+// les barres obliques, et elles ne s'échappent pas.
+const CLOUDFLARED = "C:/Program Files (x86)/cloudflared/cloudflared.exe";
+// **Absolu, et non pas déduit de `USERPROFILE`.** Le démon PM2 de cette machine
+// tourne en service sous LocalSystem : si ce fichier était relu dans ce
+// contexte, `USERPROFILE` vaudrait `C:\Windows\system32\config\systemprofile` et
+// le chemin serait faux. Les huit tunnels déjà en service portent tous le chemin
+// absolu ; on fait pareil. Le fichier de créance qu'il désigne est absolu aussi.
+const CONFIG_TUNNEL = "C:/Users/Van Jean/.cloudflared/mip-config.yml";
 
 module.exports = {
   apps: [
