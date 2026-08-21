@@ -13,16 +13,18 @@ un prompt qui fait travailler votre IA correctement.**
 
 ---
 
-## Le problème
+## Bien guidée, une IA va beaucoup plus loin
 
-On ouvre une IA, on décrit son projet en trois phrases, elle part sur une
-mauvaise piste, on rattrape, on refait. Le défaut n'est pas dans le modèle : il
-est dans ce qu'on lui a donné.
+Une IA travaille avec ce qu'on lui donne. Plus elle sait pour qui c'est, jusqu'où
+aller et ce qui compte le plus, plus elle vise juste — et ces réponses-là, c'est
+vous qui les avez.
 
 Un chef de projet expérimenté pose une vingtaine de questions avant d'écrire une
-ligne de code — à quoi ça sert, pour qui, qu'est-ce qui est hors périmètre, quel
+ligne de code : à quoi ça sert, pour qui, qu'est-ce qui est hors périmètre, quel
 est le risque, qu'est-ce qu'on abandonne. **MIP Studio pose ces questions à votre
 place, et met vos réponses dans la forme qu'un agent suit.**
+
+Le même modèle, mieux dirigé, produit un projet qui tient.
 
 ## Ce que ça donne
 

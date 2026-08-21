@@ -3,7 +3,7 @@
     "id": "mip",
     "file": "README.md",
     "start_line": 1,
-    "end_line": 114,
+    "end_line": 116,
     "role": "orchestration",
     "layer": "doc",
     "do": "cadrer_une_sequence_de_developpement_et_en_produire_le_prompt",
@@ -102,8 +102,8 @@
   {
     "id": "mip.decisions",
     "file": "README.md",
-    "start_line": 115,
-    "end_line": 184,
+    "start_line": 117,
+    "end_line": 186,
     "role": "rule",
     "layer": "doc",
     "do": "consigner_les_decisions_et_leur_raison",
@@ -133,7 +133,7 @@
     "id": "mip.doc.guide",
     "file": "docs/guide.md",
     "start_line": 1,
-    "end_line": 131,
+    "end_line": 130,
     "role": "config",
     "layer": "doc",
     "do": "expliquer_l_usage_de_mip_studio_a_quelqu_un_qui_arrive",
@@ -252,8 +252,8 @@
   {
     "id": "mip.publication",
     "file": "README.md",
-    "start_line": 185,
-    "end_line": 253,
+    "start_line": 187,
+    "end_line": 255,
     "role": "config",
     "layer": "infra",
     "do": "publier_l_application_derriere_un_tunnel_cloudflare",
@@ -303,11 +303,11 @@
     "id": "mip.web.accueil",
     "file": "web/src/Accueil.tsx",
     "start_line": 1,
-    "end_line": 167,
+    "end_line": 173,
     "role": "ui",
     "layer": "ui",
     "do": "presenter_le_mip_a_quelqu_un_qui_arrive_sans_rien_savoir",
-    "human": "La présentation : le problème, ce qu'on y gagne, et par où commencer"
+    "human": "La présentation : ce qu'on y gagne, comment ça marche, par où commencer"
   },
   {
     "id": "mip.web.cadrage",

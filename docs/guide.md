@@ -6,17 +6,16 @@
 
 # Guide d'utilisation
 
-## Le problème qu'on essaie de régler
+## Ce que le cadrage vous apporte
 
-Vous ouvrez une IA, vous décrivez votre projet en trois phrases, elle part sur
-une mauvaise piste. Vous rattrapez, elle repart de travers, vous refaites.
-
-Le défaut n'est pas dans le modèle : il est dans ce que vous lui avez donné.
-Trois phrases ne disent ni pour qui c'est, ni ce qui est hors sujet, ni ce qui
-compte le plus — donc l'IA décide à votre place, et elle décide mal.
+Une IA travaille avec ce qu'on lui donne. Trois phrases suffisent à la lancer ;
+elles ne suffisent pas à lui dire pour qui c'est, jusqu'où aller, ni ce qui
+compte le plus. Ces réponses-là, personne d'autre que vous ne les a — et dès
+qu'elle les reçoit, elle vise juste du premier coup.
 
 **MIP Studio pose les questions qu'un chef de projet poserait, et met vos
-réponses dans une forme qu'un agent suit.**
+réponses dans une forme qu'un agent suit.** Le même modèle, mieux dirigé, va
+beaucoup plus loin.
 
 ## En cinq minutes
 

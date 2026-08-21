@@ -1,7 +1,7 @@
 // @id mip.web.accueil
 // @role ui
 // @layer ui
-// @human La présentation : le problème, ce qu'on y gagne, et par où commencer
+// @human La présentation : ce qu'on y gagne, comment ça marche, par où commencer
 // @do presenter_le_mip_a_quelqu_un_qui_arrive_sans_rien_savoir
 
 import { surClicInterne } from "./routeur";
@@ -15,10 +15,16 @@ interface Props {
 /**
  * La page d'accueil.
  *
- * **Elle mène par le problème, pas par le produit.** « MIP est un protocole de
- * développement assisté par IA en six phases » ne dit rien à qui n'a pas le
- * problème ; « votre IA part sur une mauvaise piste et vous refaites » se
- * reconnaît en une seconde.
+ * **Elle mène par ce qu'on y gagne, pas par ce qu'on fait mal.** « MIP est un
+ * protocole de développement assisté par IA en six phases » ne dit rien à qui
+ * n'a pas encore le problème. Une première version disait à la place « votre IA
+ * part sur une mauvaise piste et vous refaites » : exact, reconnaissable, et
+ * accusateur — elle mettait le visiteur en faute avant de lui proposer quoi que
+ * ce soit.
+ *
+ * La promesse marche mieux que le reproche, et elle est tout aussi vraie : le
+ * même modèle, mieux dirigé, va plus loin. On garde le mécanisme — ce qu'on
+ * donne décide de ce qu'on obtient — sans le tourner contre le lecteur.
  *
  * **Les chiffres viennent du protocole réel**, chargés depuis l'API. Écrire
  * « 32 questions » en dur donnerait une page qui ment le jour où le protocole
@@ -35,14 +41,14 @@ export function Accueil({ formulaire, aller }: Props) {
     <div className="accueil">
       <header className="hero">
         <h1>
-          Votre IA part sur une mauvaise piste ?
+          Bien guidée, votre IA va beaucoup plus loin.
           <br />
-          <span className="hero-suite">Ce n'est pas elle. C'est ce qu'on lui a donné.</span>
+          <span className="hero-suite">Le même modèle. Dix minutes de cadrage.</span>
         </h1>
         <p className="hero-texte">
-          Vous décrivez votre projet en trois phrases. Elles ne disent ni pour qui c'est,
-          ni ce qui est hors sujet, ni ce qui compte le plus — alors l'IA décide à votre
-          place, et elle décide mal.
+          Une IA travaille avec ce qu'on lui donne. Plus elle sait pour qui c'est,
+          jusqu'où aller et ce qui compte le plus, plus elle vise juste — et ces
+          réponses-là, c'est vous qui les avez.
         </p>
         <p className="hero-texte">
           <strong>
