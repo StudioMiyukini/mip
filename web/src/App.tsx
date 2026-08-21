@@ -7,6 +7,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Champ, Suggestion } from "./Champ";
+import { Compte, type EtatCompte } from "./Compte";
+import { Document } from "./Document";
 import { Etages, Palier } from "./Etages";
 import { Porte } from "./Porte";
 import { Tags } from "./Tags";
@@ -40,9 +42,20 @@ export function App() {
   const [copie, setCopie] = useState(false);
   const [enregistre, setEnregistre] = useState<string | null>(null);
   const [ouverte, setOuverte] = useState<boolean | null>(null);
+  const [compteEtat, setCompteEtat] = useState<EtatCompte>({ connecte: false });
   // On commence à l'étage 1, toujours. C'est tout l'objet de la refonte : le
   // formulaire posait 21 à 32 questions d'un bloc, et un mur ne se termine pas.
   const [etage, setEtage] = useState<Etage>(1);
+
+  /** L'état du compte. Rechargé après chaque inscription, connexion ou effacement. */
+  function relireLeCompte(): void {
+    fetch("/api/compte")
+      .then((r) => r.json())
+      .then((d: EtatCompte) => setCompteEtat(d))
+      .catch(() => setCompteEtat({ connecte: false }));
+  }
+
+  useEffect(relireLeCompte, []);
 
   useEffect(() => {
     fetch("/api/porte")
@@ -163,6 +176,12 @@ export function App() {
   /** Combien de suggestions attendent une relecture. */
   const aRelire = Object.values(cadrage.reponses).filter((r) => etatDe(r) === "suggere").length;
 
+  // Une page de documentation se sert avant tout le reste : elle n'a besoin ni
+  // de la porte, ni du formulaire, ni du compte. Un routeur complet serait trois
+  // dépendances pour trois pages.
+  const chemin = window.location.pathname.replace(/^\/|\/$/g, "");
+  if (chemin && chemin !== "index.html") return <Document nom={chemin} />;
+
   if (ouverte === null) return <main className="page"><p className="explication">…</p></main>;
   if (ouverte === false) return <Porte surOuverture={() => setOuverte(true)} />;
 
@@ -220,13 +239,25 @@ export function App() {
     window.setTimeout(() => setCopie(false), 2000);
   }
 
+  /**
+   * Enregistrer — la seule fonction qui exige un compte.
+   *
+   * Le refus doit dire *pourquoi*, et rester une invitation : sans compte, on
+   * n'a rien perdu, on a toujours son prompt sous les yeux et le bouton
+   * « Copier » à côté.
+   */
   async function enregistrer(): Promise<void> {
     const reponse = await fetch("/api/cadrages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cadrage),
     });
-    setEnregistre((await reponse.json()).id);
+    if (reponse.status === 401) {
+      setEnregistre("Il faut un compte pour garder ce cadrage — le prompt reste copiable.");
+      return;
+    }
+    const cree = await reponse.json();
+    setEnregistre(cree.id ? "cadrage enregistré" : "l'enregistrement a échoué");
   }
 
   function rendreQuestion(question: Question) {
@@ -264,6 +295,7 @@ export function App() {
             votre IA correctement.
           </p>
         </div>
+        <Compte etat={compteEtat} surChangement={relireLeCompte} />
       </header>
 
       {aRelire > 0 && (
@@ -439,7 +471,7 @@ export function App() {
             <button type="button" onClick={enregistrer}>
               Enregistrer
             </button>
-            {enregistre && <span className="note">enregistré</span>}
+            {enregistre && <span className="note">{enregistre}</span>}
           </div>
           <pre className="prompt">{prompt}</pre>
         </aside>
