@@ -81,6 +81,8 @@ export function valeurRetenue(reponse: ReponseBrute | undefined): string {
   return reponse.etat === "suggere" ? "" : reponse.valeur;
 }
 
+import { libelleDe, produitDuCode } from "./livrable.js";
+
 export interface Cadrage {
   titre: string;
   demande: string;
@@ -91,6 +93,10 @@ export interface Cadrage {
   skills: string[];
   modules: string[];
   certifications: string[];
+  /** Ce que le projet produit — voir `livrable.ts`. */
+  formats: string[];
+  /** Avec quoi. */
+  techniques: string[];
 }
 
 export interface Matiere {
@@ -184,6 +190,29 @@ export function assembler(cadrage: Cadrage, matiere: Matiere): string {
   // ── la demande ────────────────────────────────────────────────────────
   bouts.push("## La demande");
   bouts.push(cadrage.demande.trim() || "_Non renseignée._");
+
+  // ── ce qu'il faut produire ────────────────────────────────────────────
+  //
+  // **Juste apres la demande, et avant la classification.** C'est la deuxieme
+  // chose qu'un agent doit savoir : un meme besoin donne une application React
+  // ou un document Word, et rien d'autre dans le cadrage ne le dit.
+  if (cadrage.formats.length || cadrage.techniques.length) {
+    bouts.push("## Ce qu'il faut produire");
+    const lignes: string[] = [];
+    if (cadrage.formats.length) {
+      lignes.push(`- **Format** : ${cadrage.formats.map(libelleDe).join(", ")}`);
+    }
+    if (cadrage.techniques.length) {
+      lignes.push(`- **Technique** : ${cadrage.techniques.map(libelleDe).join(", ")}`);
+    }
+    if (cadrage.techniques.includes("a-decider")) {
+      lignes.push(
+        "- La technique n'est **pas tranchee** : propose-la, avec ce qu'elle coute, " +
+          "et attends l'accord avant de commencer.",
+      );
+    }
+    bouts.push(lignes.join("\n"));
+  }
 
   // ── classification et conduite ────────────────────────────────────────
   bouts.push("## Classification et conduite");
@@ -364,6 +393,7 @@ export function assembler(cadrage: Cadrage, matiere: Matiere): string {
  * formulaire qu'on vient de remplir.
  */
 function instruction(cadrage: Cadrage, phases: string[], manquantes: number): string {
+  const avecDuCode = produitDuCode(cadrage.formats, cadrage.techniques);
   const lignes: string[] = [];
 
   if (manquantes > 0) {
@@ -402,11 +432,23 @@ function instruction(cadrage: Cadrage, phases: string[], manquantes: number): st
       );
   }
 
-  lignes.push(
-    `${suite + 1}. Le TDD est obligatoire dès qu'il y a du code : RED → GREEN → ` +
-      "REFACTOR → VERIFY → LINT → COMMIT. Un test qui encode une décision de ce " +
-      "cadrage vaut mieux qu'un paragraphe qui la raconte.",
-  );
+  // **Le TDD ne s'exige que s'il y a du code.** Le demander à quelqu'un qui
+  // rédige un support de cours n'est pas seulement inutile : c'est le genre de
+  // consigne hors sujet qui apprend à l'agent que le reste du document est
+  // peut-être décoratif aussi.
+  if (avecDuCode) {
+    lignes.push(
+      `${suite + 1}. Le TDD est obligatoire dès qu'il y a du code : RED → GREEN → ` +
+        "REFACTOR → VERIFY → LINT → COMMIT. Un test qui encode une décision de ce " +
+        "cadrage vaut mieux qu'un paragraphe qui la raconte.",
+    );
+  } else {
+    lignes.push(
+      `${suite + 1}. Ce livrable n'est pas du code : pas de tests, pas de branche. ` +
+        "Ce qui les remplace, c'est une **relecture à chaque étape** — présente un " +
+        "plan avant de rédiger, et le plan avant le texte.",
+    );
+  }
 
   return lignes.join("\n");
 }

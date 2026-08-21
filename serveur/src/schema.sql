@@ -153,5 +153,11 @@ CREATE TABLE IF NOT EXISTS cadrage (
 -- avant que le `ALTER` ait pu l'ajouter. La migration passe d'abord.
 ALTER TABLE cadrage ADD COLUMN IF NOT EXISTS utilisateur UUID REFERENCES utilisateur(id) ON DELETE CASCADE;
 
+-- Ce que le projet produit, et avec quoi. Le protocole ne le demandait pas —
+-- c'est un angle mort : un même besoin donne une application React ou un
+-- document Word, et rien d'autre dans le cadrage ne le disait.
+ALTER TABLE cadrage ADD COLUMN IF NOT EXISTS formats    TEXT[] NOT NULL DEFAULT '{}';
+ALTER TABLE cadrage ADD COLUMN IF NOT EXISTS techniques TEXT[] NOT NULL DEFAULT '{}';
+
 CREATE INDEX IF NOT EXISTS cadrage_recents ON cadrage(modifie_le DESC);
 CREATE INDEX IF NOT EXISTS cadrage_par_utilisateur ON cadrage(utilisateur, modifie_le DESC);

@@ -76,6 +76,12 @@
   "serveur/src/ingerer.ts": [
     "mip.bd.ingestion"
   ],
+  "serveur/src/livrable.test.ts": [
+    "mip.livrable.essais"
+  ],
+  "serveur/src/livrable.ts": [
+    "mip.livrable"
+  ],
   "serveur/src/porte.ts": [
     "mip.porte"
   ],
@@ -123,6 +129,9 @@
   ],
   "web/src/Tags.tsx": [
     "mip.web.tags"
+  ],
+  "web/src/TagsGroupes.tsx": [
+    "mip.web.tags_groupes"
   ],
   "web/src/main.tsx": [
     "mip.web.entree"

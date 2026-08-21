@@ -13,6 +13,7 @@ import Fastify from "fastify";
 
 import { bassin, matiere, RACINE } from "./bd.js";
 import { Cadence, demandeur } from "./cadence.js";
+import { FORMATS, TECHNIQUES } from "./livrable.js";
 import { BISCUIT, duTunnel, jetonDe, Porte } from "./porte.js";
 import { assembler, etagesDe, QUESTIONS_ESSENTIELLES, retenue, type Cadrage } from "./prompt.js";
 import {
@@ -109,7 +110,14 @@ serveur.get("/api/formulaire", async () => {
     ...section,
     questions: section.questions.map((q) => ({ ...q, etages: etagesDe(q) })),
   }));
-  return { ...donnees, sections, agents: agents.rows, essentielles: QUESTIONS_ESSENTIELLES };
+  return {
+    ...donnees,
+    sections,
+    agents: agents.rows,
+    essentielles: QUESTIONS_ESSENTIELLES,
+    formats: FORMATS,
+    techniques: TECHNIQUES,
+  };
 });
 
 /** Ce qu'un formulaire rempli envoie. */
@@ -128,6 +136,8 @@ function normaliser(corps: CorpsCadrage): Cadrage {
     skills: corps.skills ?? [],
     modules: corps.modules ?? [],
     certifications: corps.certifications ?? [],
+    formats: corps.formats ?? [],
+    techniques: corps.techniques ?? [],
   };
 }
 
@@ -464,8 +474,8 @@ serveur.post("/api/cadrages", async (requete, reponse) => {
   const cadrage = normaliser(requete.body as CorpsCadrage);
   const prompt = assembler(cadrage, await matiere());
   const ligne = await bassin.query(
-    `INSERT INTO cadrage (titre, demande, classe, mode, reponses, agents, skills, modules, certifications, prompt, utilisateur)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
+    `INSERT INTO cadrage (titre, demande, classe, mode, reponses, agents, skills, modules, certifications, prompt, utilisateur, formats, techniques)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
     [
       cadrage.titre,
       cadrage.demande,
@@ -478,6 +488,8 @@ serveur.post("/api/cadrages", async (requete, reponse) => {
       cadrage.certifications,
       prompt,
       utilisateur,
+      cadrage.formats,
+      cadrage.techniques,
     ],
   );
   return reponse.code(201).send(ligne.rows[0]);
@@ -490,7 +502,8 @@ serveur.put<{ Params: { id: string } }>("/api/cadrages/:id", async (requete, rep
   const prompt = assembler(cadrage, await matiere());
   const ligne = await bassin.query(
     `UPDATE cadrage SET titre=$2, demande=$3, classe=$4, mode=$5, reponses=$6,
-            agents=$7, skills=$8, modules=$9, certifications=$10, prompt=$11, modifie_le=now()
+            agents=$7, skills=$8, modules=$9, certifications=$10, prompt=$11,
+            formats=$13, techniques=$14, modifie_le=now()
      WHERE id=$1 AND utilisateur=$12 RETURNING *`,
     [
       requete.params.id,
@@ -505,6 +518,8 @@ serveur.put<{ Params: { id: string } }>("/api/cadrages/:id", async (requete, rep
       cadrage.certifications,
       prompt,
       utilisateur,
+      cadrage.formats,
+      cadrage.techniques,
     ],
   );
   if (!ligne.rowCount) return reponse.code(404).send({ erreur: "introuvable" });

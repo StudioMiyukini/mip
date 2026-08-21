@@ -4,6 +4,8 @@
     "mip.cadence.essais",
     "mip.comptes",
     "mip.comptes.essais",
+    "mip.livrable",
+    "mip.livrable.essais",
     "mip.porte",
     "mip.prompt",
     "mip.prompt.essais",
@@ -53,6 +55,7 @@
     "mip.web.porte",
     "mip.web.routeur",
     "mip.web.tags",
+    "mip.web.tags_groupes",
     "mip.web.types"
   ]
 }

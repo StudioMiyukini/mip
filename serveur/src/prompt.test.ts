@@ -87,6 +87,8 @@ function cadrage(reponses: Cadrage["reponses"], classe = "T3"): Cadrage {
     skills: [],
     modules: [],
     certifications: [],
+    formats: [],
+    techniques: [],
   };
 }
 

@@ -19,6 +19,8 @@
     "mip.extraction.champ",
     "mip.extraction.encodage",
     "mip.extraction.markdown",
+    "mip.livrable",
+    "mip.livrable.essais",
     "mip.porte",
     "mip.porte.empreinte",
     "mip.prompt",
@@ -40,6 +42,7 @@
     "mip.web.porte",
     "mip.web.routeur",
     "mip.web.tags",
+    "mip.web.tags_groupes",
     "mip.web.types",
     "mscm",
     "mscm.balisage",
@@ -81,6 +84,11 @@
     {
       "from": "mip",
       "to": "mip.extraction",
+      "type": "parent"
+    },
+    {
+      "from": "mip",
+      "to": "mip.livrable",
       "type": "parent"
     },
     {
@@ -169,6 +177,11 @@
       "type": "parent"
     },
     {
+      "from": "mip.livrable",
+      "to": "mip.livrable.essais",
+      "type": "parent"
+    },
+    {
       "from": "mip.porte",
       "to": "mip.porte.empreinte",
       "type": "parent"
@@ -241,6 +254,11 @@
     {
       "from": "mip.web",
       "to": "mip.web.tags",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web",
+      "to": "mip.web.tags_groupes",
       "type": "parent"
     },
     {

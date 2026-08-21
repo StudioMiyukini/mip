@@ -393,3 +393,12 @@ body {
 .document blockquote { margin: 14px 0; padding-left: 14px; border-left: 2px solid var(--accent); color: var(--doux); }
 .document a { color: var(--accent); }
 .document hr { border: none; border-top: 1px solid var(--trait); margin: 26px 0; }
+
+/* Les tags rangés par sous-groupe. Vingt tags à plat se lisent comme une liste
+   de courses ; rangés par famille, on sait où chercher. */
+.tags-groupe { margin-top: 12px; }
+.tags-groupe:first-of-type { margin-top: 4px; }
+.tags-groupe h4 {
+  margin: 0 0 6px; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--doux);
+}

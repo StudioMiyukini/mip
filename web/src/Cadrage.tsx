@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Champ, Suggestion } from "./Champ";
 import { Etages, Palier } from "./Etages";
 import { Tags } from "./Tags";
+import { TagsGroupes } from "./TagsGroupes";
 import {
   compte,
   etatDe,
@@ -29,6 +30,8 @@ const VIDE: TypeCadrage = {
   skills: [],
   modules: [],
   certifications: [],
+  formats: [],
+  techniques: [],
 };
 
 interface Props {
@@ -269,6 +272,22 @@ export function Cadrage({ formulaire, connecte, surEnregistrement }: Props) {
               placeholder="Ce que vous voulez construire, en quelques phrases."
             />
           </section>
+
+          <TagsGroupes
+            titre="Ce que ça doit produire"
+            explication="Le protocole ne le demande pas, et c'est un angle mort : un même besoin donne une application ou un document. Sans réponse, l'agent prend la première hypothèse venue."
+            choix={formulaire.formats}
+            actifs={cadrage.formats}
+            surChangement={(formats) => setCadrage({ ...cadrage, formats })}
+          />
+
+          <TagsGroupes
+            titre="Avec quoi"
+            explication="Laissez vide si ce n'est pas du code, ou cochez « À décider » pour que l'agent propose au lieu de supposer."
+            choix={formulaire.techniques}
+            actifs={cadrage.techniques}
+            surChangement={(techniques) => setCadrage({ ...cadrage, techniques })}
+          />
 
           {visibles.map((section) => (
             <section className="bloc" key={section.numero}>

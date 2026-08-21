@@ -69,6 +69,14 @@ export interface Certification {
   ko: number;
 }
 
+export interface Choix {
+  code: string;
+  libelle: string;
+  detail?: string;
+  /** Le groupe d'affichage — les tags se rangent par sous-titre. */
+  groupe: string;
+}
+
 export interface Formulaire {
   sections: Section[];
   protocole: {
@@ -83,6 +91,8 @@ export interface Formulaire {
   modules: Module[];
   certifications: Certification[];
   essentielles: string[];
+  formats: Choix[];
+  techniques: Choix[];
 }
 
 /**
@@ -112,6 +122,10 @@ export interface Cadrage {
   skills: string[];
   modules: string[];
   certifications: string[];
+  /** Ce que le projet produit. */
+  formats: string[];
+  /** Avec quoi. */
+  techniques: string[];
 }
 
 /** Le texte d'une réponse, quel que soit son état. */
