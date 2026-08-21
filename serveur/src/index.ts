@@ -12,6 +12,7 @@ import statique from "@fastify/static";
 import Fastify from "fastify";
 
 import { bassin, matiere, RACINE } from "./bd.js";
+import { Cadence, demandeur } from "./cadence.js";
 import { BISCUIT, duTunnel, jetonDe, Porte } from "./porte.js";
 import { assembler, etagesDe, QUESTIONS_ESSENTIELLES, retenue, type Cadrage } from "./prompt.js";
 import {
@@ -46,14 +47,9 @@ serveur.addHook("onRequest", async (requete, reponse) => {
   if (chemin === "/api/porte" || chemin === "/api/entrer" || chemin === "/api/sante") return;
   if (!duTunnel(requete.headers as Record<string, unknown>)) return;
 
-  if (!porte.configuree()) {
-    // Refuse, pas ouvert. Sans mot de passe, l'application n'est joignable que
-    // depuis la machine, et c'est probablement une surprise : on le dit.
-    return reponse.code(503).send({
-      erreur: "porte_absente",
-      message: "MIP_EMPREINTE n'est pas configuree : l'acces distant est refuse en bloc.",
-    });
-  }
+  // Sans empreinte, le site est **ouvert**. Les comptes bornent les données ;
+  // la porte n'est plus qu'un verrou de maintenance.
+  if (!porte.configuree()) return;
   if (porte.valide(jetonDe(requete.headers as Record<string, unknown>))) return;
 
   if (chemin.startsWith("/api/")) {
@@ -64,13 +60,15 @@ serveur.addHook("onRequest", async (requete, reponse) => {
   // maintenir deux interfaces pour la meme chose.
 });
 
-serveur.get("/api/porte", async (requete) => ({
-  configuree: porte.configuree(),
-  exigee: duTunnel(requete.headers as Record<string, unknown>),
-  ouverte:
-    !duTunnel(requete.headers as Record<string, unknown>) ||
-    porte.valide(jetonDe(requete.headers as Record<string, unknown>)),
-}));
+serveur.get("/api/porte", async (requete) => {
+  const entetes = requete.headers as Record<string, unknown>;
+  const exigee = porte.configuree() && duTunnel(entetes);
+  return {
+    configuree: porte.configuree(),
+    exigee,
+    ouverte: !exigee || porte.valide(jetonDe(entetes)),
+  };
+});
 
 serveur.post("/api/entrer", async (requete, reponse) => {
   const corps = (requete.body ?? {}) as { mot_de_passe?: string };
@@ -145,6 +143,22 @@ serveur.post("/api/apercu", async (requete) => {
   return { prompt: assembler(cadrage, await matiere()) };
 });
 
+/**
+ * Les limites de cadence.
+ *
+ * Deux routes coûtent cher à qui les sert, et le site est public sans mot de
+ * passe : `/api/suggerer` occupe un modèle local pendant sept secondes — un
+ * modèle partagé avec une autre application — et `/api/compte/creer` écrit en
+ * base sans rien demander.
+ *
+ * Les plafonds sont larges à dessein. Ils visent l'usage machinal — un script
+ * mal écrit, un onglet qui recharge en boucle — pas l'attaque déterminée, contre
+ * laquelle une adresse se change. Un plafond serré gênerait les gens honnêtes
+ * sans arrêter les autres.
+ */
+const CADENCE_SUGGESTION = new Cadence(20, 10 * 60_000);
+const CADENCE_INSCRIPTION = new Cadence(5, 60 * 60_000);
+
 /** Le modèle local. Jamais distant : rien de ce qui est saisi ne sort d'ici. */
 const MODELE = process.env.MIP_MODELE ?? "qwen/qwen3.5-9b";
 const MODELE_URL = process.env.MIP_MODELE_URL ?? "http://127.0.0.1:1234/v1";
@@ -177,6 +191,12 @@ serveur.post("/api/suggerer", async (requete) => {
   // Sous quelques mots, il n'y a rien à déduire — et le modèle comblerait le
   // vide en inventant, ce qu'il fait déjà quand il a de la matière.
   if (texte.length < 25) return { suggestions: {} };
+
+  // Au-delà du plafond, on rend une liste vide plutôt qu'une erreur : le
+  // pré-remplissage est un confort, et le formulaire n'en dépend pas. Un code
+  // d'erreur ferait clignoter un bandeau rouge pour une fonction accessoire.
+  const qui = demandeur(requete.headers as Record<string, unknown>, requete.ip);
+  if (!CADENCE_SUGGESTION.accepte(qui)) return { suggestions: {} };
 
   const questions = (await matiere()).sections.flatMap((s) => s.questions);
 
@@ -289,6 +309,16 @@ serveur.post("/api/compte/creer", async (requete, reponse) => {
     return reponse.code(400).send({
       erreur: "mot_de_passe",
       message: "Huit caractères au minimum. La longueur compte, pas la composition.",
+    });
+  }
+
+  // Ici on refuse franchement : créer un compte est une action, et l'utilisateur
+  // doit savoir qu'elle n'a pas eu lieu.
+  const qui = demandeur(requete.headers as Record<string, unknown>, requete.ip);
+  if (!CADENCE_INSCRIPTION.accepte(qui)) {
+    return reponse.code(429).send({
+      erreur: "cadence",
+      message: "Trop de créations de compte depuis cette adresse. Réessayez dans une heure.",
     });
   }
 
@@ -573,10 +603,9 @@ async function demarrer(): Promise<void> {
   await serveur.listen({ port: PORT, host: "127.0.0.1" });
   serveur.log.info("MIP Studio - http://127.0.0.1:" + PORT);
   if (porte.configuree()) {
-    serveur.log.info("la porte est posee : le tunnel demande le mot de passe");
+    serveur.log.warn("MIP_EMPREINTE posée : le site est FERMÉ au public, mot de passe exigé");
   } else {
-    serveur.log.warn("MIP_EMPREINTE absente : le tunnel est refuse en bloc");
-    serveur.log.warn('poser un mot de passe : npm run -w serveur empreinte -- "<mot de passe>"');
+    serveur.log.info("site ouvert au public — les comptes bornent les données");
   }
 }
 

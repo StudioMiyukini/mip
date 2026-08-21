@@ -190,10 +190,16 @@ migration Immich ne doit pas pouvoir empêcher d'ouvrir un formulaire.
 
 ## Publier — mip.miyukini.org
 
-**La porte d'abord.** Publier une application de cadrage sans authentification
-donne à qui trouve l'adresse la lecture du protocole entier et l'écriture en
-base — et une URL finit toujours par circuler. Sans `MIP_EMPREINTE`, l'accès
-venu du tunnel est **refusé en bloc** : pas ouvert, refusé.
+**Le site est ouvert par défaut.** Les comptes bornent les données — l'écriture
+en exige un, la lecture est limitée au propriétaire — et le formulaire fonctionne
+sans inscription, ce qui est le but.
+
+`MIP_EMPREINTE` reste disponible : la poser **referme le site d'un coup** derrière
+un mot de passe partagé, pour une maintenance ou une mise en ligne progressive.
+C'est un verrou, pas une condition d'existence.
+
+Deux routes sont plafonnées par adresse, parce qu'elles coûtent cher à servir :
+les suggestions (20 par dix minutes) et la création de compte (5 par heure).
 
 ```bash
 npm run -w serveur empreinte -- "<mot de passe>"   # → une empreinte scrypt

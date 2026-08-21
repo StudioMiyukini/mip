@@ -1,6 +1,7 @@
 {
   "mip": [
     "mip.bd",
+    "mip.cadence",
     "mip.comptes",
     "mip.confidentialite",
     "mip.decisions",
@@ -17,6 +18,9 @@
     "mip.bd.conteneur",
     "mip.bd.ingestion",
     "mip.bd.migration"
+  ],
+  "mip.cadence": [
+    "mip.cadence.essais"
   ],
   "mip.comptes": [
     "mip.comptes.essais"

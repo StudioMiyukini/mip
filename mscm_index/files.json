@@ -55,6 +55,12 @@
   "serveur/src/bd.ts": [
     "mip.bd"
   ],
+  "serveur/src/cadence.test.ts": [
+    "mip.cadence.essais"
+  ],
+  "serveur/src/cadence.ts": [
+    "mip.cadence"
+  ],
   "serveur/src/comptes.test.ts": [
     "mip.comptes.essais"
   ],

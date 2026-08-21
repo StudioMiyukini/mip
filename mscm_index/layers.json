@@ -1,5 +1,7 @@
 {
   "core": [
+    "mip.cadence",
+    "mip.cadence.essais",
     "mip.comptes",
     "mip.comptes.essais",
     "mip.porte",

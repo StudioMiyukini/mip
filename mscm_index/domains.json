@@ -8,6 +8,10 @@
     "mip.bd.ingestion",
     "mip.bd.migration"
   ],
+  "cadence": [
+    "mip.cadence",
+    "mip.cadence.essais"
+  ],
   "comptes": [
     "mip.comptes",
     "mip.comptes.essais"

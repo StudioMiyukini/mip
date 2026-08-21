@@ -12,12 +12,18 @@
  * machine, non. C'est le même principe que chez Alicia : le client ne déclare
  * pas ses droits, le serveur les établit à partir de ce qu'il voit passer.
  *
- * **Sans mot de passe configuré, le tunnel est refusé en bloc.** Pas ouvert :
- * refusé. Une application de cadrage publiée sans porte donne à qui trouve
- * l'adresse la lecture du protocole entier et l'écriture en base — et une URL
- * finit toujours par circuler, dans un historique, un journal de proxy, un
- * partage d'écran. Le défaut ouvert est un défaut qu'on découvre trop tard ; le
- * défaut fermé se remarque à la première tentative.
+ * **Sans empreinte configurée, le site est ouvert.** Ce n'était pas le cas au
+ * départ : le tunnel était alors refusé en bloc, parce qu'une application sans
+ * compte publiée sans porte aurait laissé lire et écrire à qui trouvait l'URL.
+ *
+ * Cette raison a disparu le jour où les comptes sont arrivés. Aujourd'hui,
+ * l'écriture exige un compte et la lecture est bornée à son propriétaire — la
+ * porte partagée ne protégeait plus des données, elle empêchait seulement le
+ * public d'entrer. Or le public est le but.
+ *
+ * Elle reste disponible : poser `MIP_EMPREINTE` referme le site d'un coup, pour
+ * une maintenance ou une mise en ligne progressive. C'est un verrou, plus une
+ * condition d'existence.
  */
 
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";

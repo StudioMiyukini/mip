@@ -77,6 +77,16 @@ rattachés, en base, immédiatement. Pas de corbeille, pas de marquage « effac�
 pas de délai de rétention. Après ça, il ne reste rien — et nous ne pouvons rien
 restaurer.
 
+## Une limite de cadence
+
+Deux actions sont plafonnées par adresse : les suggestions de pré-remplissage
+(20 par dix minutes) et la création de compte (5 par heure). L'adresse sert
+uniquement à ce comptage, **en mémoire**, et disparaît dès que la fenêtre passe.
+Elle n'est ni enregistrée, ni journalisée.
+
+C'est là pour protéger un modèle local partagé d'un onglet qui recharge en
+boucle — pas pour vous suivre.
+
 ## Ce qu'on ne fait pas
 
 - Aucune revente, aucun partage avec un tiers.

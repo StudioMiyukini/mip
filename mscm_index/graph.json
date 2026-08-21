@@ -5,6 +5,8 @@
     "mip.bd.conteneur",
     "mip.bd.ingestion",
     "mip.bd.migration",
+    "mip.cadence",
+    "mip.cadence.essais",
     "mip.comptes",
     "mip.comptes.essais",
     "mip.confidentialite",
@@ -45,6 +47,11 @@
     {
       "from": "mip",
       "to": "mip.bd",
+      "type": "parent"
+    },
+    {
+      "from": "mip",
+      "to": "mip.cadence",
       "type": "parent"
     },
     {
@@ -115,6 +122,11 @@
     {
       "from": "mip.bd",
       "to": "mip.bd.migration",
+      "type": "parent"
+    },
+    {
+      "from": "mip.cadence",
+      "to": "mip.cadence.essais",
       "type": "parent"
     },
     {

@@ -105,7 +105,8 @@ pas un cadrage sans risque, c'est un cadrage où personne n'a regardé.*
 
 ## Le compte
 
-**Il n'est jamais nécessaire.** Vous pouvez tout faire sans vous inscrire.
+**Il n'est jamais nécessaire.** Vous pouvez tout faire sans vous inscrire — le
+site est ouvert, il n'y a pas de mot de passe à l'entrée.
 
 Il sert à une chose : retrouver vos cadrages plus tard. On garde votre adresse
 et une empreinte de votre mot de passe, rien d'autre — et vous pouvez tout
