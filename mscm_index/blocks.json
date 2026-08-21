@@ -90,6 +90,36 @@
     "human": "Les décisions prises pendant l'extraction, avec leur motif"
   },
   {
+    "id": "mip.doc.developpement",
+    "file": "docs/developpement.md",
+    "start_line": 1,
+    "end_line": 160,
+    "role": "config",
+    "layer": "doc",
+    "do": "expliquer_l_architecture_et_comment_contribuer",
+    "human": "La documentation développeur : monter le projet, le comprendre, y contribuer"
+  },
+  {
+    "id": "mip.doc.guide",
+    "file": "docs/guide.md",
+    "start_line": 1,
+    "end_line": 130,
+    "role": "config",
+    "layer": "doc",
+    "do": "expliquer_l_usage_de_mip_studio_a_quelqu_un_qui_arrive",
+    "human": "Le guide d'utilisation : à quoi ça sert, comment s'en servir, et ce que ça ne fait pas"
+  },
+  {
+    "id": "mip.doc.protocole",
+    "file": "docs/protocole.md",
+    "start_line": 1,
+    "end_line": 125,
+    "role": "config",
+    "layer": "doc",
+    "do": "expliquer_le_protocole_mip_a_qui_recoit_un_prompt",
+    "human": "Le protocole MIP : les classes, les phases, les gates et les rôles"
+  },
+  {
     "id": "mip.extraction",
     "file": "extraction/src/extraire.ts",
     "start_line": 1,
@@ -183,7 +213,7 @@
     "id": "mip.serveur",
     "file": "serveur/src/index.ts",
     "start_line": 1,
-    "end_line": 582,
+    "end_line": 585,
     "role": "ui",
     "layer": "ui",
     "do": "servir_le_formulaire_et_assembler_les_prompts",
@@ -213,7 +243,7 @@
     "id": "mip.web",
     "file": "web/src/App.tsx",
     "start_line": 1,
-    "end_line": 481,
+    "end_line": 484,
     "role": "ui",
     "layer": "ui",
     "do": "remplir_un_cadrage_par_etages_et_en_voir_sortir_le_prompt",
@@ -270,6 +300,16 @@
     "human": "Les trois étages : où l'on en est, et ce qu'on gagne à continuer"
   },
   {
+    "id": "mip.web.pied",
+    "file": "web/src/Pied.tsx",
+    "start_line": 1,
+    "end_line": 29,
+    "role": "ui",
+    "layer": "ui",
+    "do": "rendre_la_documentation_atteignable_depuis_l_application",
+    "human": "Le pied de page : où trouver le guide, le protocole, et le reste"
+  },
+  {
     "id": "mip.web.porte",
     "file": "web/src/Porte.tsx",
     "start_line": 1,
@@ -323,7 +363,7 @@
     "id": "mscm.essais",
     "file": "mscm/src/mscm.test.ts",
     "start_line": 1,
-    "end_line": 287,
+    "end_line": 286,
     "role": "rule",
     "layer": "outil",
     "do": "eprouver_l_extraction_et_les_controles_d_integrite",

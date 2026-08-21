@@ -10,6 +10,7 @@ import { Champ, Suggestion } from "./Champ";
 import { Compte, type EtatCompte } from "./Compte";
 import { Document } from "./Document";
 import { Etages, Palier } from "./Etages";
+import { Pied } from "./Pied";
 import { Porte } from "./Porte";
 import { Tags } from "./Tags";
 import {
@@ -476,6 +477,8 @@ export function App() {
           <pre className="prompt">{prompt}</pre>
         </aside>
       </div>
+
+      <Pied />
     </div>
   );
 }

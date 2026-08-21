@@ -1,7 +1,11 @@
 {
   "version": "1.0.0",
   "projet": "mip-studio",
-  "integrite": "ok",
-  "erreurs": [],
-  "empreinte": "b7586ae69613e6be"
+  "integrite": "defauts",
+  "erreurs": [
+    "bloc orphelin : « mip.doc.developpement » (docs/developpement.md:1) — parent « mip.doc » introuvable",
+    "bloc orphelin : « mip.doc.guide » (docs/guide.md:1) — parent « mip.doc » introuvable",
+    "bloc orphelin : « mip.doc.protocole » (docs/protocole.md:1) — parent « mip.doc » introuvable"
+  ],
+  "empreinte": "9255056699b1bf0a"
 }

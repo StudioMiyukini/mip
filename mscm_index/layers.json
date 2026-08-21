@@ -11,7 +11,10 @@
   "doc": [
     "mip",
     "mip.confidentialite",
-    "mip.decisions"
+    "mip.decisions",
+    "mip.doc.developpement",
+    "mip.doc.guide",
+    "mip.doc.protocole"
   ],
   "infra": [
     "mip.bd",
@@ -40,6 +43,7 @@
     "mip.web.document",
     "mip.web.entree",
     "mip.web.etages",
+    "mip.web.pied",
     "mip.web.porte",
     "mip.web.tags",
     "mip.web.types"

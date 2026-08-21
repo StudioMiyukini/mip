@@ -20,6 +20,11 @@
   "mip.comptes": [
     "mip.comptes.essais"
   ],
+  "mip.doc": [
+    "mip.doc.developpement",
+    "mip.doc.guide",
+    "mip.doc.protocole"
+  ],
   "mip.extraction": [
     "mip.extraction.champ",
     "mip.extraction.encodage",
@@ -40,6 +45,7 @@
     "mip.web.document",
     "mip.web.entree",
     "mip.web.etages",
+    "mip.web.pied",
     "mip.web.porte",
     "mip.web.tags",
     "mip.web.types"

@@ -9,6 +9,9 @@
     "mip.comptes.essais",
     "mip.confidentialite",
     "mip.decisions",
+    "mip.doc.developpement",
+    "mip.doc.guide",
+    "mip.doc.protocole",
     "mip.extraction",
     "mip.extraction.champ",
     "mip.extraction.encodage",
@@ -27,6 +30,7 @@
     "mip.web.document",
     "mip.web.entree",
     "mip.web.etages",
+    "mip.web.pied",
     "mip.web.porte",
     "mip.web.tags",
     "mip.web.types",
@@ -113,6 +117,21 @@
       "type": "parent"
     },
     {
+      "from": "mip.doc",
+      "to": "mip.doc.developpement",
+      "type": "parent"
+    },
+    {
+      "from": "mip.doc",
+      "to": "mip.doc.guide",
+      "type": "parent"
+    },
+    {
+      "from": "mip.doc",
+      "to": "mip.doc.protocole",
+      "type": "parent"
+    },
+    {
       "from": "mip.extraction",
       "to": "mip.extraction.champ",
       "type": "parent"
@@ -165,6 +184,11 @@
     {
       "from": "mip.web",
       "to": "mip.web.etages",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web",
+      "to": "mip.web.pied",
       "type": "parent"
     },
     {

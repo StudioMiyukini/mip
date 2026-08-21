@@ -317,3 +317,17 @@ body {
 .document blockquote { margin: 14px 0; padding-left: 14px; border-left: 2px solid var(--accent); color: var(--doux); }
 .document a { color: var(--accent); }
 .document hr { border: none; border-top: 1px solid var(--trait); margin: 26px 0; }
+
+/* Le pied de page. Discret mais sur chaque écran : une documentation qu'on ne
+   trouve pas n'existe pas, et le premier réflexe de qui bloque est de regarder
+   en bas de la page. */
+.pied {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap;
+  margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--trait);
+  font-size: 13px; color: var(--doux);
+}
+.pied nav { display: flex; gap: 16px; flex-wrap: wrap; }
+.pied a { color: var(--doux); text-decoration: none; }
+.pied a:hover { color: var(--accent); text-decoration: underline; }
+.pied-note { font-style: italic; }

@@ -10,6 +10,15 @@
   "docker-compose.yml": [
     "mip.bd.conteneur"
   ],
+  "docs/developpement.md": [
+    "mip.doc.developpement"
+  ],
+  "docs/guide.md": [
+    "mip.doc.guide"
+  ],
+  "docs/protocole.md": [
+    "mip.doc.protocole"
+  ],
   "extraction/src/champs.ts": [
     "mip.extraction.champ"
   ],
@@ -87,6 +96,9 @@
   ],
   "web/src/Etages.tsx": [
     "mip.web.etages"
+  ],
+  "web/src/Pied.tsx": [
+    "mip.web.pied"
   ],
   "web/src/Porte.tsx": [
     "mip.web.porte"

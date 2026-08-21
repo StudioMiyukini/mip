@@ -18,6 +18,11 @@
   "decisions": [
     "mip.decisions"
   ],
+  "doc": [
+    "mip.doc.developpement",
+    "mip.doc.guide",
+    "mip.doc.protocole"
+  ],
   "essais": [
     "mscm.essais"
   ],
@@ -64,6 +69,7 @@
     "mip.web.document",
     "mip.web.entree",
     "mip.web.etages",
+    "mip.web.pied",
     "mip.web.porte",
     "mip.web.tags",
     "mip.web.types"
