@@ -1,0 +1,39 @@
+{
+  "name": "@mip/mscm",
+  "version": "0.1.0",
+  "description": "MSCM — balisage sémantique du code, index et contrôle d'intégrité. Markdown, Rust, TypeScript, Python et compagnie.",
+  "license": "MIT",
+  "author": "NGUYEN \"Miyukini\" Van Jean",
+  "type": "module",
+  "bin": {
+    "mscm": "./dist/mscm.js"
+  },
+  "main": "./dist/index-mscm.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "mscm",
+    "mip",
+    "semantic",
+    "code-markup",
+    "index",
+    "documentation",
+    "ai-agents"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "mscm": "tsx src/mscm.ts",
+    "essais": "node --import tsx --test src/*.test.ts",
+    "verifier": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "core": [
+    "mip.comptes",
+    "mip.comptes.essais",
+    "mip.porte",
+    "mip.prompt",
+    "mip.prompt.essais",
+    "mip.suggestion",
+    "mip.suggestion.essais"
+  ],
+  "doc": [
+    "mip",
+    "mip.confidentialite",
+    "mip.decisions"
+  ],
+  "infra": [
+    "mip.bd",
+    "mip.bd.conteneur",
+    "mip.bd.ingestion",
+    "mip.bd.migration",
+    "mip.publication"
+  ],
+  "outil": [
+    "mip.extraction",
+    "mip.extraction.champ",
+    "mip.extraction.encodage",
+    "mip.extraction.markdown",
+    "mip.porte.empreinte",
+    "mscm",
+    "mscm.balisage",
+    "mscm.essais",
+    "mscm.index",
+    "mscm.integrite"
+  ],
+  "ui": [
+    "mip.serveur",
+    "mip.web",
+    "mip.web.champ",
+    "mip.web.compte",
+    "mip.web.document",
+    "mip.web.entree",
+    "mip.web.etages",
+    "mip.web.porte",
+    "mip.web.tags",
+    "mip.web.types"
+  ]
+}
