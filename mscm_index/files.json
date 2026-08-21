@@ -1,6 +1,12 @@
 {
+  "CGU.md": [
+    "mip.cgu"
+  ],
   "CONFIDENTIALITE.md": [
     "mip.confidentialite"
+  ],
+  "MENTIONS-LEGALES.md": [
+    "mip.mentions"
   ],
   "README.md": [
     "mip",
@@ -16,11 +22,26 @@
   "docs/developpement.md": [
     "mip.doc.developpement"
   ],
+  "docs/exemples.md": [
+    "mip.doc.exemples"
+  ],
+  "docs/faq.md": [
+    "mip.doc.faq"
+  ],
   "docs/guide.md": [
     "mip.doc.guide"
   ],
+  "docs/mscm.md": [
+    "mip.doc.mscm"
+  ],
+  "docs/prompt.md": [
+    "mip.doc.prompt"
+  ],
   "docs/protocole.md": [
     "mip.doc.protocole"
+  ],
+  "docs/questions.md": [
+    "mip.doc.questions"
   ],
   "extraction/src/champs.ts": [
     "mip.extraction.champ"
@@ -66,6 +87,9 @@
   ],
   "serveur/src/comptes.ts": [
     "mip.comptes"
+  ],
+  "serveur/src/documents.test.ts": [
+    "mip.serveur.essais"
   ],
   "serveur/src/empreinte.ts": [
     "mip.porte.empreinte"

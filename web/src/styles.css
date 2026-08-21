@@ -90,6 +90,16 @@ body {
 .flanc-source { color: var(--doux); text-decoration: none; margin-top: 4px; }
 .flanc-source:hover { color: var(--accent); }
 
+/* Le légal : joignable depuis chaque page — c'est une obligation — sans peser
+   autant que le reste de la navigation. Plus petit, plus pâle, sur une ligne. */
+.flanc-legal {
+  display: flex; flex-wrap: wrap; gap: 2px 8px;
+  margin-top: 6px; font-size: 11px; line-height: 1.5;
+}
+.flanc-legal a { color: var(--doux); text-decoration: none; }
+.flanc-legal a:hover { color: var(--accent); text-decoration: underline; }
+.flanc-legal a.actif { color: var(--texte); }
+
 /* Sous 900 px, la colonne passe au-dessus et se couche. Un tiroir coulissant
    demanderait un bouton, un état, et un piège au clavier. */
 @media (max-width: 900px) {

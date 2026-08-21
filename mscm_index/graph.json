@@ -7,26 +7,34 @@
     "mip.bd.migration",
     "mip.cadence",
     "mip.cadence.essais",
+    "mip.cgu",
     "mip.comptes",
     "mip.comptes.essais",
     "mip.confidentialite",
     "mip.decisions",
     "mip.doc",
     "mip.doc.developpement",
+    "mip.doc.exemples",
+    "mip.doc.faq",
     "mip.doc.guide",
+    "mip.doc.mscm",
+    "mip.doc.prompt",
     "mip.doc.protocole",
+    "mip.doc.questions",
     "mip.extraction",
     "mip.extraction.champ",
     "mip.extraction.encodage",
     "mip.extraction.markdown",
     "mip.livrable",
     "mip.livrable.essais",
+    "mip.mentions",
     "mip.porte",
     "mip.porte.empreinte",
     "mip.prompt",
     "mip.prompt.essais",
     "mip.publication",
     "mip.serveur",
+    "mip.serveur.essais",
     "mip.suggestion",
     "mip.suggestion.essais",
     "mip.web",
@@ -63,6 +71,11 @@
     },
     {
       "from": "mip",
+      "to": "mip.cgu",
+      "type": "parent"
+    },
+    {
+      "from": "mip",
       "to": "mip.comptes",
       "type": "parent"
     },
@@ -89,6 +102,11 @@
     {
       "from": "mip",
       "to": "mip.livrable",
+      "type": "parent"
+    },
+    {
+      "from": "mip",
+      "to": "mip.mentions",
       "type": "parent"
     },
     {
@@ -153,12 +171,37 @@
     },
     {
       "from": "mip.doc",
+      "to": "mip.doc.exemples",
+      "type": "parent"
+    },
+    {
+      "from": "mip.doc",
+      "to": "mip.doc.faq",
+      "type": "parent"
+    },
+    {
+      "from": "mip.doc",
       "to": "mip.doc.guide",
       "type": "parent"
     },
     {
       "from": "mip.doc",
+      "to": "mip.doc.mscm",
+      "type": "parent"
+    },
+    {
+      "from": "mip.doc",
+      "to": "mip.doc.prompt",
+      "type": "parent"
+    },
+    {
+      "from": "mip.doc",
       "to": "mip.doc.protocole",
+      "type": "parent"
+    },
+    {
+      "from": "mip.doc",
+      "to": "mip.doc.questions",
       "type": "parent"
     },
     {
@@ -189,6 +232,11 @@
     {
       "from": "mip.prompt",
       "to": "mip.prompt.essais",
+      "type": "parent"
+    },
+    {
+      "from": "mip.serveur",
+      "to": "mip.serveur.essais",
       "type": "parent"
     },
     {

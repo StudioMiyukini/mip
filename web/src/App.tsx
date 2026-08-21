@@ -18,13 +18,20 @@ import type { Formulaire } from "./types";
 
 /** Les pages qui sont un document Markdown du dépôt, servi par l'API. */
 const DOCUMENTS = new Set([
+  "documentation",
   "guide",
+  "exemples",
+  "faq",
   "protocole",
+  "questions",
+  "prompt",
+  "mscm",
   "developpement",
   "confidentialite",
+  "mentions",
+  "cgu",
   "licence",
   "apropos",
-  "documentation",
 ]);
 
 export function App() {

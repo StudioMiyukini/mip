@@ -2,12 +2,14 @@
   "mip": [
     "mip.bd",
     "mip.cadence",
+    "mip.cgu",
     "mip.comptes",
     "mip.confidentialite",
     "mip.decisions",
     "mip.doc",
     "mip.extraction",
     "mip.livrable",
+    "mip.mentions",
     "mip.porte",
     "mip.prompt",
     "mip.publication",
@@ -28,8 +30,13 @@
   ],
   "mip.doc": [
     "mip.doc.developpement",
+    "mip.doc.exemples",
+    "mip.doc.faq",
     "mip.doc.guide",
-    "mip.doc.protocole"
+    "mip.doc.mscm",
+    "mip.doc.prompt",
+    "mip.doc.protocole",
+    "mip.doc.questions"
   ],
   "mip.extraction": [
     "mip.extraction.champ",
@@ -44,6 +51,9 @@
   ],
   "mip.prompt": [
     "mip.prompt.essais"
+  ],
+  "mip.serveur": [
+    "mip.serveur.essais"
   ],
   "mip.suggestion": [
     "mip.suggestion.essais"

@@ -207,6 +207,41 @@ describe("les suggestions", () => {
   });
 });
 
+// ── ce qui dépend du format ───────────────────────────────────────────────
+
+describe("le format décide de ce qu'on exige", () => {
+  const questions = QUESTIONS_ESSENTIELLES.map((n) => question(n, "T3"));
+  const reponses = Object.fromEntries(QUESTIONS_ESSENTIELLES.map((n) => [n, "r"]));
+
+  function promptPour(formats: string[], techniques: string[] = []): string {
+    return assembler({ ...cadrage(reponses), formats, techniques }, matiere(questions));
+  }
+
+  it("un livrable en code demande le TDD et le balisage", () => {
+    const prompt = promptPour(["app-web"], ["typescript"]);
+    assert.ok(prompt.includes("RED → GREEN → REFACTOR"));
+    assert.ok(prompt.includes("## Le balisage MSCM"));
+  });
+
+  it("un document ne demande ni TDD ni balisage", () => {
+    // Le TDD était déjà retiré ; le balisage restait. Exiger `@id` et `@layer`
+    // de quelqu'un qui rédige des fiches de révision est la même faute — une
+    // consigne hors sujet apprend à l'agent que le reste est peut-être
+    // décoratif aussi.
+    const prompt = promptPour(["cours", "pdf"]);
+    assert.ok(!prompt.includes("RED → GREEN → REFACTOR"));
+    assert.ok(!prompt.includes("## Le balisage MSCM"), "le balisage n'a rien à faire là");
+    assert.ok(prompt.includes("relecture à chaque étape"), "ce qui le remplace doit être dit");
+  });
+
+  it("un document engendré par un script reste du code", () => {
+    // Un rapport PDF produit par un programme : le format dit « document »,
+    // la technique dit le contraire, et c'est la technique qui gagne.
+    const prompt = promptPour(["pdf"], ["python"]);
+    assert.ok(prompt.includes("## Le balisage MSCM"));
+  });
+});
+
 // ── le prompt de l'étage 1 ────────────────────────────────────────────────
 
 describe("le prompt de l'étage 1", () => {
@@ -225,6 +260,50 @@ describe("le prompt de l'étage 1", () => {
     }
     for (const numero of QUESTIONS_ESSENTIELLES) {
       assert.ok(prompt.includes("réponse " + numero), `réponse ${numero} absente`);
+    }
+  });
+
+  it("à T1, les quatre essentielles entrent bel et bien dans le prompt", () => {
+    // Le défaut, découvert en fabriquant un exemple pour la documentation :
+    // l'assembleur filtrait sur `retenue()` — donc sur `depuis` — pendant que
+    // le formulaire affichait sur `etageDe()`. Les quatre essentielles portent
+    // `depuis: T3`. À T1 et T2 elles étaient donc posées à l'écran, saisies par
+    // l'utilisateur, puis **jetées** : le cadrage d'un micro-fix sortait sans
+    // une seule des réponses écrites.
+    const questions = QUESTIONS_ESSENTIELLES.map((n) => question(n, "T3"));
+    const reponses = Object.fromEntries(QUESTIONS_ESSENTIELLES.map((n) => [n, "réponse " + n]));
+    const prompt = assembler(cadrage(reponses, "T1"), matiere(questions));
+
+    for (const numero of QUESTIONS_ESSENTIELLES) {
+      assert.ok(prompt.includes("réponse " + numero), `réponse ${numero} perdue à T1`);
+    }
+    assert.ok(
+      !prompt.includes("Ce qui n'a pas été tranché"),
+      "rien ne manque : les quatre sont répondues",
+    );
+  });
+
+  it("affichée quelque part, une question est assemblée partout", () => {
+    // La règle générale derrière le défaut ci-dessus : un seul critère décide
+    // de l'affichage et de l'assemblage. Tant que les deux tiennent, ce test
+    // passe pour toutes les classes.
+    const questions = [
+      ...QUESTIONS_ESSENTIELLES.map((n) => question(n, "T3")),
+      question("1.2", "T1"),
+      question("4.4", "T4", true),
+    ];
+    const reponses = Object.fromEntries(questions.map((q) => [q.numero, "réponse " + q.numero]));
+
+    for (const classe of ["T1", "T2", "T3", "T4", "T5"]) {
+      const prompt = assembler(cadrage(reponses, classe), matiere(questions));
+      for (const q of questions) {
+        const affichee = etageDe(q, classe) !== null;
+        assert.equal(
+          prompt.includes("réponse " + q.numero),
+          affichee,
+          `${q.numero} à ${classe} : affichée=${affichee}, assemblée=${!affichee}`,
+        );
+      }
     }
   });
 

@@ -264,8 +264,16 @@ export function assembler(cadrage: Cadrage, matiere: Matiere): string {
 
   const manquantes: string[] = [];
   for (const section of matiere.sections) {
+    // **Le même critère que le formulaire, pas un critère parallèle.**
+    // Une version antérieure filtrait ici sur `retenue()` alors que le
+    // formulaire affiche sur `etageDe()`. Les deux divergent pour les quatre
+    // essentielles, dont le `depuis` vaut T3 : à T1 et T2 elles étaient posées
+    // à l'écran, saisies, puis **jetées** à l'assemblage. Le cadrage d'un
+    // micro-fix sortait sans une seule des réponses écrites — seule la section
+    // déduite survivait, entièrement vide. Un seul critère, donc, et c'est
+    // celui qui décide déjà de l'affichage.
     const questions = section.questions
-      .filter((q) => retenue(q, cadrage.classe))
+      .filter((q) => etageDe(q, cadrage.classe) !== null)
       .sort((a, b) => a.rang - b.rang);
     if (!questions.length) continue;
 
@@ -355,27 +363,35 @@ export function assembler(cadrage: Cadrage, matiere: Matiere): string {
   }
 
   // ── le balisage ───────────────────────────────────────────────────────
-  bouts.push("## Le balisage MSCM");
-  bouts.push(
-    "Chaque unité de sens du code porte cinq annotations en commentaire, et un " +
-      "index est reconstruit à partir d'elles :",
-  );
-  bouts.push(
-    [
-      "```",
-      "@id     identifiant unique et hiérarchique — obligatoire",
-      "@do     ce que fait l'unité, en verbe_infinitif_souligne — obligatoire",
-      "@role   securite | donnee | orchestration | ui | config | rule",
-      "@layer  core | domain | infra | outil | ui | doc",
-      "@human  une phrase lisible, pour qui n'a pas le code sous les yeux",
-      "```",
-    ].join("\n"),
-  );
-  bouts.push(
-    "Règles d'intégrité : **identifiant unique**, **aucun bloc orphelin** (tout " +
-      "`@id` enfant doit avoir un parent existant), **aucun cycle** dans les " +
-      "dépendances. Un index périmé fait échouer la vérification.",
-  );
+  //
+  // **Seulement s'il y a du code.** Demander `@id` et `@layer` à quelqu'un qui
+  // rédige des fiches de révision, c'est la même faute que d'exiger son cycle
+  // TDD : une consigne hors sujet apprend à l'agent que le reste du document
+  // est peut-être décoratif aussi. Le format décide, comme pour l'instruction
+  // finale, et par le même appel.
+  if (produitDuCode(cadrage.formats, cadrage.techniques)) {
+    bouts.push("## Le balisage MSCM");
+    bouts.push(
+      "Chaque unité de sens du code porte cinq annotations en commentaire, et un " +
+        "index est reconstruit à partir d'elles :",
+    );
+    bouts.push(
+      [
+        "```",
+        "@id     identifiant unique et hiérarchique — obligatoire",
+        "@do     ce que fait l'unité, en verbe_infinitif_souligne — obligatoire",
+        "@role   securite | donnee | orchestration | ui | config | rule",
+        "@layer  core | domain | infra | outil | ui | doc",
+        "@human  une phrase lisible, pour qui n'a pas le code sous les yeux",
+        "```",
+      ].join("\n"),
+    );
+    bouts.push(
+      "Règles d'intégrité : **identifiant unique**, **aucun bloc orphelin** (tout " +
+        "`@id` enfant doit avoir un parent existant), **aucun cycle** dans les " +
+        "dépendances. Un index périmé fait échouer la vérification.",
+    );
+  }
 
   // ── l'instruction finale ──────────────────────────────────────────────
   bouts.push("## Ce qu'il faut faire maintenant");

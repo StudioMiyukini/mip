@@ -15,7 +15,7 @@ import { bassin, matiere, RACINE } from "./bd.js";
 import { Cadence, demandeur } from "./cadence.js";
 import { FORMATS, TECHNIQUES } from "./livrable.js";
 import { BISCUIT, duTunnel, jetonDe, Porte } from "./porte.js";
-import { assembler, etagesDe, QUESTIONS_ESSENTIELLES, retenue, type Cadrage } from "./prompt.js";
+import { assembler, etageDe, etagesDe, QUESTIONS_ESSENTIELLES, type Cadrage } from "./prompt.js";
 import {
   adresseValide,
   empreindre,
@@ -427,6 +427,53 @@ serveur.get("/api/compte/donnees", async (requete, reponse) => {
 });
 
 /**
+ * Corriger son adresse.
+ *
+ * **Le droit de rectification (RGPD art. 16), et il manquait.** La politique de
+ * confidentialité disait « supprimez le compte et recréez-en un » : ce n'est pas
+ * une rectification, c'est un effacement suivi d'une perte. Tous les cadrages
+ * partaient avec l'ancienne adresse.
+ *
+ * L'adresse est le seul champ d'identité qu'on détient — donc le seul qui puisse
+ * être faux. Le mot de passe est redemandé pour la même raison qu'à la
+ * suppression : une session volée ne doit pas suffire à s'emparer d'un compte en
+ * en changeant l'adresse.
+ */
+serveur.post("/api/compte/adresse", async (requete, reponse) => {
+  const utilisateur = quiParle(requete as never);
+  if (!utilisateur) return reponse.code(401).send({ erreur: "session" });
+
+  const corps = (requete.body ?? {}) as { adresse?: string; mot_de_passe?: string };
+  if (!adresseValide(corps.adresse ?? "")) {
+    return reponse
+      .code(400)
+      .send({ erreur: "adresse", message: "Cette adresse ne semble pas valide." });
+  }
+
+  const ligne = await bassin.query("SELECT empreinte FROM utilisateur WHERE id = $1", [utilisateur]);
+  if (!ligne.rowCount || !motCorrespond(corps.mot_de_passe ?? "", ligne.rows[0].empreinte)) {
+    return reponse.code(401).send({ erreur: "refuse", message: "Mot de passe incorrect." });
+  }
+
+  const normalisee = normaliserAdresse(corps.adresse!);
+  try {
+    await bassin.query("UPDATE utilisateur SET adresse = $1 WHERE id = $2", [
+      normalisee,
+      utilisateur,
+    ]);
+  } catch (erreur) {
+    if ((erreur as { code?: string }).code === "23505") {
+      return reponse
+        .code(409)
+        .send({ erreur: "existe", message: "Un compte existe déjà pour cette adresse." });
+    }
+    throw erreur;
+  }
+  // La session tient à un jeton, pas à l'adresse : on reste connecté.
+  return { ok: true, adresse: normalisee };
+});
+
+/**
  * Supprimer son compte.
  *
  * **Pour de bon, pas marqué effacé.** La suppression emporte les cadrages par
@@ -570,8 +617,10 @@ serveur.get("/api/poids", async () => {
   return {
     poids: classes.map((classe) => ({
       classe,
-      questions: toutes.filter((q) => retenue(q, classe) && !q.optionnelle).length,
-      avec_optionnelles: toutes.filter((q) => retenue(q, classe)).length,
+      // Comptés sur l'étage, comme l'affichage et comme l'assemblage. Sur
+      // `retenue()`, T1 et T2 annonçaient sept questions et en posaient onze.
+      questions: toutes.filter((q) => (etageDe(q, classe) ?? 3) <= 2).length,
+      avec_optionnelles: toutes.filter((q) => etageDe(q, classe) !== null).length,
     })),
   };
 });
@@ -587,9 +636,16 @@ serveur.get("/api/poids", async () => {
 const DOCUMENTS: Record<string, string> = {
   documentation: "docs/README.md",
   guide: "docs/guide.md",
+  exemples: "docs/exemples.md",
+  faq: "docs/faq.md",
   protocole: "docs/protocole.md",
+  questions: "docs/questions.md",
+  prompt: "docs/prompt.md",
+  mscm: "docs/mscm.md",
   developpement: "docs/developpement.md",
   confidentialite: "CONFIDENTIALITE.md",
+  mentions: "MENTIONS-LEGALES.md",
+  cgu: "CGU.md",
   licence: "LICENSE",
   apropos: "README.md",
 };

@@ -9,17 +9,25 @@
     "mip.porte",
     "mip.prompt",
     "mip.prompt.essais",
+    "mip.serveur.essais",
     "mip.suggestion",
     "mip.suggestion.essais"
   ],
   "doc": [
     "mip",
+    "mip.cgu",
     "mip.confidentialite",
     "mip.decisions",
     "mip.doc",
     "mip.doc.developpement",
+    "mip.doc.exemples",
+    "mip.doc.faq",
     "mip.doc.guide",
-    "mip.doc.protocole"
+    "mip.doc.mscm",
+    "mip.doc.prompt",
+    "mip.doc.protocole",
+    "mip.doc.questions",
+    "mip.mentions"
   ],
   "infra": [
     "mip.bd",

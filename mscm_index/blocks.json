@@ -43,7 +43,7 @@
     "id": "mip.bd.migration",
     "file": "serveur/src/appliquer-schema.ts",
     "start_line": 1,
-    "end_line": 12,
+    "end_line": 23,
     "role": "orchestration",
     "layer": "infra",
     "do": "appliquer_le_schema_sur_la_base",
@@ -70,6 +70,16 @@
     "human": "Les essais de la limite de cadence : ce qu'elle laisse passer, et ce qu'elle retient"
   },
   {
+    "id": "mip.cgu",
+    "file": "CGU.md",
+    "start_line": 1,
+    "end_line": 154,
+    "role": "rule",
+    "layer": "doc",
+    "do": "fixer_les_conditions_d_utilisation_du_service",
+    "human": "Les conditions d'utilisation : ce que le service promet, et ce qu'il ne promet pas"
+  },
+  {
     "id": "mip.comptes",
     "file": "serveur/src/comptes.ts",
     "start_line": 1,
@@ -93,7 +103,7 @@
     "id": "mip.confidentialite",
     "file": "CONFIDENTIALITE.md",
     "start_line": 1,
-    "end_line": 105,
+    "end_line": 201,
     "role": "rule",
     "layer": "doc",
     "do": "dire_ce_qui_est_collecte_ou_c_est_heberge_et_comment_l_effacer",
@@ -113,11 +123,11 @@
     "id": "mip.doc",
     "file": "docs/README.md",
     "start_line": 1,
-    "end_line": 25,
+    "end_line": 38,
     "role": "config",
     "layer": "doc",
     "do": "orienter_la_lecture_de_la_documentation",
-    "human": "La carte de la documentation : quatre portes selon ce qu'on cherche"
+    "human": "La carte de la documentation : par où entrer selon ce qu'on cherche"
   },
   {
     "id": "mip.doc.developpement",
@@ -130,6 +140,26 @@
     "human": "La documentation développeur : monter le projet, le comprendre, y contribuer"
   },
   {
+    "id": "mip.doc.exemples",
+    "file": "docs/exemples.md",
+    "start_line": 1,
+    "end_line": 310,
+    "role": "config",
+    "layer": "doc",
+    "do": "montrer_des_cadrages_reels_et_le_prompt_qu_ils_produisent",
+    "human": "Deux exemples complets : ce qu'on répond, et ce qui en sort"
+  },
+  {
+    "id": "mip.doc.faq",
+    "file": "docs/faq.md",
+    "start_line": 1,
+    "end_line": 137,
+    "role": "config",
+    "layer": "doc",
+    "do": "repondre_aux_questions_frequentes",
+    "human": "Les questions qu'on se pose en arrivant, et leurs réponses"
+  },
+  {
     "id": "mip.doc.guide",
     "file": "docs/guide.md",
     "start_line": 1,
@@ -140,6 +170,26 @@
     "human": "Le guide d'utilisation : à quoi ça sert, comment s'en servir, et ce que ça ne fait pas"
   },
   {
+    "id": "mip.doc.mscm",
+    "file": "docs/mscm.md",
+    "start_line": 1,
+    "end_line": 138,
+    "role": "config",
+    "layer": "doc",
+    "do": "expliquer_le_balisage_mscm_et_son_usage",
+    "human": "Le balisage MSCM : annoter son code pour qu'un agent s'y retrouve"
+  },
+  {
+    "id": "mip.doc.prompt",
+    "file": "docs/prompt.md",
+    "start_line": 1,
+    "end_line": 123,
+    "role": "config",
+    "layer": "doc",
+    "do": "decrire_l_anatomie_du_prompt_produit",
+    "human": "Anatomie du prompt : chaque section, ce qu'elle fait, et pourquoi elle y est"
+  },
+  {
     "id": "mip.doc.protocole",
     "file": "docs/protocole.md",
     "start_line": 1,
@@ -148,6 +198,16 @@
     "layer": "doc",
     "do": "expliquer_le_protocole_mip_a_qui_recoit_un_prompt",
     "human": "Le protocole MIP : les classes, les phases, les gates et les rôles"
+  },
+  {
+    "id": "mip.doc.questions",
+    "file": "docs/questions.md",
+    "start_line": 1,
+    "end_line": 124,
+    "role": "config",
+    "layer": "doc",
+    "do": "expliquer_ce_que_chaque_section_de_questions_cherche",
+    "human": "Les six sections : d'où viennent les questions et ce qu'elles cherchent"
   },
   {
     "id": "mip.extraction",
@@ -210,6 +270,16 @@
     "human": "Les essais du livrable : ce qui produit du code, et ce qui n'en produit pas"
   },
   {
+    "id": "mip.mentions",
+    "file": "MENTIONS-LEGALES.md",
+    "start_line": 1,
+    "end_line": 95,
+    "role": "rule",
+    "layer": "doc",
+    "do": "publier_l_identite_de_l_editeur_et_de_l_hebergeur",
+    "human": "Les mentions légales : qui édite ce site, qui l'héberge, et comment joindre"
+  },
+  {
     "id": "mip.porte",
     "file": "serveur/src/porte.ts",
     "start_line": 1,
@@ -233,7 +303,7 @@
     "id": "mip.prompt",
     "file": "serveur/src/prompt.ts",
     "start_line": 1,
-    "end_line": 454,
+    "end_line": 470,
     "role": "orchestration",
     "layer": "core",
     "do": "assembler_le_prompt_initial_depuis_les_reponses_de_cadrage",
@@ -243,7 +313,7 @@
     "id": "mip.prompt.essais",
     "file": "serveur/src/prompt.test.ts",
     "start_line": 1,
-    "end_line": 239,
+    "end_line": 318,
     "role": "rule",
     "layer": "core",
     "do": "eprouver_l_etagement_et_le_traitement_des_suggestions",
@@ -263,11 +333,21 @@
     "id": "mip.serveur",
     "file": "serveur/src/index.ts",
     "start_line": 1,
-    "end_line": 630,
+    "end_line": 707,
     "role": "ui",
     "layer": "ui",
     "do": "servir_le_formulaire_et_assembler_les_prompts",
     "human": "Le serveur : le formulaire, les cadrages, et le prompt assemblé"
+  },
+  {
+    "id": "mip.serveur.essais",
+    "file": "serveur/src/documents.test.ts",
+    "start_line": 1,
+    "end_line": 100,
+    "role": "config",
+    "layer": "core",
+    "do": "verifier_que_la_liste_blanche_et_le_routeur_client_nomment_les_memes_pages",
+    "human": "L'essai qui empêche la liste blanche des documents de diverger du client"
   },
   {
     "id": "mip.suggestion",
@@ -293,7 +373,7 @@
     "id": "mip.web",
     "file": "web/src/App.tsx",
     "start_line": 1,
-    "end_line": 178,
+    "end_line": 191,
     "role": "ui",
     "layer": "ui",
     "do": "assembler_les_pages_dans_la_coque_et_router_entre_elles",
@@ -303,7 +383,7 @@
     "id": "mip.web.accueil",
     "file": "web/src/Accueil.tsx",
     "start_line": 1,
-    "end_line": 173,
+    "end_line": 182,
     "role": "ui",
     "layer": "ui",
     "do": "presenter_le_mip_a_quelqu_un_qui_arrive_sans_rien_savoir",
@@ -333,17 +413,17 @@
     "id": "mip.web.compte",
     "file": "web/src/Compte.tsx",
     "start_line": 1,
-    "end_line": 239,
+    "end_line": 314,
     "role": "ui",
     "layer": "ui",
-    "do": "gerer_l_inscription_la_connexion_et_l_effacement_du_compte",
-    "human": "Le compte : s'inscrire pour sauvegarder, et pouvoir tout effacer"
+    "do": "gerer_l_inscription_la_connexion_la_rectification_et_l_effacement_du_compte",
+    "human": "Le compte : s'inscrire, corriger son adresse, tout emporter, tout effacer"
   },
   {
     "id": "mip.web.coque",
     "file": "web/src/Coque.tsx",
     "start_line": 1,
-    "end_line": 131,
+    "end_line": 160,
     "role": "ui",
     "layer": "ui",
     "do": "encadrer_les_pages_dans_une_navigation_laterale",

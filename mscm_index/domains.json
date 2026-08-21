@@ -12,6 +12,9 @@
     "mip.cadence",
     "mip.cadence.essais"
   ],
+  "cgu": [
+    "mip.cgu"
+  ],
   "comptes": [
     "mip.comptes",
     "mip.comptes.essais"
@@ -25,8 +28,13 @@
   "doc": [
     "mip.doc",
     "mip.doc.developpement",
+    "mip.doc.exemples",
+    "mip.doc.faq",
     "mip.doc.guide",
-    "mip.doc.protocole"
+    "mip.doc.mscm",
+    "mip.doc.prompt",
+    "mip.doc.protocole",
+    "mip.doc.questions"
   ],
   "essais": [
     "mscm.essais"
@@ -47,6 +55,9 @@
     "mip.livrable",
     "mip.livrable.essais"
   ],
+  "mentions": [
+    "mip.mentions"
+  ],
   "mip": [
     "mip"
   ],
@@ -65,7 +76,8 @@
     "mip.publication"
   ],
   "serveur": [
-    "mip.serveur"
+    "mip.serveur",
+    "mip.serveur.essais"
   ],
   "suggestion": [
     "mip.suggestion",

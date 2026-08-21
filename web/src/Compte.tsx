@@ -1,8 +1,8 @@
 // @id mip.web.compte
 // @role ui
 // @layer ui
-// @human Le compte : s'inscrire pour sauvegarder, et pouvoir tout effacer
-// @do gerer_l_inscription_la_connexion_et_l_effacement_du_compte
+// @human Le compte : s'inscrire, corriger son adresse, tout emporter, tout effacer
+// @do gerer_l_inscription_la_connexion_la_rectification_et_l_effacement_du_compte
 
 import { useState } from "react";
 
@@ -128,6 +128,12 @@ function Reglages({
   const [mot, setMot] = useState("");
   const [refus, setRefus] = useState<string | null>(null);
   const [confirme, setConfirme] = useState(false);
+  // La rectification est repliée par défaut : c'est un droit, pas une tâche
+  // courante. Dépliée, elle prendrait toute la place devant « emporter » et
+  // « supprimer », qu'on vient chercher bien plus souvent.
+  const [rectifie, setRectifie] = useState(false);
+  const [nouvelle, setNouvelle] = useState("");
+  const [dit, setDit] = useState<string | null>(null);
 
   async function emporter(): Promise<void> {
     const reponse = await fetch("/api/compte/donnees");
@@ -141,6 +147,32 @@ function Reglages({
     lien.download = "mip-studio-mes-donnees.json";
     lien.click();
     URL.revokeObjectURL(lien.href);
+  }
+
+  /**
+   * Corriger son adresse — RGPD art. 16.
+   *
+   * L'ancienne version de la politique disait « supprimez le compte et
+   * recréez-en un ». Ce n'est pas une rectification : c'est un effacement, et
+   * il emportait tous les cadrages.
+   */
+  async function rectifier(): Promise<void> {
+    setRefus(null);
+    setDit(null);
+    const reponse = await fetch("/api/compte/adresse", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ adresse: nouvelle, mot_de_passe: mot }),
+    });
+    if (reponse.ok) {
+      setDit("Adresse corrigée.");
+      setNouvelle("");
+      setMot("");
+      setRectifie(false);
+      surChangement();
+      return;
+    }
+    setRefus((await reponse.json().catch(() => ({}))).message ?? "Refusé.");
   }
 
   async function supprimer(): Promise<void> {
@@ -172,10 +204,53 @@ function Reglages({
         <button type="button" onClick={emporter}>
           Emporter mes données
         </button>
+        <button type="button" onClick={() => setRectifie((v) => !v)}>
+          Changer d'adresse
+        </button>
         <button type="button" onClick={sortir}>
           Se déconnecter
         </button>
       </div>
+
+      {rectifie && (
+        <>
+          <p className="explication">
+            Vos cadrages restent attachés au compte. Le mot de passe est redemandé : une
+            session ouverte ne doit pas suffire à changer l'adresse d'un compte.
+          </p>
+          <input
+            className="controle"
+            type="email"
+            value={nouvelle}
+            onChange={(e) => setNouvelle(e.target.value)}
+            placeholder="nouvelle adresse électronique"
+            autoComplete="email"
+            autoFocus
+          />
+          <input
+            className="controle"
+            type="password"
+            value={mot}
+            onChange={(e) => setMot(e.target.value)}
+            placeholder="votre mot de passe, pour confirmer"
+            autoComplete="current-password"
+          />
+          <div className="boutons">
+            <button
+              type="button"
+              className="principal"
+              disabled={!nouvelle || !mot}
+              onClick={rectifier}
+            >
+              Corriger
+            </button>
+            <button type="button" onClick={() => setRectifie(false)}>
+              Annuler
+            </button>
+          </div>
+        </>
+      )}
+      {dit && <p className="note">{dit}</p>}
 
       <hr className="separateur" />
 

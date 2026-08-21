@@ -60,8 +60,8 @@ export function Accueil({ formulaire, aller }: Props) {
           <a href="/cadrage" className="bouton-principal" onClick={(e) => surClicInterne(e, aller)}>
             Commencer un cadrage
           </a>
-          <a href="/guide" className="bouton-second" onClick={(e) => surClicInterne(e, aller)}>
-            Comment ça marche
+          <a href="/exemples" className="bouton-second" onClick={(e) => surClicInterne(e, aller)}>
+            Voir un exemple
           </a>
         </div>
         <p className="hero-note">
@@ -145,6 +145,11 @@ export function Accueil({ formulaire, aller }: Props) {
             correspond plus au terrain.
           </p>
           <p className="commande">npx @mip/mscm</p>
+          <p>
+            <a href="/mscm" onClick={(e) => surClicInterne(e, aller)}>
+              Comment ça s'annote
+            </a>
+          </p>
         </div>
       </section>
 
@@ -153,7 +158,11 @@ export function Accueil({ formulaire, aller }: Props) {
           Commencer un cadrage
         </a>
         <span className="explication">
-          Aucune donnée n'est conservée si vous n'avez pas de compte.
+          Aucune donnée n'est conservée si vous n'avez pas de compte —{" "}
+          <a href="/confidentialite" onClick={(e) => surClicInterne(e, aller)}>
+            ce qu'on garde, et pourquoi
+          </a>
+          .
         </span>
       </footer>
     </div>
