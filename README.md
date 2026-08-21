@@ -235,13 +235,19 @@ donc poser le CNAME dans la zone `miyukini.org` :
 **PM2**, une fois le DNS en place :
 
 ```
-pm2 start "C:\Program Files (x86)\cloudflared\cloudflared.exe" --name mip-tunnel -- \
-  tunnel --config "C:\Users\Van Jean\.cloudflared\mip-config.yml" run
-pm2 start npm --name mip --cwd D:\APP\mip-studio\serveur -- run start
+npm run -w web build          # le serveur sert web/dist
+pm2 start ecosystem.config.cjs
 pm2 save
 ```
 
-Le serveur doit voir `MIP_EMPREINTE` dans son environnement. **PM2 rejoue
-l'environnement capturé au premier démarrage** : une variable ajoutée après coup
-n'arrive jamais, et `pm2 restart` relance sans elle sans rien signaler. La poser
-dans le shell *avant* le `pm2 start`, ou utiliser `--update-env`.
+Deux processus — le serveur et le tunnel. PostgreSQL n'y est pas : il vit dans
+Docker avec `restart: unless-stopped` et se relève seul.
+
+**Tout l'environnement du serveur est dans le fichier**, pas dans le shell. PM2
+rejoue l'environnement capturé au premier démarrage : une variable posée à la
+main avant un `pm2 start` disparaît au premier `pm2 restart`, sans rien
+signaler.
+
+`MIP_EMPREINTE` en est volontairement **absente** — le site est public. La poser
+le refermerait derrière un mot de passe partagé ; l'ancienne valeur est dans
+`.env.ferme`.
