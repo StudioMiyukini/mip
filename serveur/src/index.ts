@@ -99,8 +99,29 @@ serveur.post("/api/sortir", async (requete, reponse) => {
  * pèse moins qu'une image. Découper en cinq routes ferait cinq allers-retours
  * pour afficher une page qui ne s'affiche qu'une fois.
  */
-serveur.get("/api/formulaire", async () => {
+serveur.get("/api/formulaire", async (_requete, reponse) => {
   const donnees = await matiere();
+
+  // **Un protocole vide est une panne, pas un formulaire court.**
+  //
+  // Le schéma supprime et recrée les tables dérivées — c'est voulu, elles se
+  // régénèrent depuis le pack. Mais qui applique le schéma sans ré-ingérer
+  // derrière obtient une base sans une seule question, et le formulaire s'est
+  // alors affiché *comme s'il marchait* : des menus déroulants vides, aucune
+  // question, et un prompt qui annonçait « critère inconnu ». Vu en vrai le
+  // 2026-08-21.
+  //
+  // Une page cassée qui a l'air normale coûte plus cher qu'une erreur franche :
+  // on cherche le défaut dans son propre usage avant de le chercher dans le
+  // service.
+  if (!donnees.sections.length || !donnees.protocole.classification.length) {
+    return reponse.code(503).send({
+      erreur: "protocole_absent",
+      message:
+        "Le protocole n'est pas chargé en base. Lancer `npm run extraire` puis `npm run ingerer`.",
+    });
+  }
+
   const agents = await bassin.query(
     "SELECT code, nom, role, phases, optionnel, jetons FROM agent ORDER BY optionnel, code",
   );

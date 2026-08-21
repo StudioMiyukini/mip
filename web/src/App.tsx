@@ -67,9 +67,15 @@ export function App() {
     // ré-ingestion et il sert à trois pages — le recharger par page ferait trois
     // allers-retours pour la même chose.
     fetch("/api/formulaire")
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`formulaire : ${r.status}`))))
+      .then(async (r) => {
+        if (r.ok) return r.json();
+        // Le serveur dit *pourquoi* : on relaie son message plutôt que le code
+        // HTTP, qui n'apprend rien à qui lit l'écran.
+        const dit = await r.json().catch(() => ({}));
+        throw new Error(dit.message ?? `formulaire : ${r.status}`);
+      })
       .then(setFormulaire)
-      .catch((e) => setErreur(String(e)));
+      .catch((e) => setErreur(e instanceof Error ? e.message : String(e)));
   }, [ouverte]);
 
   useEffect(() => {
