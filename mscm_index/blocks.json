@@ -90,6 +90,16 @@
     "human": "Les décisions prises pendant l'extraction, avec leur motif"
   },
   {
+    "id": "mip.doc",
+    "file": "docs/README.md",
+    "start_line": 1,
+    "end_line": 25,
+    "role": "config",
+    "layer": "doc",
+    "do": "orienter_la_lecture_de_la_documentation",
+    "human": "La carte de la documentation : quatre portes selon ce qu'on cherche"
+  },
+  {
     "id": "mip.doc.developpement",
     "file": "docs/developpement.md",
     "start_line": 1,
@@ -213,7 +223,7 @@
     "id": "mip.serveur",
     "file": "serveur/src/index.ts",
     "start_line": 1,
-    "end_line": 585,
+    "end_line": 586,
     "role": "ui",
     "layer": "ui",
     "do": "servir_le_formulaire_et_assembler_les_prompts",
@@ -303,7 +313,7 @@
     "id": "mip.web.pied",
     "file": "web/src/Pied.tsx",
     "start_line": 1,
-    "end_line": 29,
+    "end_line": 30,
     "role": "ui",
     "layer": "ui",
     "do": "rendre_la_documentation_atteignable_depuis_l_application",

@@ -9,6 +9,7 @@
     "mip.comptes.essais",
     "mip.confidentialite",
     "mip.decisions",
+    "mip.doc",
     "mip.doc.developpement",
     "mip.doc.guide",
     "mip.doc.protocole",
@@ -59,6 +60,11 @@
     {
       "from": "mip",
       "to": "mip.decisions",
+      "type": "parent"
+    },
+    {
+      "from": "mip",
+      "to": "mip.doc",
       "type": "parent"
     },
     {

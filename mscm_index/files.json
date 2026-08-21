@@ -10,6 +10,9 @@
   "docker-compose.yml": [
     "mip.bd.conteneur"
   ],
+  "docs/README.md": [
+    "mip.doc"
+  ],
   "docs/developpement.md": [
     "mip.doc.developpement"
   ],

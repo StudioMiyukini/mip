@@ -4,6 +4,7 @@
     "mip.comptes",
     "mip.confidentialite",
     "mip.decisions",
+    "mip.doc",
     "mip.extraction",
     "mip.porte",
     "mip.prompt",

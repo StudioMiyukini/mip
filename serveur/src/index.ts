@@ -519,6 +519,7 @@ serveur.get("/api/poids", async () => {
  * nommé n'existe pas.
  */
 const DOCUMENTS: Record<string, string> = {
+  documentation: "docs/README.md",
   guide: "docs/guide.md",
   protocole: "docs/protocole.md",
   developpement: "docs/developpement.md",

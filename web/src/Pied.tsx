@@ -15,6 +15,7 @@ export function Pied() {
   return (
     <footer className="pied">
       <nav>
+        <a href="/documentation">Documentation</a>
         <a href="/guide">Guide d'utilisation</a>
         <a href="/protocole">Le protocole MIP</a>
         <a href="/developpement">Développer</a>

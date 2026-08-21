@@ -19,6 +19,7 @@
     "mip.decisions"
   ],
   "doc": [
+    "mip.doc",
     "mip.doc.developpement",
     "mip.doc.guide",
     "mip.doc.protocole"
