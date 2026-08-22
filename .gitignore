@@ -21,3 +21,4 @@ mscm/dist/
 # références à des dépôts internes.
 .mip/
 logs/
+.tmp/

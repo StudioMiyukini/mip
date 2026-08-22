@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Champ, Suggestion } from "./Champ";
 import { Etages, Palier } from "./Etages";
+import { Equipe } from "./Equipe";
 import { Tags } from "./Tags";
 import { TagsGroupes } from "./TagsGroupes";
 import {
@@ -355,16 +356,8 @@ export function Cadrage({ formulaire, connecte, surEnregistrement }: Props) {
                 </p>
               </section>
 
-              <Tags
-                titre="L'équipe"
-                explication="Chaque rôle est un prompt chargé au moment de sa phase. L'équipe cœur est active par défaut."
-                elements={formulaire.agents.map((a) => ({
-                  code: a.code,
-                  libelle: a.nom,
-                  detail: `${a.role} · ${a.phases}`,
-                  reserve: a.optionnel ? "optionnel" : undefined,
-                  jetons: a.jetons,
-                }))}
+              <Equipe
+                agents={formulaire.agents}
                 actifs={cadrage.agents}
                 surChangement={(agents) => setCadrage({ ...cadrage, agents })}
               />

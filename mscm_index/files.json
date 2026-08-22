@@ -70,6 +70,9 @@
   "mscm/src/mscm.ts": [
     "mscm"
   ],
+  "scripts/engendrer-exemples.mjs": [
+    "mip.doc.exemples.engendrement"
+  ],
   "serveur/src/appliquer-schema.ts": [
     "mip.bd.migration"
   ],
@@ -93,6 +96,12 @@
   ],
   "serveur/src/empreinte.ts": [
     "mip.porte.empreinte"
+  ],
+  "serveur/src/glossaire.test.ts": [
+    "mip.glossaire.essais"
+  ],
+  "serveur/src/glossaire.ts": [
+    "mip.glossaire"
   ],
   "serveur/src/index.ts": [
     "mip.serveur"
@@ -141,6 +150,9 @@
   ],
   "web/src/Document.tsx": [
     "mip.web.document"
+  ],
+  "web/src/Equipe.tsx": [
+    "mip.web.equipe"
   ],
   "web/src/Etages.tsx": [
     "mip.web.etages"

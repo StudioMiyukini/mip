@@ -47,6 +47,28 @@ Une phrase compte plus que les autres : *« La classification a déjà été
 tranchée. Ne la recalcule pas. »* Sans elle, l'agent refait l'estimation, arrive
 à une autre, et vous vous retrouvez avec deux avis sans savoir lequel suivre.
 
+## Le protocole, en bref
+
+Ce qu'est une gate, puis **chaque phase de votre classe** : ce qui s'y passe, et
+à quelle condition on en sort. Enfin le vocabulaire — séquence, phase, temps,
+étape, volet, tâche — parce que le protocole y tient et qu'un agent qui appelle
+« étape » une subdivision de P0 range ses artefacts là où personne ne les
+retrouvera.
+
+Cette section manquait. Le prompt ordonnait *« commence en P3 »*, *« arrête-toi
+à chaque gate »* et renvoyait vers `<sequence>/briefs/` — trois choses qu'un
+modèle qui n'a jamais lu le protocole ne peut que deviner. **Deviner est
+exactement ce que ce cadrage existe pour empêcher.**
+
+Deux économies, dans le même esprit :
+
+- **seules les phases de votre classe** sont décrites. Un micro-fix ne lit pas
+  ce qu'est P6 ;
+- **seul le vocabulaire qui a cours**. « Temps » n'existe qu'en P0 : l'enseigner
+  à qui n'y passe pas ne coûte pas que des jetons, ça l'invite à s'en servir.
+
+Compter environ 350 jetons pour un T1, 900 pour un T5.
+
 ## Le noyau immuable
 
 Seize règles qui ne dépendent ni du projet ni de l'outil. Elles sont **copiées
@@ -58,6 +80,15 @@ d'aller chercher.
 Les rôles retenus, avec cette précision : ce sont des **prompts à charger au
 moment de leur phase**, pas des personnages à jouer. Un agent qui « incarne »
 onze rôles simultanément ne fait que changer de ton.
+
+Chacun porte **ce qu'il fait**, pas seulement son intitulé de poste :
+
+> - **Victor** (Expert cybersécurité) — P0 temps 5 (à partir de T3), P4
+>   Cherche ce qui peut être attaqué : entrées non vérifiées, secrets exposés,
+>   droits d'accès trop larges. Il note le résultat sur 100 lors de l'audit.
+
+L'intitulé reste entre parenthèses : c'est lui qui nomme le fichier à charger.
+Les abréviations de la source sont dépliées — « P0 T5 (T3+) » ne se lit pas.
 
 ## Le cadrage
 
@@ -93,6 +124,11 @@ contexte et fait payer à chaque tour ce qui n'aura servi qu'une fois.
 Les cinq annotations et les règles d'intégrité. Présent même si vous n'utilisez
 pas MSCM : un agent qui les connaît produit du code plus facile à reprendre, et
 les ignorer ne coûte rien.
+
+**Absent si le livrable n'est pas du code.** Demander `@id` et `@layer` à
+quelqu'un qui rédige des fiches de révision est la même faute que d'exiger son
+cycle de tests : une consigne hors sujet apprend à l'agent que le reste du
+document est peut-être décoratif aussi.
 
 ## Ce qu'il faut faire maintenant
 

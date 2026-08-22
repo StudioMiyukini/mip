@@ -207,6 +207,93 @@ describe("les suggestions", () => {
   });
 });
 
+// ── le protocole rappelé en contexte ──────────────────────────────────────
+
+describe("le protocole rappelé dans le prompt", () => {
+  const questions = QUESTIONS_ESSENTIELLES.map((n) => question(n, "T3"));
+  const reponses = Object.fromEntries(QUESTIONS_ESSENTIELLES.map((n) => [n, "r"]));
+  const promptDe = (classe: string) => assembler(cadrage(reponses, classe), matiere(questions));
+
+  it("dit ce qu'est une gate avant d'ordonner de s'y arrêter", () => {
+    // Le défaut d'origine : le prompt exigeait « arrête-toi à chaque gate »
+    // sans avoir jamais dit ce qu'est une gate. Un modèle devinait — c'est
+    // précisément ce que ce cadrage existe pour empêcher.
+    const prompt = promptDe("T3");
+    assert.ok(prompt.includes("## Le protocole, en bref"));
+    assert.ok(prompt.includes("point d'arrêt avec un critère explicite"));
+  });
+
+  it("décrit chaque phase de la classe, et sa gate", () => {
+    const prompt = promptDe("T3");
+    for (const code of ["P0", "P3", "P5"]) {
+      assert.ok(prompt.includes(`### ${code} — `), `phase ${code} non décrite`);
+      assert.ok(prompt.includes(`**Gate ${code}**`), `gate ${code} non décrite`);
+    }
+  });
+
+  it("ne décrit pas les phases que la classe ne fait pas", () => {
+    // Décrire P4 et P6 à qui ne les fera pas coûte des jetons **et** laisse un
+    // doute sur ce qu'on attend. La classe T3 de l'essai va P0 → P3 → P5.
+    const prompt = promptDe("T3");
+    assert.ok(!prompt.includes("### P4 — "), "P4 décrite alors qu'elle n'est pas au programme");
+    assert.ok(!prompt.includes("### P6 — "), "P6 décrite alors qu'elle n'est pas au programme");
+  });
+
+  it("explique la phase Git, que le protocole nomme sans jamais la lister", () => {
+    // I-2 énonce « P0 → Git → P3 → … » et I-11 impose la branche, mais la table
+    // de classification ne met Git dans aucune classe. Le prompt citait donc
+    // une phase qu'il n'expliquait pas.
+    const avecCode = assembler(
+      { ...cadrage(reponses, "T3"), formats: ["app-web"], techniques: ["typescript"] },
+      matiere(questions),
+    );
+    assert.ok(avecCode.includes("### Git — "), "Git n'est pas expliquée");
+    // Et à sa place : après P0, avant P3.
+    assert.ok(
+      avecCode.indexOf("### P0 — ") < avecCode.indexOf("### Git — "),
+      "Git placée avant P0",
+    );
+    assert.ok(
+      avecCode.indexOf("### Git — ") < avecCode.indexOf("### P3 — "),
+      "Git placée après P3",
+    );
+  });
+
+  it("n'ouvre pas de branche pour un support de cours", () => {
+    const document = assembler(
+      { ...cadrage(reponses, "T3"), formats: ["cours"], techniques: [] },
+      matiere(questions),
+    );
+    assert.ok(!document.includes("### Git — "), "Git expliquée à qui rédige un document");
+  });
+
+  it("n'enseigne que le vocabulaire qui a cours", () => {
+    // « Temps » n'existe qu'en P0, « Volet » qu'en P4/P5/P6. Apprendre un mot
+    // hors de sa portée ne coûte pas que des jetons : ça invite à l'employer.
+    const sansP0 = promptDe("T1"); // classe inconnue de l'essai → repli P3 → P5
+    assert.ok(!sansP0.includes("**Temps** —"), "« Temps » enseigné sans P0");
+    assert.ok(sansP0.includes("**Volet** —"), "« Volet » manquant alors que P5 est au programme");
+    assert.ok(sansP0.includes("**Gate** —"));
+
+    const avecP0 = promptDe("T3");
+    assert.ok(avecP0.includes("**Temps** —"), "« Temps » manquant alors que P0 est au programme");
+  });
+
+  it("explique ce que fait chaque membre de l'équipe retenue", () => {
+    // « Denis — Chef dev, architecture · P0 T4&T8 » ne dit pas ce que Denis
+    // fait. La phrase du glossaire, si — et les abréviations sont dépliées.
+    const m = matiere(questions);
+    m.protocole.equipe = [
+      { agent: "denis", nom: "Denis", role: "Chef dev, architecture", phases: "P0 T4&T8, P3", optionnel: false },
+    ];
+    const prompt = assembler({ ...cadrage(reponses), agents: ["denis"] }, m);
+
+    assert.ok(prompt.includes("Décide de l'architecture"), "le rôle n'est pas expliqué");
+    assert.ok(prompt.includes("P0 temps 4 et 8"), "les abréviations ne sont pas dépliées");
+    assert.ok(prompt.includes("(Chef dev, architecture)"), "l'intitulé nomme le fichier à charger — il reste");
+  });
+});
+
 // ── ce qui dépend du format ───────────────────────────────────────────────
 
 describe("le format décide de ce qu'on exige", () => {

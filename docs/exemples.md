@@ -7,11 +7,10 @@
 # Deux exemples
 
 Ce qu'on tape dans le formulaire, et ce qui en sort. **Les prompts ci-dessous
-sont réels** : produits par l'outil à partir des réponses montrées, copiés tels
-quels. Ils ne sont ni raccourcis ni retouchés.
-
-Deux cas volontairement éloignés : un correctif d'une ligne dans du code, et un
-livrable qui n'est pas du code du tout.
+sont réels** : cette page est refabriquée par l'outil lui-même
+(`node scripts/engendrer-exemples.mjs`), à partir des réponses montrées — ni
+raccourcis, ni retouchés. Deux cas volontairement éloignés : un correctif d'une
+ligne dans du code, et un livrable qui n'est pas du code du tout.
 
 ---
 
@@ -27,7 +26,7 @@ livrable qui n'est pas du code du tout.
 
 **Classe** T1 (un fichier, moins de vingt lignes) · **Mode** FULL (l'agent
 enchaîne, une seule validation à la fin) · **Format** Application web ·
-**Technique** TypeScript, React
+**Technique** TypeScript, React · **Équipe** Denis, Lise
 
 Puis les quatre questions de l'essentiel :
 
@@ -38,11 +37,9 @@ Puis les quatre questions de l'essentiel :
 | **2.2 · Périmètre ?** | INCLUS : le comparateur de la colonne Date. EXCLUS : le reste du tableau, la pagination, les autres colonnes. |
 | **5.1 · Minimum viable ?** | Un test qui reproduit l'ordre faux, puis le comparateur corrigé. |
 
-C'est tout. Quatre champs, deux minutes.
-
 ### Ce qui en sort
 
-6161 caractères, environ 6.8 k jetons.
+8154 caractères, environ 9 k jetons.
 
 <details>
 <summary>Voir le prompt entier</summary>
@@ -68,6 +65,39 @@ Sur la page des factures, le tri par colonne Date se fait dans le mauvais ordre 
 - **Mode d'autonomie : FULL** (Autonome) — L'agent enchaîne les phases sans s'arrêter. Une seule validation humaine, en P5.
 - La classification a **déjà été tranchée** par le cadrage. Ne la recalcule pas ; si tu la crois fausse, dis-le et attends.
 
+## Le protocole, en bref
+
+Tu suis un protocole nommé MIP. Voici le strict nécessaire pour t'y tenir ; le reste se charge au fil des phases.
+
+**Une gate est un point d'arrêt avec un critère explicite.** On ne la franchit pas parce que le travail semble fini : on la franchit parce que son critère est rempli. Un critère non rempli renvoie en arrière, il ne se contourne pas.
+
+### Git — Ouverture de branche
+
+Une branche `feat/<slug>` est créée. Rien n'est écrit sur la branche principale.
+
+**Gate Git** — La branche existe et le dépôt est propre.
+
+### P3 — Réalisation
+
+Le travail se fait, tâche par tâche, selon le plan. Un point d'étape toutes les cinq tâches plutôt qu'un grand saut.
+
+**Gate P3** — Chaque tâche passe ses vérifications avant que la suivante commence.
+
+### P5 — Livraison et test humain
+
+Le livrable est présenté à l'humain, qui l'essaie et rend un verdict : accepté, accepté avec réserves, ou refusé.
+
+**Gate P5** — Le verdict humain. **Il est obligatoire** — un agent ne se décerne pas son propre quitus. Un refus renvoie au cadrage avec le motif.
+
+Le vocabulaire est strict : chaque mot désigne un seul niveau.
+
+- **Séquence** — un cycle complet, du cadrage au rapport
+- **Phase** — P0, Git, P3, P4, P5, P6 — l'ordre ne se réarrange pas
+- **Étape** — les groupes du plan de P3, et de P3 seulement
+- **Volet** — les blocs internes de P4, P5 et P6
+- **Tâche** — l'unité atomique — une tâche, un exécutant
+- **Gate** — le point d'arrêt entre deux phases, avec un critère explicite
+
 ## Le noyau immuable
 
 Ces règles ne dépendent ni du projet, ni de la stack, ni de l'outil. Elles s'appliquent telles quelles.
@@ -88,6 +118,15 @@ Ces règles ne dépendent ni du projet, ni de la stack, ni de l'outil. Elles s'a
 - **I-14** — Documents modulaires, 400 lignes max _(Tout artefact decoupe si depassement ; volet optimisation P4/P6 si depassement)_
 - **I-15** — Boucle MIP bornee _(Comptage `mip_loops` ; apres 10 iterations, suggerer de reduire le scope)_
 - **I-16** — Chargement agents borne par phase _(Charger `<PHASE>_<agent>.md` en premier ; escalader vers `FULL_<agent>.md` uniquement si justifie)_
+
+## L'équipe
+
+Chaque rôle est un **prompt à charger au moment de sa phase**, pas un personnage à jouer. Charger la version de phase, jamais la version complète sans raison.
+
+- **Denis** (Chef dev, architecture) — P0 temps 4 et 8, P3, P4, P5
+  Décide de l'architecture et écrit le plan d'implémentation, puis coordonne la réalisation et présente les résultats aux points d'arrêt.
+- **Lise** (Dev front-end) — P0 temps 2, P3
+  La partie visible : les écrans, ce qui se clique, ce qui s'affiche.
 
 ## Le cadrage
 
@@ -187,23 +226,24 @@ Règles d'intégrité : **identifiant unique**, **aucun bloc orphelin** (tout `@
 
 ### Ce qu'il faut y remarquer
 
+**Le protocole est rappelé avant qu'on ordonne de le suivre.** « Commence en
+P3 », « arrête-toi à chaque gate » : un modèle qui n'a jamais lu MIP ne peut que
+deviner ce que ça veut dire. La section « Le protocole, en bref » décrit les
+phases de cette classe-là — pas les six — et ce qu'est une gate.
+
 **La classification est déjà tranchée**, et le prompt le dit à l'agent — « ne la
 recalcule pas ; si tu la crois fausse, dis-le et attends ». Sans ça, un agent
 commence par réévaluer l'ampleur du travail, et il la surévalue à peu près
 toujours.
 
-**Le périmètre porte ses EXCLUS.** « On ne touche pas à la pagination » n'est pas
-une précaution rhétorique : c'est la phrase qui évite la refonte du tableau
-pendant qu'on y était.
+**Le périmètre porte ses EXCLUS.** « On ne touche pas à la pagination » est la
+phrase qui évite la refonte du tableau pendant qu'on y était.
 
-**Les sept questions non répondues sont listées, pas cachées.** La section
-ORIENTER se déduit de la demande ; le prompt demande à l'agent de la vérifier
-contre le code plutôt que de la supposer, et la première instruction de la fin
-est « commence par ces sept questions ».
-
-C'est la partie qu'on est tenté de retirer parce qu'elle fait désordre. Elle
-reste : un cadrage muet sur ses trous n'est pas un cadrage sans trous, c'est un
-cadrage où personne n'a regardé.
+**Les questions non répondues sont listées, pas cachées**, et la première
+instruction de la fin est « commence par elles ». C'est la partie qu'on est
+tenté de retirer parce qu'elle fait désordre. Elle reste : un cadrage muet sur
+ses trous n'est pas un cadrage sans trous, c'est un cadrage où personne n'a
+regardé.
 
 ---
 
@@ -221,7 +261,8 @@ même** — à condition de cocher le bon format.
 > Je donne des cours particuliers d'espagnol à des lycéens. Je voudrais un jeu de fiches sur les temps du passé, à distribuer en PDF.
 
 **Classe** T3 (un vrai petit chantier) · **Mode** BIG_STEPS (on relit à chaque
-étape) · **Format** Support de cours, PDF · **Technique** aucune
+étape) · **Format** Support de cours, PDF · **Technique** aucune ·
+**Équipe** Maria, Arianne
 
 | Question | Réponse |
 | --- | --- |
@@ -236,7 +277,7 @@ même** — à condition de cocher le bon format.
 
 ### Ce qui en sort
 
-7648 caractères. Deux sections du prompt précédent ont **disparu**, et
+10434 caractères. Deux sections du prompt précédent ont **disparu**, et
 c'est le format qui les a fait disparaître.
 
 <details>
@@ -254,6 +295,52 @@ c'est le format qui les a fait disparaître.
 - **Mode d'autonomie : BIG_STEPS** (Collaboratif) — Arrêt à chaque gate de phase : P0, P3, P4, P5 sont validées une par une.
 - La classification a **déjà été tranchée** par le cadrage. Ne la recalcule pas ; si tu la crois fausse, dis-le et attends.
 
+## Le protocole, en bref
+
+Tu suis un protocole nommé MIP. Voici le strict nécessaire pour t'y tenir ; le reste se charge au fil des phases.
+
+**Une gate est un point d'arrêt avec un critère explicite.** On ne la franchit pas parce que le travail semble fini : on la franchit parce que son critère est rempli. Un critère non rempli renvoie en arrière, il ne se contourne pas.
+
+### P0 — Cadrage
+
+La seule phase où l'humain décide. On explore, on spécifie, on chiffre les risques, et on écrit un brief. Aucune ligne de code avant sa fin.
+
+**Gate P0** — Le brief est présenté, l'humain l'approuve ou le rejette, **puis seulement** il choisit le mode d'autonomie. Ni approbation implicite, ni choix avant lecture.
+
+### P3 — Réalisation
+
+Le travail se fait, tâche par tâche, selon le plan. Un point d'étape toutes les cinq tâches plutôt qu'un grand saut.
+
+**Gate P3** — Chaque tâche passe ses vérifications avant que la suivante commence.
+
+### P4 — Intégration et audit
+
+L'ensemble est assemblé et vérifié : construction complète, conformité à ce qui avait été décidé, revue de sécurité.
+
+**Gate P4** — Aucun défaut bloquant. Un défaut bloquant renvoie en P3, il ne se contourne pas.
+
+### P5 — Livraison et test humain
+
+Le livrable est présenté à l'humain, qui l'essaie et rend un verdict : accepté, accepté avec réserves, ou refusé.
+
+**Gate P5** — Le verdict humain. **Il est obligatoire** — un agent ne se décerne pas son propre quitus. Un refus renvoie au cadrage avec le motif.
+
+### P6 — Rapport et capitalisation
+
+Ce qui a été fait est consigné : trace d'exécution, mesures, et ce qu'on retient pour la prochaine fois.
+
+**Gate P6** — Le rapport porte une trace d'exécution réelle. Sans elle, il est incomplet.
+
+Le vocabulaire est strict : chaque mot désigne un seul niveau.
+
+- **Séquence** — un cycle complet, du cadrage au rapport
+- **Phase** — P0, Git, P3, P4, P5, P6 — l'ordre ne se réarrange pas
+- **Temps** — les onze subdivisions de P0, et de P0 seulement
+- **Étape** — les groupes du plan de P3, et de P3 seulement
+- **Volet** — les blocs internes de P4, P5 et P6
+- **Tâche** — l'unité atomique — une tâche, un exécutant
+- **Gate** — le point d'arrêt entre deux phases, avec un critère explicite
+
 […]
 
 ## Ce qu'il faut faire maintenant
@@ -268,8 +355,8 @@ c'est le format qui les a fait disparaître.
 
 ### Ce qu'il faut y remarquer
 
-**Plus de TDD, plus de balisage MSCM.** L'instruction finale du premier exemple
-disait « RED → GREEN → REFACTOR ». Ici elle dit :
+**Plus de TDD, plus de balisage MSCM, plus de branche Git.** L'instruction finale
+du premier exemple disait « RED → GREEN → REFACTOR ». Ici elle dit :
 
 > Ce livrable n'est pas du code : pas de tests, pas de branche. Ce qui les
 > remplace, c'est une **relecture à chaque étape** — présente un plan avant de
@@ -282,7 +369,8 @@ pas.
 
 **BIG_STEPS a changé la marche à suivre**, pas seulement une étiquette :
 « arrête-toi à chaque gate de phase — P0, P3, P4, P5, P6 ». En FULL, la même
-ligne disait « enchaîne sans t'arrêter ».
+ligne disait « enchaîne sans t'arrêter ». Et chacune de ces gates est décrite
+plus haut dans le prompt, avec son critère de sortie.
 
 **4.2 est la réponse la plus utile du lot.** « Le risque, c'est la fiche
 exhaustive que personne ne lit » cadre le travail mieux que les sept autres
@@ -296,7 +384,8 @@ réunies : elle dit à l'agent ce qu'il doit refuser de faire.
 | --- | --- | --- |
 | Questions répondues | 4 | 8 |
 | Temps de saisie | ~2 min | ~10 min |
-| Taille du prompt | ~6.8 k jetons | ~8.4 k jetons |
+| Taille du prompt | ~9 k jetons | ~11.5 k jetons |
+| Phases décrites | Git, P3, P5 | P0, P3, P4, P5, P6 |
 | TDD exigé | oui | non |
 | Balisage MSCM | oui | non |
 | Arrêts prévus | 1 | 5 |

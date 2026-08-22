@@ -43,9 +43,21 @@ export interface Agent {
   code: string;
   nom: string;
   role: string;
+  /** L'intitulé brut du protocole : « P0 T9, P6 ». */
   phases: string;
   optionnel: boolean;
   jetons: number;
+  /**
+   * Ce que la personne fait, en français. Ajouté par le serveur depuis son
+   * glossaire — le protocole extrait ne porte qu'un intitulé de poste.
+   * Facultatif : un agent inconnu du glossaire garde son seul intitulé plutôt
+   * que de recevoir un rôle inventé.
+   */
+  resume?: string;
+  /** Quand il vaut la peine de l'activer. C'est ce champ qui permet de décocher. */
+  quand?: string;
+  /** « P0 T9, P6 » déplié en « P0 temps 9, P6 ». */
+  phases_claires?: string;
 }
 
 export interface Skill {

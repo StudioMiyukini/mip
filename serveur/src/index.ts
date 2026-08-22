@@ -15,6 +15,7 @@ import { bassin, matiere, RACINE } from "./bd.js";
 import { Cadence, demandeur } from "./cadence.js";
 import { FORMATS, TECHNIQUES } from "./livrable.js";
 import { BISCUIT, duTunnel, jetonDe, Porte } from "./porte.js";
+import { AGENTS, phasesEnClair } from "./glossaire.js";
 import { assembler, etageDe, etagesDe, QUESTIONS_ESSENTIELLES, type Cadrage } from "./prompt.js";
 import {
   adresseValide,
@@ -125,6 +126,24 @@ serveur.get("/api/formulaire", async (_requete, reponse) => {
   const agents = await bassin.query(
     "SELECT code, nom, role, phases, optionnel, jetons FROM agent ORDER BY optionnel, code",
   );
+  // **Le protocole donne un intitulé de poste, pas une explication.**
+  // « Arianne — Team manager, QA, memoire · P0 T9, P6 » ne permet à personne de
+  // décider s'il lui faut Arianne : on coche par défaut, et le tag cesse d'être
+  // un choix. Le glossaire ajoute ce que la personne fait, quand elle sert, et
+  // déplie les abréviations. Un agent sans explication garde son intitulé — on
+  // n'invente pas de rôle pour combler un trou.
+  const equipe = agents.rows.map((a: { code: string; nom: string; role: string; phases: string }) => {
+    const clair = AGENTS[a.code];
+    return {
+      ...a,
+      ...clair,
+      // Les accents que la source ASCII a perdus, quand une surcharge existe.
+      // Un essai garantit qu'elle ne change que les accents.
+      nom: clair?.nom ?? a.nom,
+      role: clair?.poste ?? a.role,
+      phases_claires: phasesEnClair(a.phases ?? ""),
+    };
+  });
   // L'etage part avec la question, pour toutes les classes. Le client lit
   // dedans ; il ne recalcule rien.
   const sections = donnees.sections.map((section) => ({
@@ -134,7 +153,7 @@ serveur.get("/api/formulaire", async (_requete, reponse) => {
   return {
     ...donnees,
     sections,
-    agents: agents.rows,
+    agents: equipe,
     essentielles: QUESTIONS_ESSENTIELLES,
     formats: FORMATS,
     techniques: TECHNIQUES,

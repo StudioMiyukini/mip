@@ -29,6 +29,7 @@
     "mip.doc",
     "mip.doc.developpement",
     "mip.doc.exemples",
+    "mip.doc.exemples.engendrement",
     "mip.doc.faq",
     "mip.doc.guide",
     "mip.doc.mscm",
@@ -44,6 +45,10 @@
     "mip.extraction.champ",
     "mip.extraction.encodage",
     "mip.extraction.markdown"
+  ],
+  "glossaire": [
+    "mip.glossaire",
+    "mip.glossaire.essais"
   ],
   "index": [
     "mscm.index"
@@ -92,6 +97,7 @@
     "mip.web.coque",
     "mip.web.document",
     "mip.web.entree",
+    "mip.web.equipe",
     "mip.web.etages",
     "mip.web.mes_cadrages",
     "mip.web.porte",

@@ -80,18 +80,24 @@ Le protocole nomme onze rôles. **Ce ne sont pas des personnages à jouer** : ce
 sont des jeux d'instructions qu'on charge au moment où ils servent, puis qu'on
 décharge.
 
-| Rôle | Ce qu'il porte |
-| --- | --- |
-| **Maria** | l'orchestration, et la classification |
-| **Denis** | l'architecture et le plan |
-| **Lise** · **François** | le front, le back |
-| **Victor** | la sécurité |
-| **George** | la conformité |
-| **Hugo** | l'infrastructure |
-| **Jean** | le coût en jetons |
-| **Arianne** | la qualité et la mémoire |
-| **Fabrice** | l'analyse concurrentielle |
-| **Bob** | les tâches simples, en parallèle |
+| Rôle | Ce qu'il porte | Quand l'activer |
+| --- | --- | --- |
+| **Maria** | l'orchestration et le brief | toujours — elle tient le fil |
+| **Denis** | l'architecture et le plan | dès qu'il y a du code |
+| **François** | le serveur, les données, les API | s'il y a un back |
+| **Lise** | les écrans | s'il y a une interface |
+| **Victor** | la sécurité, notée sur 100 | comptes, paiements, données personnelles |
+| **George** | la conformité | quand le projet doit rendre des comptes |
+| **Hugo** | l'infrastructure et le déploiement | si ça doit tourner ailleurs |
+| **Arianne** | la faisabilité, le rapport, la mémoire | sur les gros chantiers |
+| **Jean** | le coût en jetons | sur les longues séquences |
+| **Fabrice** | l'analyse concurrentielle | si le projet est un produit |
+| **Bob** | les tâches simples, en parallèle | pour un lot de petites corrections |
+
+**La colonne de droite est celle qui compte.** Sans elle on active les onze au
+cas où, et le chargement à la demande — toute la raison d'être de ces rôles — ne
+sert plus à rien. Le formulaire affiche la même chose, en plus long, à côté de
+chaque case.
 
 L'intérêt n'est pas la mise en scène : c'est qu'un contexte chargé pour la
 sécurité ne traîne pas pendant l'implémentation. **Un contexte se paie à chaque

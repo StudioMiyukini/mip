@@ -81,6 +81,7 @@ export function valeurRetenue(reponse: ReponseBrute | undefined): string {
   return reponse.etat === "suggere" ? "" : reponse.valeur;
 }
 
+import { AGENTS, phasesDe, phasesEnClair, vocabulaireDe } from "./glossaire.js";
 import { libelleDe, produitDuCode } from "./livrable.js";
 
 export interface Cadrage {
@@ -229,6 +230,71 @@ export function assembler(cadrage: Cadrage, matiere: Matiere): string {
   );
   bouts.push(lignes.join("\n"));
 
+  // ── le protocole, en clair ────────────────────────────────────────────
+  //
+  // **On ordonnait « commence en P3 » sans avoir dit ce qu'est P3.** Le prompt
+  // citait les phases par leur code, exigeait un arrêt « à chaque gate », et
+  // renvoyait vers `<sequence>/briefs/` — trois choses qu'un modèle qui n'a
+  // jamais lu le protocole ne peut que deviner. Or deviner est précisément ce
+  // que ce cadrage existe pour empêcher : un agent qui invente sa propre
+  // définition de P4 produit un travail plausible et hors protocole.
+  //
+  // **Seulement les phases de la classe retenue.** Décrire P4 et P6 à quelqu'un
+  // qui fait un micro-fix coûte deux cents jetons pour lui apprendre des étapes
+  // qu'il ne fera pas — et laisse un doute sur ce qu'on attend vraiment.
+  //
+  // **Une seule liste de phases, pas deux.** Un premier jet lisait le repli
+  // `["P3", "P5"]` pour les descriptions et `classe?.phases ?? []` pour le
+  // vocabulaire : sur une classe inconnue, le prompt décrivait P5 et refusait
+  // d'expliquer « Volet », le mot que P5 emploie. Deux replis pour une même
+  // question donnent deux réponses.
+  //
+  // **Git est nommée partout et listée nulle part.** L'invariant I-2 énonce la
+  // séquence « P0 → Git → P3 → … » et I-11 impose la branche de fonctionnalité,
+  // mais la table de classification ne fait figurer Git dans aucune classe. Le
+  // prompt citait donc une phase qu'il n'expliquait jamais — exactement le trou
+  // qu'on est en train de boucher. On l'insère quand il y a du code, puisque
+  // c'est la condition qui rend I-11 applicable, et jamais pour un document :
+  // on n'ouvre pas de branche pour un support de cours.
+  const codesDePhase = classe?.phases ?? ["P3", "P5"];
+  const avecGit =
+    produitDuCode(cadrage.formats, cadrage.techniques) && !codesDePhase.includes("Git")
+      ? [...codesDePhase.slice(0, codesDePhase.indexOf("P3")), "Git", ...codesDePhase.slice(codesDePhase.indexOf("P3"))]
+      : codesDePhase;
+  const enBref = phasesDe(codesDePhase.includes("P3") ? avecGit : codesDePhase);
+  if (enBref.length) {
+    bouts.push("## Le protocole, en bref");
+    bouts.push(
+      "Tu suis un protocole nommé MIP. Voici le strict nécessaire pour t'y tenir ; " +
+        "le reste se charge au fil des phases.",
+    );
+    bouts.push(
+      "**Une gate est un point d'arrêt avec un critère explicite.** On ne la franchit " +
+        "pas parce que le travail semble fini : on la franchit parce que son critère " +
+        "est rempli. Un critère non rempli renvoie en arrière, il ne se contourne pas.",
+    );
+    bouts.push(
+      enBref
+        .map(
+          (phase) =>
+            [
+              `### ${phase.code} — ${phase.titre}`,
+              phase.quoi,
+              `**Gate ${phase.code}** — ${phase.gate}`,
+            ].join("\n\n"),
+        )
+        .join("\n\n"),
+    );
+    bouts.push(
+      [
+        "Le vocabulaire est strict : chaque mot désigne un seul niveau.",
+        vocabulaireDe(codesDePhase)
+          .map((v) => `- **${v.terme}** — ${v.sens}`)
+          .join("\n"),
+      ].join("\n\n"),
+    );
+  }
+
   // ── les invariants ────────────────────────────────────────────────────
   if (matiere.protocole.invariants.length) {
     bouts.push("## Le noyau immuable");
@@ -252,9 +318,23 @@ export function assembler(cadrage: Cadrage, matiere: Matiere): string {
         "personnage à jouer. Charger la version de phase, jamais la version complète " +
         "sans raison.",
     );
+    // Le rôle expliqué plutôt que l'intitulé de poste. « Jean — Efficience
+    // tokens · P0 T9, P4, P6 » ne dit pas à un agent ce que Jean fait ni quand
+    // l'appeler ; la phrase du glossaire, si. L'intitulé reste, entre
+    // parenthèses : c'est lui qui nomme le fichier à charger.
     bouts.push(
       equipe
-        .map((a) => `- **${a.nom}** — ${a.role}${a.phases ? ` · ${a.phases}` : ""}`)
+        .map((a) => {
+          const clair = AGENTS[a.agent];
+          // Les accents que la source ASCII a perdus. Un essai garantit que la
+          // surcharge ne change que les accents, jamais les mots.
+          const nom = clair?.nom ?? a.nom;
+          const poste = clair?.poste ?? a.role;
+          const quand = a.phases ? ` — ${phasesEnClair(a.phases)}` : "";
+          return clair
+            ? `- **${nom}** (${poste})${quand}\n  ${clair.resume}`
+            : `- **${nom}** — ${poste}${quand}`;
+        })
         .join("\n"),
     );
   }
