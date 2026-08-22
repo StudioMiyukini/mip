@@ -23,10 +23,54 @@ describe("les catalogues", () => {
     }
   });
 
-  it("les formats se rangent en deux familles", () => {
-    // Ce qui s'exécute et ce qui se lit n'appellent pas le même travail.
+  it("les formats se rangent en trois familles", () => {
+    // Ce qui s'exécute, ce qui se lit, ce qui se regarde : trois travaux
+    // différents. Le troisième suit le régime du deuxième côté prompt.
     const familles = new Set(FORMATS.map((f) => f.groupe));
-    assert.deepEqual([...familles].sort(), ["Ce qui s'exécute", "Ce qui se lit"]);
+    assert.deepEqual(
+      [...familles].sort(),
+      ["Ce qui s'exécute", "Ce qui se lit", "Ce qui se regarde"],
+    );
+  });
+
+  it("tout format exécutable est rangé dans « Ce qui s'exécute »", () => {
+    // La liste EXECUTABLES et le groupe d'affichage sont deux sources
+    // distinctes — c'est voulu, elles répondent à deux questions. Mais elles ne
+    // doivent pas se contredire : un format qui exige du TDD tout en étant
+    // affiché parmi les documents serait incompréhensible à l'écran.
+    for (const format of FORMATS) {
+      const executable = produitDuCode([format.code], []);
+      assert.equal(
+        executable,
+        format.groupe === "Ce qui s'exécute",
+        `${format.code} : groupe « ${format.groupe} » mais produitDuCode=${executable}`,
+      );
+    }
+  });
+
+  it("aucun groupe ne dépasse ce qu'un œil parcourt", () => {
+    // Le rangement est ce qui rend une longue liste utilisable : c'est
+    // l'argument du fichier, et il ne tient que si les groupes restent courts.
+    // Huit entrées se balaient d'un regard ; vingt redeviennent une liste de
+    // courses, et le groupe cesse de servir a quoi que ce soit.
+    const tailles = new Map<string, number>();
+    for (const choix of [...FORMATS, ...TECHNIQUES]) {
+      tailles.set(choix.groupe, (tailles.get(choix.groupe) ?? 0) + 1);
+    }
+    for (const [groupe, taille] of tailles) {
+      assert.ok(taille <= 15, `« ${groupe} » compte ${taille} entrées — à découper`);
+    }
+  });
+
+  it("un détail n'est pas une répétition du libellé", () => {
+    // Le détail est desormais affiché sous le libellé, plus en infobulle. Un
+    // détail qui redit le nom occupe une ligne pour rien.
+    for (const choix of [...FORMATS, ...TECHNIQUES]) {
+      if (!choix.detail) continue;
+      const nu = (t: string) => t.toLowerCase().replace(/[^a-z0-9]/g, "");
+      assert.notEqual(nu(choix.detail), nu(choix.libelle), `${choix.code} : détail redondant`);
+      assert.ok(choix.detail.length > 4, `${choix.code} : détail trop court pour apprendre quelque chose`);
+    }
   });
 
   it("un code inconnu rend le code lui-même", () => {

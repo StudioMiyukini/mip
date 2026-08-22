@@ -28,6 +28,28 @@ beaucoup plus loin.
 C'est tout. Les étages 2 et 3 existent pour les projets qui le méritent ; vous
 n'êtes pas obligé d'y aller.
 
+## Ce que ça doit produire
+
+Juste sous la description, deux rangées de tags — et **c'est la question que le
+protocole ne pose pas**. Ses questions portent sur le pourquoi et le pour qui ;
+aucune ne demande ce qu'on obtient à la fin. Un agent qui l'ignore choisit à
+votre place, et il choisit du code.
+
+Les formats sont rangés en trois familles :
+
+| Famille | Exemples | Ce que ça change |
+| --- | --- | --- |
+| **Ce qui s'exécute** | application, API, jeu, bot, greffon, script | tests obligatoires, branche Git, balisage du code |
+| **Ce qui se lit** | PDF, Word, support de cours, procédure, rapport | pas de tests : une relecture à chaque étape |
+| **Ce qui se regarde** | diagramme, maquette, charte graphique | même régime que ci-dessus — on valide la trame avant le contenu |
+
+La seconde rangée, **avec quoi**, liste les techniques. Laissez-la vide si ce
+n'est pas du code. Cochez **« À décider »** pour que l'agent propose une pile
+avec son coût au lieu d'en supposer une.
+
+Un projet peut cocher dans plusieurs familles : une application *et* sa
+documentation, c'est le cas courant.
+
 ## Les trois étages
 
 | Étage | Ce qu'on demande | Ce que vous gagnez |

@@ -279,6 +279,26 @@ body {
 .tag-reserve { font-size: 11px; opacity: 0.75; font-style: italic; }
 .tag-poids { font-size: 11px; opacity: 0.65; font-family: var(--mono); }
 
+/* Quand les entrees portent un detail, les pastilles deviennent des cases :
+   deux lignes ne tiennent pas dans une pastille, et le detail sert au moment
+   du choix — pas apres. Voir TagsGroupes.tsx. */
+.tags.grille {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 6px;
+}
+.tags.grille .tag {
+  flex-direction: column; align-items: flex-start; gap: 2px;
+  border-radius: 8px; padding: 8px 11px; text-align: left; min-height: 100%;
+}
+/* Pas d'aplat de couleur ici : sous un aplat, la seconde ligne devient
+   illisible. La bordure et le liseré disent la même chose. */
+.tags.grille .tag.actif {
+  background: var(--fond); color: var(--texte);
+  border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent);
+}
+.tags.grille .tag.actif .tag-nom { color: var(--accent); font-weight: 600; }
+.tag-detail { font-size: 11px; color: var(--doux); line-height: 1.35; }
+
 /* ── l'équipe ────────────────────────────────────────────────────────────── */
 
 /* Des lignes, pas des pastilles : un rôle se choisit sur ce qu'il fait, et une

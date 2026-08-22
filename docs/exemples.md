@@ -277,7 +277,7 @@ même** — à condition de cocher le bon format.
 
 ### Ce qui en sort
 
-10434 caractères. Deux sections du prompt précédent ont **disparu**, et
+10480 caractères. Deux sections du prompt précédent ont **disparu**, et
 c'est le format qui les a fait disparaître.
 
 <details>
@@ -348,7 +348,7 @@ Le vocabulaire est strict : chaque mot désigne un seul niveau.
 1. **Commence par les 13 questions sans réponse.** Pose-les groupées, en une fois. Ne devine pas.
 2. Ouvre la séquence : `.mip/sequences/<AAAA-MM-JJ>-<slug>/`, et commence en **P0**.
 3. **Arrête-toi à chaque gate de phase** — P0, P3, P4, P5, P6 — et présente ce qui est fait avant de demander à passer la suivante.
-4. Ce livrable n'est pas du code : pas de tests, pas de branche. Ce qui les remplace, c'est une **relecture à chaque étape** — présente un plan avant de rédiger, et le plan avant le texte.
+4. Ce livrable n'est pas du code : pas de tests, pas de branche. Ce qui les remplace, c'est une **relecture à chaque étape** — présente d'abord la trame (sommaire, plan, esquisse), fais-la valider, et ne produis le contenu qu'ensuite.
 ````
 
 </details>
@@ -359,8 +359,9 @@ Le vocabulaire est strict : chaque mot désigne un seul niveau.
 du premier exemple disait « RED → GREEN → REFACTOR ». Ici elle dit :
 
 > Ce livrable n'est pas du code : pas de tests, pas de branche. Ce qui les
-> remplace, c'est une **relecture à chaque étape** — présente un plan avant de
-> rédiger, et le plan avant le texte.
+> remplace, c'est une **relecture à chaque étape** — présente d'abord la trame
+> (sommaire, plan, esquisse), fais-la valider, et ne produis le contenu
+> qu'ensuite.
 
 Ce n'est pas cosmétique. Une consigne hors sujet — exiger un cycle de tests de
 quelqu'un qui rédige des fiches — apprend à l'agent que le reste du document est

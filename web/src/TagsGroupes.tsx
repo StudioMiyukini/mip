@@ -24,6 +24,15 @@ interface Props {
  * Elle diffère de [`Tags`], qui affiche le poids en jetons : ici rien ne se
  * charge dans un contexte, donc il n'y a pas de coût à montrer — seulement un
  * choix à faire.
+ *
+ * **Le détail est écrit, pas mis en infobulle.** Il l'était, et une infobulle
+ * ne se lit pas au doigt, ne s'imprime pas, et ne se voit que si l'on soupçonne
+ * déjà qu'il y a quelque chose à lire. Tant que le catalogue tenait en seize
+ * entrées aux libellés évidents, ça passait ; à trente-trois, le moment où le
+ * détail sert est justement celui du choix.
+ *
+ * Un groupe dont aucune entrée ne porte de détail garde les pastilles serrées :
+ * la grille ne s'impose que là où il y a quelque chose à lire.
  */
 export function TagsGroupes({ titre, explication, choix, actifs, surChangement }: Props) {
   const ensemble = new Set(actifs);
@@ -53,25 +62,28 @@ export function TagsGroupes({ titre, explication, choix, actifs, surChangement }
       </header>
       <p className="explication">{explication}</p>
 
-      {groupes.map(([nom, elements]) => (
-        <div className="tags-groupe" key={nom}>
-          <h4>{nom}</h4>
-          <div className="tags">
-            {elements.map((element) => (
-              <button
-                key={element.code}
-                type="button"
-                aria-pressed={ensemble.has(element.code)}
-                className={ensemble.has(element.code) ? "tag actif" : "tag"}
-                onClick={() => basculer(element.code)}
-                title={element.detail}
-              >
-                <span className="tag-nom">{element.libelle}</span>
-              </button>
-            ))}
+      {groupes.map(([nom, elements]) => {
+        const detaille = elements.some((e) => e.detail);
+        return (
+          <div className="tags-groupe" key={nom}>
+            <h4>{nom}</h4>
+            <div className={detaille ? "tags grille" : "tags"}>
+              {elements.map((element) => (
+                <button
+                  key={element.code}
+                  type="button"
+                  aria-pressed={ensemble.has(element.code)}
+                  className={ensemble.has(element.code) ? "tag actif" : "tag"}
+                  onClick={() => basculer(element.code)}
+                >
+                  <span className="tag-nom">{element.libelle}</span>
+                  {detaille && <span className="tag-detail">{element.detail ?? ""}</span>}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </section>
   );
 }

@@ -539,10 +539,14 @@ function instruction(cadrage: Cadrage, phases: string[], manquantes: number): st
         "cadrage vaut mieux qu'un paragraphe qui la raconte.",
     );
   } else {
+    // La formulation couvre le document **et** le visuel : « avant le texte »
+    // seul ne disait rien à qui produit un diagramme ou une maquette, et le
+    // catalogue des formats en propose désormais.
     lignes.push(
       `${suite + 1}. Ce livrable n'est pas du code : pas de tests, pas de branche. ` +
-        "Ce qui les remplace, c'est une **relecture à chaque étape** — présente un " +
-        "plan avant de rédiger, et le plan avant le texte.",
+        "Ce qui les remplace, c'est une **relecture à chaque étape** — présente " +
+        "d'abord la trame (sommaire, plan, esquisse), fais-la valider, et ne " +
+        "produis le contenu qu'ensuite.",
     );
   }
 

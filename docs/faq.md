@@ -35,9 +35,21 @@ remplace ni Cursor ni Copilot, il leur donne de quoi ne pas se tromper de projet
 
 ### Mon projet n'est pas du code
 
-Ça marche quand même. Cochez le format — support de cours, PDF, présentation — et
-le prompt cesse d'exiger des tests et une branche Git. Il demande à la place une
-relecture à chaque étape.
+Ça marche quand même. Cochez le format — support de cours, PDF, procédure,
+rapport, diagramme, maquette — et le prompt cesse d'exiger des tests, une
+branche Git et un balisage du code. Il demande à la place que la **trame** soit
+validée avant le contenu.
+
+Trois familles au choix : ce qui s'exécute, ce qui se lit, ce qui se regarde.
+
+### Ma pile n'est pas dans la liste
+
+La liste est courte volontairement : ce sont les piles réellement utilisées ici,
+pas un catalogue de tout ce qui existe. Cent entrées se parcourent moins bien
+qu'aucune.
+
+Si la vôtre manque, **écrivez-la dans la description du projet** — l'agent la
+lira là. Ou cochez « À décider » pour qu'il propose.
 
 ### Le prompt est trop long pour mon IA
 

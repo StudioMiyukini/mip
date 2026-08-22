@@ -233,8 +233,9 @@ ${F}
 du premier exemple disait « RED → GREEN → REFACTOR ». Ici elle dit :
 
 > Ce livrable n'est pas du code : pas de tests, pas de branche. Ce qui les
-> remplace, c'est une **relecture à chaque étape** — présente un plan avant de
-> rédiger, et le plan avant le texte.
+> remplace, c'est une **relecture à chaque étape** — présente d'abord la trame
+> (sommaire, plan, esquisse), fais-la valider, et ne produis le contenu
+> qu'ensuite.
 
 Ce n'est pas cosmétique. Une consigne hors sujet — exiger un cycle de tests de
 quelqu'un qui rédige des fiches — apprend à l'agent que le reste du document est

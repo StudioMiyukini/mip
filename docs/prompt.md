@@ -34,7 +34,11 @@ ambigu.
 
 Le format du livrable et la technique. **Le protocole ne le demandait pas** —
 ses vingt-cinq questions portent sur le pourquoi et le pour qui, aucune sur ce
-qu'on obtient à la fin. Un agent qui l'ignore choisit à votre place.
+qu'on obtient à la fin. Un agent qui l'ignore choisit à votre place, et il
+choisit du code.
+
+C'est cette ligne qui décide de trois choses plus bas : le TDD, la branche Git,
+et le balisage MSCM. Un livrable qui n'est pas du code n'en voit aucune.
 
 Si vous avez coché « À décider », une ligne demande à l'agent de **proposer** la
 technique avec son coût, et d'attendre votre accord.
@@ -141,7 +145,7 @@ document est peut-être décoratif aussi.
 | Mode `BIG_STEPS` | arrête-toi à chaque gate de phase |
 | Mode `GUIDED` | arrête-toi à chaque étape du plan |
 | Livrable en code | TDD obligatoire : RED → GREEN → REFACTOR |
-| Livrable en document | pas de tests ; une relecture à chaque étape |
+| Livrable en document ou en visuel | pas de tests ; la trame validée avant le contenu |
 
 Un prompt qui dirait « fais tout » à quelqu'un ayant choisi la supervision
 contredirait le formulaire qu'il vient de remplir.
