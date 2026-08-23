@@ -6,10 +6,10 @@
 
 import { ArrowRight, Check, Layers, ScanSearch, Terminal, Users } from "lucide-react";
 
-import { Badge } from "@/composants/ui/badge";
 import { Button } from "@/composants/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/composants/ui/card";
 
+import { Hero } from "./Hero";
 import { surClicInterne } from "./routeur";
 import type { Formulaire } from "./types";
 
@@ -45,42 +45,7 @@ export function Accueil({ formulaire, aller }: Props) {
 
   return (
     <div className="space-y-14">
-      <header className="mx-auto max-w-3xl pt-4 text-center sm:pt-10">
-        <Badge variant="secondary" className="mb-5 font-mono text-[11px]">
-          gratuit · sans inscription
-        </Badge>
-        <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-5xl">
-          Bien guidée, votre IA va beaucoup plus loin.
-          <span className="text-muted-foreground mt-2 block text-xl font-normal sm:text-2xl">
-            Le même modèle. Dix minutes de cadrage.
-          </span>
-        </h1>
-        <p className="text-muted-foreground mx-auto mt-6 max-w-2xl leading-relaxed text-pretty">
-          Une IA travaille avec ce qu'on lui donne. Plus elle sait pour qui c'est, jusqu'où
-          aller et ce qui compte le plus, plus elle vise juste — et ces réponses-là, c'est
-          vous qui les avez.
-        </p>
-        <p className="mx-auto mt-4 max-w-2xl font-medium text-pretty">
-          MIP Studio pose les questions qu'un chef de projet poserait, et met vos réponses
-          dans une forme qu'un agent suit.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Button size="lg" asChild>
-            <a href="/cadrage" onClick={(e) => surClicInterne(e, aller)}>
-              Commencer un cadrage
-              <ArrowRight className="size-4" />
-            </a>
-          </Button>
-          <Button size="lg" variant="outline" asChild>
-            <a href="/exemples" onClick={(e) => surClicInterne(e, aller)}>
-              Voir un exemple
-            </a>
-          </Button>
-        </div>
-        <p className="text-muted-foreground mt-5 text-sm">
-          Quatre questions suffisent pour repartir avec quelque chose d'utilisable.
-        </p>
-      </header>
+      <Hero aller={aller} />
 
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Chiffre

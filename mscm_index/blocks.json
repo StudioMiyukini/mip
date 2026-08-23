@@ -413,7 +413,7 @@
     "id": "mip.web.accueil",
     "file": "web/src/Accueil.tsx",
     "start_line": 1,
-    "end_line": 286,
+    "end_line": 251,
     "role": "ui",
     "layer": "ui",
     "do": "presenter_le_mip_a_quelqu_un_qui_arrive_sans_rien_savoir",
@@ -548,6 +548,16 @@
     "layer": "ui",
     "do": "montrer_la_progression_par_etages_et_ce_que_chacun_apporte",
     "human": "Les trois étages : où l'on en est, et ce qu'on gagne à continuer"
+  },
+  {
+    "id": "mip.web.hero",
+    "file": "web/src/Hero.tsx",
+    "start_line": 1,
+    "end_line": 299,
+    "role": "ui",
+    "layer": "ui",
+    "do": "accrocher_le_visiteur_en_lui_montrant_le_produit_a_l_oeuvre",
+    "human": "Le hero de la présentation : le titre, et le prompt qui s'écrit tout seul à côté"
   },
   {
     "id": "mip.web.mes_cadrages",

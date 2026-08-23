@@ -104,6 +104,7 @@
     "mip.web.entree",
     "mip.web.equipe",
     "mip.web.etages",
+    "mip.web.hero",
     "mip.web.mes_cadrages",
     "mip.web.porte",
     "mip.web.routeur",

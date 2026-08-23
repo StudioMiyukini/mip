@@ -166,6 +166,9 @@
   "web/src/Etages.tsx": [
     "mip.web.etages"
   ],
+  "web/src/Hero.tsx": [
+    "mip.web.hero"
+  ],
   "web/src/MesCadrages.tsx": [
     "mip.web.mes_cadrages"
   ],
