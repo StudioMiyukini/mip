@@ -45,6 +45,7 @@
     "mip.extraction.encodage",
     "mip.extraction.markdown",
     "mip.porte.empreinte",
+    "mip.web.capture",
     "mscm",
     "mscm.balisage",
     "mscm.essais",
@@ -55,10 +56,14 @@
     "mip.serveur",
     "mip.web",
     "mip.web.accueil",
+    "mip.web.appareil",
     "mip.web.cadrage",
+    "mip.web.cadrage.etat",
+    "mip.web.cadrage.mobile",
     "mip.web.champ",
     "mip.web.compte",
     "mip.web.coque",
+    "mip.web.coque.mobile",
     "mip.web.document",
     "mip.web.entree",
     "mip.web.equipe",
@@ -68,6 +73,8 @@
     "mip.web.routeur",
     "mip.web.tags",
     "mip.web.tags_groupes",
-    "mip.web.types"
+    "mip.web.theme",
+    "mip.web.types",
+    "mip.web.utils"
   ]
 }

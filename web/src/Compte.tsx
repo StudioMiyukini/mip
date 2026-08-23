@@ -5,6 +5,18 @@
 // @do gerer_l_inscription_la_connexion_la_rectification_et_l_effacement_du_compte
 
 import { useState } from "react";
+import { AtSign, Download, LogOut, Trash2 } from "lucide-react";
+
+import { Button } from "@/composants/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/composants/ui/dialog";
+import { Input } from "@/composants/ui/input";
+import { Separator } from "@/composants/ui/separator";
 
 export interface EtatCompte {
   connecte: boolean;
@@ -30,10 +42,16 @@ export function Compte({
   surFermeture: () => void;
   surChangement: () => void;
 }) {
-  return etat.connecte ? (
-    <Reglages etat={etat} surFermeture={surFermeture} surChangement={surChangement} />
-  ) : (
-    <Identification surFermeture={surFermeture} surChangement={surChangement} />
+  return (
+    <Dialog open onOpenChange={(ouvert) => !ouvert && surFermeture()}>
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-md">
+        {etat.connecte ? (
+          <Reglages etat={etat} surFermeture={surFermeture} surChangement={surChangement} />
+        ) : (
+          <Identification surFermeture={surFermeture} surChangement={surChangement} />
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -73,49 +91,58 @@ function Identification({
   }
 
   return (
-    <Fenetre titre="Votre compte" surFermeture={surFermeture}>
-      <p className="explication">
-        Un compte sert à retrouver vos cadrages. Il n'est jamais nécessaire pour utiliser
-        l'outil.
-      </p>
-      <input
-        className="controle"
-        type="email"
-        value={adresse}
-        onChange={(e) => setAdresse(e.target.value)}
-        placeholder="adresse électronique"
-        autoComplete="email"
-        autoFocus
-      />
-      <input
-        className="controle"
-        type="password"
-        value={mot}
-        onChange={(e) => setMot(e.target.value)}
-        placeholder="mot de passe — huit caractères au minimum"
-        autoComplete="current-password"
-      />
-      <div className="boutons">
-        <button type="button" className="principal" disabled={enCours} onClick={() => envoyer("entrer")}>
-          Se connecter
-        </button>
-        <button type="button" disabled={enCours} onClick={() => envoyer("creer")}>
-          Créer un compte
-        </button>
+    <>
+      <DialogHeader>
+        <DialogTitle>Votre compte</DialogTitle>
+        <DialogDescription>
+          Un compte sert à retrouver vos cadrages. Il n'est jamais nécessaire pour utiliser
+          l'outil.
+        </DialogDescription>
+      </DialogHeader>
+
+      <div className="space-y-3">
+        <Input
+          type="email"
+          value={adresse}
+          onChange={(e) => setAdresse(e.target.value)}
+          placeholder="adresse électronique"
+          autoComplete="email"
+          autoFocus
+        />
+        <Input
+          type="password"
+          value={mot}
+          onChange={(e) => setMot(e.target.value)}
+          placeholder="mot de passe — huit caractères au minimum"
+          autoComplete="current-password"
+        />
+        <div className="flex flex-wrap gap-2">
+          <Button disabled={enCours} onClick={() => envoyer("entrer")}>
+            Se connecter
+          </Button>
+          <Button variant="outline" disabled={enCours} onClick={() => envoyer("creer")}>
+            Créer un compte
+          </Button>
+        </div>
+        {refus && <p className="text-destructive text-sm">{refus}</p>}
+        <p className="text-muted-foreground text-xs leading-snug">
+          Nous gardons votre adresse et une empreinte de votre mot de passe. Rien d'autre —{" "}
+          <a
+            href="/confidentialite"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline underline-offset-2"
+          >
+            voir le détail
+          </a>
+          .
+        </p>
       </div>
-      {refus && <p className="refus">{refus}</p>}
-      <p className="note">
-        Nous gardons votre adresse et une empreinte de votre mot de passe. Rien d'autre —{" "}
-        <a href="/confidentialite" target="_blank" rel="noreferrer">
-          voir le détail
-        </a>
-        .
-      </p>
-    </Fenetre>
+    </>
   );
 }
 
-/** Ses données, et le bouton qui efface tout. */
+/** Ses données, la correction d'adresse, et le bouton qui efface tout. */
 function Reglages({
   etat,
   surFermeture,
@@ -197,118 +224,95 @@ function Reglages({
   }
 
   return (
-    <Fenetre titre="Mon compte" surFermeture={surFermeture}>
-      <p className="explication">{etat.adresse}</p>
+    <>
+      <DialogHeader>
+        <DialogTitle>Mon compte</DialogTitle>
+        <DialogDescription className="font-mono text-xs">{etat.adresse}</DialogDescription>
+      </DialogHeader>
 
-      <div className="boutons">
-        <button type="button" onClick={emporter}>
-          Emporter mes données
-        </button>
-        <button type="button" onClick={() => setRectifie((v) => !v)}>
-          Changer d'adresse
-        </button>
-        <button type="button" onClick={sortir}>
-          Se déconnecter
-        </button>
-      </div>
+      <div className="space-y-3">
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={emporter}>
+            <Download className="size-4" />
+            Emporter mes données
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setRectifie((v) => !v)}>
+            <AtSign className="size-4" />
+            Changer d'adresse
+          </Button>
+          <Button variant="ghost" size="sm" onClick={sortir}>
+            <LogOut className="size-4" />
+            Se déconnecter
+          </Button>
+        </div>
 
-      {rectifie && (
-        <>
-          <p className="explication">
-            Vos cadrages restent attachés au compte. Le mot de passe est redemandé : une
-            session ouverte ne doit pas suffire à changer l'adresse d'un compte.
-          </p>
-          <input
-            className="controle"
-            type="email"
-            value={nouvelle}
-            onChange={(e) => setNouvelle(e.target.value)}
-            placeholder="nouvelle adresse électronique"
-            autoComplete="email"
-            autoFocus
-          />
-          <input
-            className="controle"
-            type="password"
-            value={mot}
-            onChange={(e) => setMot(e.target.value)}
-            placeholder="votre mot de passe, pour confirmer"
-            autoComplete="current-password"
-          />
-          <div className="boutons">
-            <button
-              type="button"
-              className="principal"
-              disabled={!nouvelle || !mot}
-              onClick={rectifier}
-            >
-              Corriger
-            </button>
-            <button type="button" onClick={() => setRectifie(false)}>
-              Annuler
-            </button>
+        {rectifie && (
+          <div className="space-y-2 rounded-lg border p-3">
+            <p className="text-muted-foreground text-xs leading-snug">
+              Vos cadrages restent attachés au compte. Le mot de passe est redemandé : une
+              session ouverte ne doit pas suffire à changer l'adresse d'un compte.
+            </p>
+            <Input
+              type="email"
+              value={nouvelle}
+              onChange={(e) => setNouvelle(e.target.value)}
+              placeholder="nouvelle adresse électronique"
+              autoComplete="email"
+              autoFocus
+            />
+            <Input
+              type="password"
+              value={mot}
+              onChange={(e) => setMot(e.target.value)}
+              placeholder="votre mot de passe, pour confirmer"
+              autoComplete="current-password"
+            />
+            <div className="flex gap-2">
+              <Button size="sm" disabled={!nouvelle || !mot} onClick={rectifier}>
+                Corriger
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setRectifie(false)}>
+                Annuler
+              </Button>
+            </div>
           </div>
-        </>
-      )}
-      {dit && <p className="note">{dit}</p>}
+        )}
+        {dit && <p className="text-muted-foreground text-xs">{dit}</p>}
 
-      <hr className="separateur" />
+        <Separator />
 
-      {!confirme ? (
-        <button type="button" className="danger" onClick={() => setConfirme(true)}>
-          Supprimer mon compte
-        </button>
-      ) : (
-        <>
-          <p className="explication">
-            <strong>La suppression est immédiate et définitive.</strong> Elle efface le compte
-            et tous les cadrages qui y sont rattachés. Il n'y a ni corbeille, ni délai, ni
-            restauration possible.
-          </p>
-          <input
-            className="controle"
-            type="password"
-            value={mot}
-            onChange={(e) => setMot(e.target.value)}
-            placeholder="votre mot de passe, pour confirmer"
-            autoComplete="current-password"
-            autoFocus
-          />
-          <div className="boutons">
-            <button type="button" className="danger" disabled={!mot} onClick={supprimer}>
-              Tout supprimer
-            </button>
-            <button type="button" onClick={() => setConfirme(false)}>
-              Annuler
-            </button>
+        {!confirme ? (
+          <Button variant="destructive" size="sm" onClick={() => setConfirme(true)}>
+            <Trash2 className="size-4" />
+            Supprimer mon compte
+          </Button>
+        ) : (
+          <div className="border-destructive/40 bg-destructive/5 space-y-2 rounded-lg border p-3">
+            <p className="text-sm leading-snug">
+              <strong>La suppression est immédiate et définitive.</strong> Elle efface le
+              compte et tous les cadrages qui y sont rattachés. Il n'y a ni corbeille, ni
+              délai, ni restauration possible.
+            </p>
+            <Input
+              type="password"
+              value={mot}
+              onChange={(e) => setMot(e.target.value)}
+              placeholder="votre mot de passe, pour confirmer"
+              autoComplete="current-password"
+              autoFocus
+            />
+            <div className="flex gap-2">
+              <Button variant="destructive" size="sm" disabled={!mot} onClick={supprimer}>
+                Tout supprimer
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => setConfirme(false)}>
+                Annuler
+              </Button>
+            </div>
           </div>
-        </>
-      )}
-      {refus && <p className="refus">{refus}</p>}
-    </Fenetre>
-  );
-}
-
-function Fenetre({
-  titre,
-  surFermeture,
-  children,
-}: {
-  titre: string;
-  surFermeture: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="voile" onClick={surFermeture}>
-      <div className="fenetre" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={titre}>
-        <header className="bloc-tete">
-          <h3>{titre}</h3>
-          <button type="button" className="lien" onClick={surFermeture}>
-            fermer
-          </button>
-        </header>
-        {children}
+        )}
+        {refus && <p className="text-destructive text-sm">{refus}</p>}
       </div>
-    </div>
+    </>
   );
 }

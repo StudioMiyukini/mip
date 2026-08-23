@@ -3,7 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="MIP Studio pose les questions qu'un chef de projet poserait, et met vos réponses dans une forme qu'un agent suit. Gratuit, sans inscription."
+    />
     <title>MIP Studio — cadrage de séquence</title>
+    <!--
+      Le thème est posé AVANT le premier rendu, et volontairement en ligne : lu
+      depuis React, il n'arriverait qu'après la peinture, et l'on verrait un
+      éclair blanc à chaque chargement sur un système en sombre. Ces huit lignes
+      valent mieux qu'un défaut qu'on ne peut pas corriger depuis le composant.
+    -->
+    <script>
+      (function () {
+        try {
+          var garde = localStorage.getItem("mip.theme");
+          var sombre =
+            garde === "sombre" ||
+            (garde !== "clair" && matchMedia("(prefers-color-scheme: dark)").matches);
+          if (sombre) document.documentElement.classList.add("dark");
+        } catch (_) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="racine"></div>

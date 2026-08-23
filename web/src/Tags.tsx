@@ -1,8 +1,13 @@
 // @id mip.web.tags
 // @role ui
 // @layer ui
-// @human Les tags : ce qu'on active selon la pertinence
+// @human Les tags : ce qu'on active selon la pertinence, avec son poids en jetons
 // @do activer_ou_desactiver_des_elements_par_pertinence
+
+import { Badge } from "@/composants/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/composants/ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/composants/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface Element {
   code: string;
@@ -45,31 +50,58 @@ export function Tags({ titre, explication, elements, actifs, surChangement }: Pr
   }
 
   return (
-    <section className="bloc">
-      <header className="bloc-tete">
-        <h3>{titre}</h3>
-        <span className="compte">
-          {actifs.length} / {elements.length}
-          {total > 0 && <> · ≈ {total.toLocaleString("fr-FR")} jetons</>}
-        </span>
-      </header>
-      <p className="explication">{explication}</p>
-      <div className="tags">
-        {elements.map((element) => (
-          <button
-            key={element.code}
-            type="button"
-            aria-pressed={ensemble.has(element.code)}
-            className={ensemble.has(element.code) ? "tag actif" : "tag"}
-            onClick={() => basculer(element.code)}
-            title={element.detail}
-          >
-            <span className="tag-nom">{element.libelle}</span>
-            {element.reserve && <span className="tag-reserve">{element.reserve}</span>}
-            {element.jetons ? <span className="tag-poids">{Math.round(element.jetons / 100) / 10}k</span> : null}
-          </button>
-        ))}
-      </div>
-    </section>
+    <Card>
+      <CardHeader>
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <CardTitle>{titre}</CardTitle>
+          <span className="text-muted-foreground font-mono text-xs">
+            {actifs.length} / {elements.length}
+            {total > 0 && <> · ≈ {total.toLocaleString("fr-FR")} jetons</>}
+          </span>
+        </div>
+        <CardDescription>{explication}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-wrap gap-1.5">
+        {elements.map((element) => {
+          const actif = ensemble.has(element.code);
+          const pastille = (
+            <button
+              type="button"
+              aria-pressed={actif}
+              onClick={() => basculer(element.code)}
+              className={cn(
+                "focus-visible:ring-ring inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:ring-[3px] focus-visible:outline-none",
+                actif
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "bg-background hover:border-primary/60",
+              )}
+            >
+              <span>{element.libelle}</span>
+              {element.reserve && (
+                <span className="text-[11px] italic opacity-75">{element.reserve}</span>
+              )}
+              {element.jetons ? (
+                <span className="font-mono text-[11px] opacity-65">
+                  {Math.round(element.jetons / 100) / 10}k
+                </span>
+              ) : null}
+            </button>
+          );
+          // L'infobulle ne porte jamais une information nécessaire — seulement
+          // un complément. Ce qu'il faut pour choisir est dans le libellé.
+          return element.detail ? (
+            <Tooltip key={element.code}>
+              <TooltipTrigger asChild>{pastille}</TooltipTrigger>
+              <TooltipContent className="max-w-xs">{element.detail}</TooltipContent>
+            </Tooltip>
+          ) : (
+            <span key={element.code}>{pastille}</span>
+          );
+        })}
+        {!elements.length && (
+          <Badge variant="secondary">rien à activer pour cette classe</Badge>
+        )}
+      </CardContent>
+    </Card>
   );
 }

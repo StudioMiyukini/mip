@@ -35,7 +35,7 @@ Sans elle, la base reste vide et le formulaire n'a rien à afficher.
 extraction/   lit .mip/ et en fait un pack JSON — exécuté une fois, pas au service
 mscm/         le CLI de balisage, publiable en @mip/mscm — indépendant du reste
 serveur/      Fastify + PostgreSQL : formulaire, cadrages, assembleur, comptes
-web/          React : le formulaire par étages et l'aperçu du prompt
+web/          React + Tailwind + shadcn/ui : deux parcours, PC et téléphone
 ```
 
 Ils sont séparés parce qu'ils ont des **durées de vie différentes** :
@@ -46,7 +46,7 @@ autres, le serveur et le client tournent en continu.
 
 | Commande | Ce qu'elle fait |
 | --- | --- |
-| `npm run essais` | tous les essais — 61, sans réseau ni base |
+| `npm run essais` | tous les essais — 113, sans réseau ni base |
 | `npm run verifier` | les quatre typages |
 | `npm run mscm` | régénère `mscm_index/` |
 | `npm run mscm:verifier` | échoue si l'index est périmé — pour la CI |
@@ -138,6 +138,44 @@ Pour qu'une question rejoigne l'étage 1, l'ajouter à `QUESTIONS_ESSENTIELLES`
 (`serveur/src/prompt.ts`) — et un essai vérifie qu'elles restent peu nombreuses
 et d'angles distincts.
 
+## Le front : deux parcours, une logique
+
+L'interface est bâtie sur **Tailwind v4 et shadcn/ui**. Les composants de base
+vivent dans `web/src/composants/ui/` : ils sont **recopiés dans le dépôt**, pas
+importés d'un paquet — c'est la façon de faire de shadcn, et elle a l'avantage
+qu'on peut les modifier. Le socle est aussi celui qu'attendent les registres de
+composants comme [21st.dev](https://21st.dev) ; `components.json` déclare déjà
+ce registre sous `@21st`, avec sa clé en variable d'environnement.
+
+```
+appareil.tsx      la gate PC / téléphone, et le choix mémorisé
+useCadrage.ts     TOUT l'état d'un cadrage, hors mise en page
+Cadrage.tsx       parcours PC     — le formulaire entier, l'aperçu en vis-à-vis
+CadrageMobile.tsx parcours mobile — une section par écran, l'aperçu en tiroir
+Coque.tsx         coque PC + `groupesDe()`, la navigation partagée
+CoqueMobile.tsx   coque mobile — lit `groupesDe()`
+theme.ts          clair / sombre, système par défaut
+```
+
+**La règle qui tient l'ensemble : deux mises en page, une seule logique.**
+`useCadrage` porte le pré-remplissage, le calcul des étages, la règle de
+confirmation, l'enregistrement. Les deux parcours ne font que placer. Écrire
+deux fois cette logique, c'est se donner rendez-vous avec une divergence — ce
+dépôt en a déjà connu deux, l'affichage contre l'assemblage des questions, puis
+la liste blanche des documents, et les deux fois le défaut est resté invisible
+jusqu'à ce qu'un utilisateur le rencontre.
+
+Même raison pour `groupesDe()` : une entrée de menu ajoutée d'un côté et oubliée
+de l'autre serait une page joignable sur PC et introuvable sur téléphone.
+
+### Regarder le résultat, pas le supposer
+
+`.tmp/capture.mjs` ouvre les deux parcours dans un Chromium sans tête, en clair
+et en sombre, et écrit les captures. C'est ce qui a montré deux défauts que le
+typage laissait passer : l'aide des questions affichée **deux fois** — sous le
+libellé et en filigrane dans le champ — et les deux catalogues déroulés, treize
+cents pixels de tags *avant* la première question essentielle.
+
 ## Le style
 
 Le code est en **français**, commentaires compris. Ce n'est pas une coquetterie :
@@ -154,6 +192,9 @@ Deux règles de commentaire :
 
 - **Aucune CI.** Les essais et `mscm:verifier` sont prêts à y entrer.
 - **Les sessions vivent en mémoire.** Un redémarrage déconnecte tout le monde.
+- **Aucun composant de 21st.dev n'est encore posé.** Le registre demande une
+  authentification (`403 authentication_required`) : `npx shadcn add @21st/<nom>`
+  marchera dès que `TWENTYFIRST_API_KEY` sera dans l'environnement.
 - **Aucune sauvegarde de la base.** Ce n'est pas un défaut caché : la
   confidentialité l'annonce.
 - **Le pré-remplissage dépend d'un LM Studio local**, partagé avec un autre

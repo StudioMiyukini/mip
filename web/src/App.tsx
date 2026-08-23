@@ -1,15 +1,21 @@
 // @id mip.web
 // @role ui
 // @layer ui
-// @human L'assemblage : la porte, le compte, le routeur et la coque
-// @do assembler_les_pages_dans_la_coque_et_router_entre_elles
+// @human L'assemblage : la porte, la gate d'appareil, le compte, le routeur et les coques
+// @do assembler_les_pages_dans_la_coque_du_parcours_choisi
 
 import { useEffect, useState } from "react";
 
+import { Skeleton } from "@/composants/ui/skeleton";
+import { TooltipProvider } from "@/composants/ui/tooltip";
+
 import { Accueil } from "./Accueil";
+import { useAppareil } from "./appareil";
 import { Cadrage } from "./Cadrage";
+import { CadrageMobile } from "./CadrageMobile";
 import { Compte, type EtatCompte } from "./Compte";
 import { Coque } from "./Coque";
+import { CoqueMobile } from "./CoqueMobile";
 import { Document } from "./Document";
 import { MesCadrages } from "./MesCadrages";
 import { Porte } from "./Porte";
@@ -36,6 +42,7 @@ const DOCUMENTS = new Set([
 
 export function App() {
   const [route, aller] = useRoute();
+  const { appareil } = useAppareil();
   const [formulaire, setFormulaire] = useState<Formulaire | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
   const [compteEtat, setCompteEtat] = useState<EtatCompte>({ connecte: false });
@@ -92,32 +99,42 @@ export function App() {
 
   if (ouverte === null) {
     return (
-      <main className="page">
-        <p className="explication">…</p>
+      <main className="mx-auto max-w-3xl space-y-4 p-8">
+        <Skeleton className="h-8 w-52" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
       </main>
     );
   }
   if (ouverte === false) return <Porte surOuverture={() => setOuverte(true)} />;
 
+  const scene = (
+    <Scene
+      route={route}
+      aller={aller}
+      formulaire={formulaire}
+      erreur={erreur}
+      mobile={appareil === "mobile"}
+      connecte={compteEtat.connecte}
+      surConnexion={() => setFenetreCompte(true)}
+      surChangement={relireLesCadrages}
+    />
+  );
+
+  // **Deux coques, un seul jeu de props.** Le parcours change la mise en page et
+  // la façon de poser les questions ; il ne change ni les données, ni les
+  // droits, ni les routes.
+  const CoqueChoisie = appareil === "mobile" ? CoqueMobile : Coque;
+
   return (
-    <>
-      <Coque
+    <TooltipProvider delayDuration={300}>
+      <CoqueChoisie
         route={route}
         aller={aller}
         compte={compteEtat}
         mesCadrages={mesCadrages}
         surCompte={() => setFenetreCompte(true)}
-        enfants={
-          <Scene
-            route={route}
-            aller={aller}
-            formulaire={formulaire}
-            erreur={erreur}
-            connecte={compteEtat.connecte}
-            surConnexion={() => setFenetreCompte(true)}
-            surChangement={relireLesCadrages}
-          />
-        }
+        enfants={scene}
       />
       {fenetreCompte && (
         <Compte
@@ -129,7 +146,7 @@ export function App() {
           }}
         />
       )}
-    </>
+    </TooltipProvider>
   );
 }
 
@@ -139,6 +156,7 @@ function Scene({
   aller,
   formulaire,
   erreur,
+  mobile,
   connecte,
   surConnexion,
   surChangement,
@@ -147,6 +165,7 @@ function Scene({
   aller: (chemin: string) => void;
   formulaire: Formulaire | null;
   erreur: string | null;
+  mobile: boolean;
   connecte: boolean;
   surConnexion: () => void;
   surChangement: () => void;
@@ -157,13 +176,13 @@ function Scene({
 
   if (erreur) {
     return (
-      <div className="alerte">
+      <div className="border-destructive/40 bg-destructive/5 mx-auto max-w-2xl space-y-2 rounded-lg border p-5">
         <strong>Le serveur ne répond pas.</strong>
-        <p>{erreur}</p>
-        <p className="explication">
-          Vérifier que la base est montée (<code>npm run bd:monter</code>), que le schéma
-          est posé (<code>npm run bd:schema</code>) et que le pack a été ingéré (
-          <code>npm run ingerer</code>).
+        <p className="text-sm">{erreur}</p>
+        <p className="text-muted-foreground text-sm leading-relaxed">
+          Vérifier que la base est montée (<code className="font-mono">npm run bd:monter</code>),
+          que le schéma est posé (<code className="font-mono">npm run bd:schema</code>) et que
+          le pack a été ingéré (<code className="font-mono">npm run ingerer</code>).
         </p>
       </div>
     );
@@ -181,11 +200,22 @@ function Scene({
   }
 
   if (route === "cadrage") {
-    if (!formulaire) return <p className="explication">Chargement du protocole…</p>;
-    return <Cadrage formulaire={formulaire} connecte={connecte} surEnregistrement={surChangement} />;
+    if (!formulaire) {
+      return (
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-56" />
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-40 w-full" />
+        </div>
+      );
+    }
+    const Parcours = mobile ? CadrageMobile : Cadrage;
+    return (
+      <Parcours formulaire={formulaire} connecte={connecte} surEnregistrement={surChangement} />
+    );
   }
 
-  // Tout le reste mène à la présentation : pour un site de six pages, une
+  // Tout le reste mène à la présentation : pour un site de cette taille, une
   // adresse fautive vaut mieux qu'une page d'erreur.
   return <Accueil formulaire={formulaire} aller={aller} />;
 }

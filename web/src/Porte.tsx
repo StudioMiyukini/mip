@@ -6,6 +6,10 @@
 
 import { useState } from "react";
 
+import { Button } from "@/composants/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/composants/ui/card";
+import { Input } from "@/composants/ui/input";
+
 interface Props {
   surOuverture: () => void;
 }
@@ -47,26 +51,31 @@ export function Porte({ surOuverture }: Props) {
   }
 
   return (
-    <main className="page">
-      <form className="bloc porte" onSubmit={entrer}>
-        <h1>MIP Studio</h1>
-        <p className="explication">
-          Cette adresse est publiée. Il faut le mot de passe pour entrer.
-        </p>
-        <input
-          className="controle"
-          type="password"
-          value={mot}
-          onChange={(e) => setMot(e.target.value)}
-          placeholder="mot de passe"
-          autoFocus
-          autoComplete="current-password"
-        />
-        <button className="principal" type="submit" disabled={enCours || !mot}>
-          {enCours ? "…" : "Entrer"}
-        </button>
-        {refus && <p className="refus">{refus}</p>}
-      </form>
+    <main className="flex min-h-dvh items-center justify-center p-5">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>MIP Studio</CardTitle>
+          <CardDescription>
+            Cette adresse est publiée. Il faut le mot de passe pour entrer.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form className="space-y-3" onSubmit={entrer}>
+            <Input
+              type="password"
+              value={mot}
+              onChange={(e) => setMot(e.target.value)}
+              placeholder="mot de passe"
+              autoFocus
+              autoComplete="current-password"
+            />
+            <Button className="w-full" type="submit" disabled={enCours || !mot}>
+              {enCours ? "…" : "Entrer"}
+            </Button>
+            {refus && <p className="text-destructive text-sm">{refus}</p>}
+          </form>
+        </CardContent>
+      </Card>
     </main>
   );
 }

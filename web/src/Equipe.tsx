@@ -4,6 +4,12 @@
 // @human L'équipe : chaque rôle expliqué, pour qu'on puisse décocher en connaissance de cause
 // @do presenter_chaque_role_avec_ce_qu_il_fait_et_quand_il_sert
 
+import { Check } from "lucide-react";
+
+import { Badge } from "@/composants/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/composants/ui/card";
+import { cn } from "@/lib/utils";
+
 import type { Agent } from "./types";
 
 interface Props {
@@ -20,10 +26,6 @@ interface Props {
  * ce qu'est `rust-async` ou `RGPD`, ou bien on n'en a pas besoin. Les rôles
  * non : « Arianne — Team manager, QA, memoire · P0 T9, P6 » ne dit à personne
  * s'il lui faut Arianne.
- *
- * On avait mis le rôle en infobulle. Une infobulle ne se lit pas au doigt, ne
- * s'imprime pas, et ne se voit que si l'on soupçonne déjà qu'il y a quelque
- * chose à lire. Autant dire qu'elle n'existait pas.
  *
  * **Le champ « quand » est celui qui compte** : c'est lui qui permet de
  * décocher. Sans lui on active les onze rôles au cas où — et le chargement à la
@@ -44,51 +46,71 @@ export function Equipe({ agents, actifs, surChangement }: Props) {
   }
 
   return (
-    <section className="bloc">
-      <header className="bloc-tete">
-        <h3>L'équipe</h3>
-        <span className="compte">
-          {actifs.length} / {agents.length}
-          {total > 0 && <> · ≈ {total.toLocaleString("fr-FR")} jetons</>}
-        </span>
-      </header>
-      <p className="explication">
-        Chaque rôle est un prompt chargé au moment de sa phase, pas un personnage à jouer.
-        Décochez ceux dont votre projet n'a pas besoin : ce qui n'est pas chargé ne se paie
-        pas à chaque tour.
-      </p>
-
-      <ul className="equipe">
-        {agents.map((agent) => {
-          const actif = ensemble.has(agent.code);
-          return (
-            <li key={agent.code}>
-              <button
-                type="button"
-                aria-pressed={actif}
-                className={actif ? "role actif" : "role"}
-                onClick={() => basculer(agent.code)}
-              >
-                <span className="role-tete">
-                  <span className="role-nom">{agent.nom}</span>
-                  <span className="role-poste">{agent.role}</span>
-                  {agent.optionnel && <span className="role-reserve">optionnel</span>}
-                  {agent.jetons ? (
-                    <span className="role-poids">{Math.round(agent.jetons / 100) / 10}k</span>
-                  ) : null}
-                </span>
-                {agent.resume && <span className="role-resume">{agent.resume}</span>}
-                {agent.quand && (
-                  <span className="role-quand">
-                    <em>Quand</em> — {agent.quand}
+    <Card>
+      <CardHeader>
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <CardTitle>L'équipe</CardTitle>
+          <span className="text-muted-foreground font-mono text-xs">
+            {actifs.length} / {agents.length}
+            {total > 0 && <> · ≈ {total.toLocaleString("fr-FR")} jetons</>}
+          </span>
+        </div>
+        <CardDescription>
+          Chaque rôle est un prompt chargé au moment de sa phase, pas un personnage à jouer.
+          Décochez ceux dont votre projet n'a pas besoin : ce qui n'est pas chargé ne se paie
+          pas à chaque tour.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ul className="grid gap-1.5">
+          {agents.map((agent) => {
+            const actif = ensemble.has(agent.code);
+            return (
+              <li key={agent.code}>
+                <button
+                  type="button"
+                  aria-pressed={actif}
+                  onClick={() => basculer(agent.code)}
+                  className={cn(
+                    "focus-visible:ring-ring flex w-full flex-col gap-1 rounded-lg border px-3 py-2.5 text-left transition-colors focus-visible:ring-[3px] focus-visible:outline-none",
+                    actif
+                      ? "border-primary bg-primary/5 shadow-[inset_3px_0_0_var(--color-primary)]"
+                      : "bg-background hover:border-primary/60",
+                  )}
+                >
+                  <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                    {actif && <Check className="text-primary size-3.5 self-center" />}
+                    <span className={cn("font-semibold", actif && "text-primary")}>
+                      {agent.nom}
+                    </span>
+                    <span className="text-muted-foreground text-xs">{agent.role}</span>
+                    {agent.optionnel && (
+                      <Badge variant="secondary" className="text-[10px]">
+                        optionnel
+                      </Badge>
+                    )}
+                    {agent.jetons ? (
+                      <span className="text-muted-foreground ml-auto font-mono text-[11px]">
+                        {Math.round(agent.jetons / 100) / 10}k
+                      </span>
+                    ) : null}
                   </span>
-                )}
-                <span className="role-phases">{agent.phases_claires || agent.phases}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
+                  {agent.resume && <span className="text-sm leading-snug">{agent.resume}</span>}
+                  {agent.quand && (
+                    <span className="text-muted-foreground text-xs leading-snug">
+                      <em className="text-foreground/80 font-semibold not-italic">Quand</em> —{" "}
+                      {agent.quand}
+                    </span>
+                  )}
+                  <span className="text-muted-foreground/80 font-mono text-[11px]">
+                    {agent.phases_claires || agent.phases}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }

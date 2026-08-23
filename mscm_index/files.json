@@ -70,6 +70,9 @@
   "mscm/src/mscm.ts": [
     "mscm"
   ],
+  "scripts/capturer.mjs": [
+    "mip.web.capture"
+  ],
   "scripts/engendrer-exemples.mjs": [
     "mip.doc.exemples.engendrement"
   ],
@@ -139,6 +142,9 @@
   "web/src/Cadrage.tsx": [
     "mip.web.cadrage"
   ],
+  "web/src/CadrageMobile.tsx": [
+    "mip.web.cadrage.mobile"
+  ],
   "web/src/Champ.tsx": [
     "mip.web.champ"
   ],
@@ -147,6 +153,9 @@
   ],
   "web/src/Coque.tsx": [
     "mip.web.coque"
+  ],
+  "web/src/CoqueMobile.tsx": [
+    "mip.web.coque.mobile"
   ],
   "web/src/Document.tsx": [
     "mip.web.document"
@@ -169,13 +178,25 @@
   "web/src/TagsGroupes.tsx": [
     "mip.web.tags_groupes"
   ],
+  "web/src/appareil.tsx": [
+    "mip.web.appareil"
+  ],
+  "web/src/lib/utils.ts": [
+    "mip.web.utils"
+  ],
   "web/src/main.tsx": [
     "mip.web.entree"
   ],
   "web/src/routeur.ts": [
     "mip.web.routeur"
   ],
+  "web/src/theme.ts": [
+    "mip.web.theme"
+  ],
   "web/src/types.ts": [
     "mip.web.types"
+  ],
+  "web/src/useCadrage.ts": [
+    "mip.web.cadrage.etat"
   ]
 }

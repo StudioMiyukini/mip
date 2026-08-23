@@ -5,6 +5,12 @@
 // @do lister_les_cadrages_enregistres_et_permettre_de_les_reprendre
 
 import { useEffect, useState } from "react";
+import { Copy, Eye, EyeOff, Plus, Trash2 } from "lucide-react";
+
+import { Badge } from "@/composants/ui/badge";
+import { Button } from "@/composants/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/composants/ui/card";
+import { Skeleton } from "@/composants/ui/skeleton";
 
 import { surClicInterne } from "./routeur";
 
@@ -72,85 +78,114 @@ export function MesCadrages({ connecte, aller, surConnexion, surChangement }: Pr
 
   if (!connecte) {
     return (
-      <div className="scene-vide">
-        <h1>Mes cadrages</h1>
-        <p className="explication">
+      <div className="mx-auto max-w-xl space-y-4 py-8 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight">Mes cadrages</h1>
+        <p className="text-muted-foreground text-sm leading-relaxed">
           Un compte permet de retrouver vos cadrages d'un jour à l'autre. Il n'est jamais
           nécessaire pour utiliser l'outil — sans lui, le prompt reste copiable, il n'est
           simplement pas conservé.
         </p>
-        <div className="boutons">
-          <button type="button" className="principal" onClick={surConnexion}>
-            Créer un compte
-          </button>
-          <a href="/cadrage" className="bouton-second" onClick={(e) => surClicInterne(e, aller)}>
-            Commencer sans compte
-          </a>
+        <div className="flex flex-wrap justify-center gap-2">
+          <Button onClick={surConnexion}>Créer un compte</Button>
+          <Button variant="outline" asChild>
+            <a href="/cadrage" onClick={(e) => surClicInterne(e, aller)}>
+              Commencer sans compte
+            </a>
+          </Button>
         </div>
       </div>
     );
   }
 
-  if (lignes === null) return <p className="explication">…</p>;
+  if (lignes === null) {
+    return (
+      <div className="space-y-3">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-28 w-full" />
+        <Skeleton className="h-28 w-full" />
+      </div>
+    );
+  }
 
   if (!lignes.length) {
     return (
-      <div className="scene-vide">
-        <h1>Mes cadrages</h1>
-        <p className="explication">Rien d'enregistré pour l'instant.</p>
-        <a href="/cadrage" className="bouton-principal" onClick={(e) => surClicInterne(e, aller)}>
-          Commencer un cadrage
-        </a>
+      <div className="mx-auto max-w-xl space-y-4 py-8 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight">Mes cadrages</h1>
+        <p className="text-muted-foreground text-sm">Rien d'enregistré pour l'instant.</p>
+        <Button asChild>
+          <a href="/cadrage" onClick={(e) => surClicInterne(e, aller)}>
+            <Plus className="size-4" />
+            Commencer un cadrage
+          </a>
+        </Button>
       </div>
     );
   }
 
   return (
-    <div>
-      <header className="scene-tete">
+    <div className="space-y-5">
+      <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1>Mes cadrages</h1>
-          <p className="explication">
+          <h1 className="text-2xl font-semibold tracking-tight">Mes cadrages</h1>
+          <p className="text-muted-foreground mt-1 text-sm">
             {lignes.length} cadrage{lignes.length > 1 ? "s" : ""} enregistré
             {lignes.length > 1 ? "s" : ""}.
           </p>
         </div>
-        <a href="/cadrage" className="bouton-principal" onClick={(e) => surClicInterne(e, aller)}>
-          Nouveau cadrage
-        </a>
+        <Button asChild>
+          <a href="/cadrage" onClick={(e) => surClicInterne(e, aller)}>
+            <Plus className="size-4" />
+            Nouveau cadrage
+          </a>
+        </Button>
       </header>
 
-      <div className="liste-cadrages">
+      <div className="grid gap-3">
         {lignes.map((ligne) => (
-          <article className="bloc" key={ligne.id}>
-            <header className="bloc-tete">
-              <h3>{ligne.titre}</h3>
-              <span className="compte">
-                {ligne.classe} · {ligne.repondues} réponse{Number(ligne.repondues) > 1 ? "s" : ""}
-              </span>
-            </header>
-            <p className="note">
-              modifié le {new Date(ligne.modifie_le).toLocaleDateString("fr-FR")}
-            </p>
-            <div className="boutons">
-              <button type="button" onClick={() => ouvrir(ligne.id)}>
-                {ouvert === ligne.id ? "masquer" : "voir le prompt"}
-              </button>
-              {ouvert === ligne.id && (
-                <button
-                  type="button"
-                  className="principal"
-                  onClick={() => navigator.clipboard.writeText(prompt)}
+          <Card key={ligne.id}>
+            <CardHeader>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <CardTitle className="text-base">{ligne.titre}</CardTitle>
+                <span className="flex items-center gap-2">
+                  <Badge variant="secondary" className="font-mono text-[11px]">
+                    {ligne.classe}
+                  </Badge>
+                  <span className="text-muted-foreground text-xs">
+                    {ligne.repondues} réponse{Number(ligne.repondues) > 1 ? "s" : ""} ·
+                    modifié le {new Date(ligne.modifie_le).toLocaleDateString("fr-FR")}
+                  </span>
+                </span>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" onClick={() => ouvrir(ligne.id)}>
+                  {ouvert === ligne.id ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  {ouvert === ligne.id ? "Masquer" : "Voir le prompt"}
+                </Button>
+                {ouvert === ligne.id && (
+                  <Button size="sm" onClick={() => navigator.clipboard.writeText(prompt)}>
+                    <Copy className="size-4" />
+                    Copier
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-destructive hover:text-destructive ml-auto"
+                  onClick={() => supprimer(ligne.id, ligne.titre)}
                 >
-                  Copier
-                </button>
+                  <Trash2 className="size-4" />
+                  Supprimer
+                </Button>
+              </div>
+              {ouvert === ligne.id && (
+                <pre className="bg-muted/40 max-h-96 overflow-auto rounded-lg p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap">
+                  {prompt}
+                </pre>
               )}
-              <button type="button" className="danger" onClick={() => supprimer(ligne.id, ligne.titre)}>
-                Supprimer
-              </button>
-            </div>
-            {ouvert === ligne.id && <pre className="prompt">{prompt}</pre>}
-          </article>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

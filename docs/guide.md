@@ -64,6 +64,26 @@ libre.
 
 La barre en haut est cliquable dans les deux sens — on peut revenir.
 
+## Deux parcours
+
+À votre première visite, MIP Studio demande **comment vous préférez remplir**.
+Ce n'est pas une question de taille d'écran : les deux parcours posent les mêmes
+questions autrement.
+
+| | Sur grand écran | Sur téléphone |
+| --- | --- | --- |
+| Le formulaire | entier, d'un seul tenant | une section par écran |
+| Le prompt | à côté, en direct | dans un tiroir, avec le compteur toujours visible |
+| La navigation | barre latérale | menu en tiroir |
+
+Votre écran suggère une réponse, il ne l'impose pas : un développeur sur
+téléphone peut vouloir tout voir, quelqu'un sur un grand écran peut préférer
+avancer pas à pas. **Le choix est mémorisé**, et « changer de parcours » est
+dans le menu à tout moment.
+
+Le cadrage produit est **rigoureusement le même** des deux côtés — mêmes
+questions, mêmes règles, même prompt.
+
 ### Pourquoi ces quatre questions-là
 
 | Question | Ce qu'elle empêche |

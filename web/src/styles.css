@@ -1,461 +1,181 @@
 /* @id mip.web.style
    @role ui
    @layer ui
-   @human La feuille de style : un tableau de bord, une barre latérale, une scène
-   @do habiller_le_tableau_de_bord_et_ses_pages */
+   @human La feuille de style : Tailwind, et les jetons de couleur du site
+   @do declarer_les_jetons_de_theme_pour_tailwind_et_shadcn */
 
-/* Le parti pris tient en une phrase : **une colonne de navigation, et une scène
-   qui change**. Un menu horizontal aurait forcé à choisir entre montrer les six
-   pages ou les cacher derrière un bouton ; une colonne les montre toutes,
-   groupées par moment du trajet — on découvre, on cadre, on creuse. */
+/* **Tailwind v4 et les jetons shadcn, pas huit cents lignes écrites à la main.**
+   La feuille précédente déclarait chaque classe une par une — `.bloc`, `.tag`,
+   `.flanc`. Ça tenait tant que l'interface tenait, et chaque composant ajouté
+   demandait sa poignée de règles, écrites au même endroit que toutes les autres.
+
+   Le socle est désormais celui qu'attendent les registres de composants
+   (shadcn/ui, 21st.dev) : des variables CSS nommées par *rôle* — `--primary`,
+   `--muted`, `--border` — et non par couleur. Un composant recopié depuis un
+   registre s'habille alors tout seul, sans retouche.
+
+   **Les couleurs, elles, ne changent pas.** Le bleu nuit et l'accent périwinkle
+   de la version précédente sont repris tels quels : c'est l'identité du site,
+   pas un défaut de la feuille. */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --fond: #0e1420;
-  --flanc: #0a0f19;
-  --carte: #161f2e;
-  --trait: #26334a;
-  --texte: #e6edf7;
-  --doux: #8ea0bd;
-  --accent: #6d8cff;
-  --alerte: #ff7a7a;
-  --mono: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
-  --rayon: 10px;
+  --rayon: 0.625rem;
+
+  /* Clair — repris de l'ancienne palette `prefers-color-scheme: light`. */
+  --background: oklch(0.978 0.005 255);
+  --foreground: oklch(0.23 0.03 258);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.23 0.03 258);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.23 0.03 258);
+  --primary: oklch(0.62 0.17 274);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.955 0.01 257);
+  --secondary-foreground: oklch(0.28 0.03 258);
+  --muted: oklch(0.955 0.01 257);
+  --muted-foreground: oklch(0.52 0.03 258);
+  --accent: oklch(0.94 0.02 274);
+  --accent-foreground: oklch(0.35 0.08 274);
+  --destructive: oklch(0.6 0.19 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0.012 257);
+  --input: oklch(0.9 0.012 257);
+  --ring: oklch(0.62 0.17 274);
+
+  --radius: var(--rayon);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --fond: #f6f8fc;
-    --flanc: #ffffff;
-    --carte: #ffffff;
-    --trait: #dde4ef;
-    --texte: #16202e;
-    --doux: #5e6f8a;
+.dark {
+  /* Sombre — l'ambiance d'origine : #0e1420 de fond, #6d8cff d'accent. */
+  --background: oklch(0.19 0.025 259);
+  --foreground: oklch(0.93 0.015 258);
+  --card: oklch(0.235 0.028 259);
+  --card-foreground: oklch(0.93 0.015 258);
+  --popover: oklch(0.235 0.028 259);
+  --popover-foreground: oklch(0.93 0.015 258);
+  --primary: oklch(0.7 0.15 274);
+  --primary-foreground: oklch(0.16 0.03 259);
+  --secondary: oklch(0.27 0.03 259);
+  --secondary-foreground: oklch(0.93 0.015 258);
+  --muted: oklch(0.27 0.03 259);
+  --muted-foreground: oklch(0.68 0.035 258);
+  --accent: oklch(0.31 0.045 268);
+  --accent-foreground: oklch(0.93 0.015 258);
+  --destructive: oklch(0.7 0.16 22);
+  --destructive-foreground: oklch(0.16 0.03 259);
+  --border: oklch(0.32 0.035 259);
+  --input: oklch(0.32 0.035 259);
+  --ring: oklch(0.7 0.15 274);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   }
 }
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--fond);
-  color: var(--texte);
-  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-
-/* ── la coque ────────────────────────────────────────────────────────────── */
-
-.coque { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
-.scene { padding: 26px 30px 60px; max-width: 1500px; min-width: 0; }
-
-.flanc {
-  display: flex; flex-direction: column; gap: 22px;
-  padding: 22px 16px; background: var(--flanc);
-  border-right: 1px solid var(--trait);
-  position: sticky; top: 0; height: 100vh; overflow-y: auto;
-}
-
-.marque { text-decoration: none; color: inherit; display: block; }
-.marque strong { display: block; font-size: 16px; letter-spacing: -0.01em; }
-.marque span { display: block; font-size: 12px; color: var(--doux); margin-top: 2px; }
-
-.flanc-groupe { margin-bottom: 18px; }
-.flanc-groupe h2 {
-  margin: 0 0 6px; padding: 0 10px;
-  font-size: 10px; font-weight: 600; letter-spacing: 0.09em;
-  text-transform: uppercase; color: var(--doux);
-}
-.flanc-lien {
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  padding: 7px 10px; border-radius: 7px; margin-bottom: 1px;
-  font-size: 14px; color: var(--doux); text-decoration: none;
-}
-.flanc-lien:hover { background: var(--carte); color: var(--texte); }
-/* La page courante se marque par un fond et un texte plein — pas par un filet de
-   2 px, qu'on ne voit pas du coin de l'œil. */
-.flanc-lien.actif { background: var(--carte); color: var(--texte); font-weight: 600; }
-.flanc-compte {
-  font-family: var(--mono); font-size: 11px; color: var(--doux);
-  background: var(--fond); border-radius: 999px; padding: 1px 7px;
-}
-
-.flanc-pied {
-  margin-top: auto; display: flex; flex-direction: column; gap: 5px;
-  padding: 12px 10px 0; border-top: 1px solid var(--trait); font-size: 12px;
-}
-.flanc-adresse {
-  color: var(--texte); font-family: var(--mono); font-size: 11px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.flanc-offre { color: var(--doux); line-height: 1.4; }
-.flanc-source { color: var(--doux); text-decoration: none; margin-top: 4px; }
-.flanc-source:hover { color: var(--accent); }
-
-/* Le légal : joignable depuis chaque page — c'est une obligation — sans peser
-   autant que le reste de la navigation. Plus petit, plus pâle, sur une ligne. */
-.flanc-legal {
-  display: flex; flex-wrap: wrap; gap: 2px 8px;
-  margin-top: 6px; font-size: 11px; line-height: 1.5;
-}
-.flanc-legal a { color: var(--doux); text-decoration: none; }
-.flanc-legal a:hover { color: var(--accent); text-decoration: underline; }
-.flanc-legal a.actif { color: var(--texte); }
-
-/* Sous 900 px, la colonne passe au-dessus et se couche. Un tiroir coulissant
-   demanderait un bouton, un état, et un piège au clavier. */
-@media (max-width: 900px) {
-  .coque { grid-template-columns: 1fr; }
-  .flanc { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--trait); }
-  .flanc nav { display: flex; flex-wrap: wrap; gap: 4px 14px; }
-  .flanc-groupe { margin: 0; }
-  .flanc-groupe h2 { padding: 0 4px; }
-  .flanc-lien { padding: 5px 8px; }
-  .scene { padding: 18px 16px 40px; }
-}
-
-/* ── l'accueil ───────────────────────────────────────────────────────────── */
-
-.accueil { display: flex; flex-direction: column; gap: 26px; max-width: 980px; }
-
-.hero { padding: 12px 0 4px; }
-.hero h1 { margin: 0 0 14px; font-size: 30px; line-height: 1.25; letter-spacing: -0.02em; }
-.hero-suite { color: var(--doux); font-weight: 600; }
-.hero-texte { margin: 0 0 10px; font-size: 16px; max-width: 62ch; }
-.hero-boutons { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0 10px; }
-.hero-note { margin: 0; font-size: 13px; color: var(--doux); }
-
-.bouton-principal, .bouton-second {
-  display: inline-block; font: inherit; font-size: 15px; cursor: pointer;
-  padding: 11px 20px; border-radius: 9px; text-decoration: none;
-}
-.bouton-principal { background: var(--accent); border: 1px solid var(--accent); color: #fff; }
-.bouton-second { background: var(--carte); border: 1px solid var(--trait); color: var(--texte); }
-.bouton-second:hover { border-color: var(--accent); }
-
-/* Le nombre d'abord, gros ; ce qu'il compte ensuite ; d'où il vient en petit —
-   c'est l'ordre dans lequel on le lit. */
-.cartes { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
-.carte {
-  display: flex; flex-direction: column; gap: 2px;
-  background: var(--carte); border: 1px solid var(--trait);
-  border-radius: var(--rayon); padding: 15px 16px;
-}
-.carte-valeur { font-size: 27px; line-height: 1.1; font-variant-numeric: tabular-nums; }
-.carte-libelle { font-size: 13px; }
-.carte-detail { font-size: 12px; color: var(--doux); margin-top: 3px; }
-
-.temps { margin: 0; padding: 0; list-style: none; counter-reset: temps; display: grid; gap: 14px; }
-.temps li { counter-increment: temps; padding-left: 38px; position: relative; }
-.temps li::before {
-  content: counter(temps); position: absolute; left: 0; top: 0;
-  width: 25px; height: 25px; border-radius: 50%;
-  display: grid; place-items: center; font-size: 12px; font-family: var(--mono);
-  background: var(--accent); color: #fff;
-}
-.temps strong { display: block; margin-bottom: 2px; }
-.temps span { color: var(--doux); font-size: 14px; }
-
-.liste-marquee { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
-.liste-marquee li { font-size: 14px; }
-
-.deux-colonnes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
-.commande {
-  font-family: var(--mono); font-size: 13px; margin: 0;
-  background: var(--fond); border: 1px solid var(--trait);
-  border-radius: 7px; padding: 9px 12px; display: inline-block;
-}
-
-.accueil-pied {
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  padding-top: 20px; border-top: 1px solid var(--trait);
-}
-
-/* ── les pages de la scène ───────────────────────────────────────────────── */
-
-.scene-tete {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
-}
-.scene-tete h1 { margin: 0 0 3px; font-size: 21px; letter-spacing: -0.01em; }
-.scene-vide { max-width: 52ch; display: flex; flex-direction: column; gap: 12px; }
-.scene-vide h1 { margin: 0; font-size: 21px; }
-
-.page { max-width: 1500px; margin: 0 auto; padding: 20px; }
-.cadrage-page { display: flex; flex-direction: column; }
-
-.liste-cadrages { display: flex; flex-direction: column; gap: 12px; }
-.liste-cadrages .prompt { margin-top: 12px; max-height: 340px; }
-
-/* ── les étages ──────────────────────────────────────────────────────────── */
-
-.etages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
-@media (max-width: 700px) { .etages { grid-template-columns: 1fr; } }
-
-.etage {
-  display: flex; align-items: center; gap: 11px; text-align: left;
-  font: inherit; cursor: pointer; padding: 11px 13px; border-radius: var(--rayon);
-  border: 1px solid var(--trait); background: var(--carte); color: var(--doux);
-}
-.etage:hover { border-color: var(--accent); }
-.etage.atteint { color: var(--texte); border-color: var(--accent); }
-.etage-rang {
-  flex: none; width: 25px; height: 25px; border-radius: 50%;
-  display: grid; place-items: center; font-size: 12px; font-family: var(--mono);
-  background: var(--fond); border: 1px solid var(--trait);
-}
-.etage.atteint .etage-rang { background: var(--accent); border-color: var(--accent); color: #fff; }
-.etage-corps { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.etage-corps strong { font-size: 14px; font-weight: 600; }
-.etage-gain { font-size: 12px; color: var(--doux); }
-.etage-reste {
-  flex: none; margin-left: auto; font-family: var(--mono); font-size: 11px;
-  color: var(--doux); background: var(--fond); border-radius: 999px; padding: 2px 7px;
-}
-
-/* Il dit « c'est utilisable maintenant » — sans lui, personne ne sait qu'il peut
-   s'arrêter, et qui ne sait pas qu'il peut s'arrêter abandonne au lieu de finir. */
-.palier {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap;
-  background: var(--carte); border: 1px solid var(--accent);
-  border-radius: var(--rayon); padding: 15px 16px;
-}
-.palier .explication { margin: 3px 0 0; }
-
-/* ── le formulaire ───────────────────────────────────────────────────────── */
-
-.colonnes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
-@media (max-width: 1200px) { .colonnes { grid-template-columns: 1fr; } }
-
-.formulaire { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-
-.bloc {
-  background: var(--carte); border: 1px solid var(--trait);
-  border-radius: var(--rayon); padding: 16px;
-}
-.bloc h2 { margin: 0 0 10px; font-size: 16px; }
-.bloc h3 { margin: 0 0 4px; font-size: 15px; }
-.bloc-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.compte { color: var(--doux); font-size: 12px; font-family: var(--mono); }
-.explication { color: var(--doux); font-size: 13px; margin: 4px 0 12px; }
-.note { color: var(--doux); font-size: 12px; margin: 6px 0 0; }
-
-.ligne { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
-.ligne > span { font-size: 13px; color: var(--doux); }
-
-.question { display: flex; flex-direction: column; gap: 6px; padding: 12px 0; border-top: 1px solid var(--trait); }
-.question:first-of-type { border-top: none; }
-.libelle { font-size: 14px; }
-.numero { display: inline-block; min-width: 30px; color: var(--doux); font-family: var(--mono); font-size: 12px; }
-.aide { color: var(--doux); font-size: 12px; }
-
-.controle {
-  width: 100%; font: inherit; color: var(--texte); background: var(--fond);
-  border: 1px solid var(--trait); border-radius: 8px; padding: 9px 10px;
-}
-.controle:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.zone { resize: vertical; min-height: 42px; font-family: inherit; }
-
-.echelle { display: flex; gap: 6px; flex-wrap: wrap; }
-.cran {
-  font: inherit; cursor: pointer; padding: 7px 14px; border-radius: 8px;
-  border: 1px solid var(--trait); background: var(--fond); color: var(--texte);
-}
-.cran.actif { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-.cases { display: flex; flex-direction: column; gap: 6px; }
-.case { display: flex; align-items: center; gap: 8px; font-size: 14px; }
-
-/* ── les tags ────────────────────────────────────────────────────────────── */
-
-.tags { display: flex; flex-wrap: wrap; gap: 7px; }
-.tag {
-  display: inline-flex; align-items: center; gap: 7px;
-  font: inherit; font-size: 13px; cursor: pointer;
-  padding: 6px 11px; border-radius: 999px;
-  border: 1px solid var(--trait); background: var(--fond); color: var(--texte);
-}
-.tag:hover { border-color: var(--accent); }
-.tag.actif { background: var(--accent); border-color: var(--accent); color: #fff; }
-.tag-reserve { font-size: 11px; opacity: 0.75; font-style: italic; }
-.tag-poids { font-size: 11px; opacity: 0.65; font-family: var(--mono); }
-
-/* Quand les entrees portent un detail, les pastilles deviennent des cases :
-   deux lignes ne tiennent pas dans une pastille, et le detail sert au moment
-   du choix — pas apres. Voir TagsGroupes.tsx. */
-.tags.grille {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 6px;
-}
-.tags.grille .tag {
-  flex-direction: column; align-items: flex-start; gap: 2px;
-  border-radius: 8px; padding: 8px 11px; text-align: left; min-height: 100%;
-}
-/* Pas d'aplat de couleur ici : sous un aplat, la seconde ligne devient
-   illisible. La bordure et le liseré disent la même chose. */
-.tags.grille .tag.actif {
-  background: var(--fond); color: var(--texte);
-  border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent);
-}
-.tags.grille .tag.actif .tag-nom { color: var(--accent); font-weight: 600; }
-.tag-detail { font-size: 11px; color: var(--doux); line-height: 1.35; }
-
-/* ── l'équipe ────────────────────────────────────────────────────────────── */
-
-/* Des lignes, pas des pastilles : un rôle se choisit sur ce qu'il fait, et une
-   explication ne tient pas dans une pastille. Voir Equipe.tsx. */
-.equipe { list-style: none; display: grid; gap: 7px; margin: 0; padding: 0; }
-.role {
-  display: flex; flex-direction: column; gap: 4px; width: 100%; text-align: left;
-  font: inherit; font-size: 13px; cursor: pointer;
-  padding: 10px 12px; border-radius: 8px;
-  border: 1px solid var(--trait); background: var(--fond); color: var(--texte);
-}
-.role:hover { border-color: var(--accent); }
-/* L'état actif se marque par la bordure et un liseré, pas par un aplat de
-   couleur : sous un aplat, trois lignes de texte deviennent illisibles. */
-.role.actif { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
-.role.actif .role-nom { color: var(--accent); }
-
-.role-tete { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
-.role-nom { font-weight: 600; }
-.role-poste { font-size: 12px; color: var(--doux); }
-.role-reserve { font-size: 11px; opacity: 0.75; font-style: italic; }
-.role-poids { font-size: 11px; opacity: 0.65; font-family: var(--mono); margin-left: auto; }
-.role-resume { line-height: 1.45; }
-.role-quand { font-size: 12px; color: var(--doux); line-height: 1.45; }
-.role-quand em { font-style: normal; font-weight: 600; }
-.role-phases { font-size: 11px; color: var(--doux); font-family: var(--mono); opacity: 0.8; }
-
-/* ── l'aperçu du prompt ──────────────────────────────────────────────────── */
-
-.apercu {
-  position: sticky; top: 26px; min-width: 0;
-  background: var(--carte); border: 1px solid var(--trait);
-  border-radius: var(--rayon); padding: 16px;
-  display: flex; flex-direction: column; gap: 12px;
-  max-height: calc(100vh - 52px);
-}
-.apercu h3 { margin: 0; font-size: 15px; }
-@media (max-width: 1200px) { .apercu { position: static; max-height: none; } }
-
-.boutons { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.boutons button {
-  font: inherit; cursor: pointer; padding: 8px 14px; border-radius: 8px;
-  border: 1px solid var(--trait); background: var(--fond); color: var(--texte);
-}
-.boutons .principal { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-.prompt {
-  flex: 1; overflow: auto; margin: 0; padding: 14px;
-  background: var(--fond); border: 1px solid var(--trait); border-radius: 8px;
-  font-family: var(--mono); font-size: 12px; line-height: 1.6;
-  white-space: pre-wrap; word-break: break-word;
-}
-
-.alerte {
-  background: var(--carte); border: 1px solid var(--alerte);
-  border-radius: var(--rayon); padding: 18px;
-}
-.alerte code { font-family: var(--mono); font-size: 12px; }
-
-/* ── une suggestion n'est pas une réponse ────────────────────────────────── */
-
-/* Hachurée, pas colorée : une couleur seule ne se voit pas en daltonisme, et
-   rien dans le texte d'une invention ne la distingue d'une réponse. */
-.controle.suggere,
-.cran.actif.suggere {
-  border-style: dashed;
-  border-color: var(--accent);
-  background-image: repeating-linear-gradient(
-    -45deg, transparent, transparent 7px,
-    color-mix(in srgb, var(--accent) 8%, transparent) 7px,
-    color-mix(in srgb, var(--accent) 8%, transparent) 14px
-  );
-}
-.question.a-relire { border-left: 2px solid var(--accent); padding-left: 11px; }
-
-.suggestion {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; flex-wrap: wrap; margin-top: 7px;
-  font-size: 12px; color: var(--doux);
-}
-.suggestion .boutons button { padding: 5px 11px; font-size: 13px; min-height: 32px; }
-.suggestion-dit { flex: 1; min-width: 220px; }
-
-.a-relire-bandeau {
-  margin: 0 0 14px; padding: 11px 14px; font-size: 13px;
-  background: var(--carte); color: var(--doux);
-  border: 1px dashed var(--accent); border-radius: var(--rayon);
-}
-.a-relire-bandeau strong { color: var(--texte); }
-
-/* ── le compte ───────────────────────────────────────────────────────────── */
-
-.lien {
-  font: inherit; font-size: 13px; cursor: pointer; padding: 0;
-  background: none; border: none; color: var(--accent); text-decoration: underline;
-  text-align: left;
-}
-
-.voile {
-  position: fixed; inset: 0; z-index: 10; padding: 20px;
-  display: grid; place-items: center;
-  background: color-mix(in srgb, #000 55%, transparent);
-}
-.fenetre {
-  width: min(420px, 100%); max-height: 90vh; overflow: auto;
-  display: flex; flex-direction: column; gap: 11px;
-  background: var(--carte); border: 1px solid var(--trait);
-  border-radius: var(--rayon); padding: 18px;
-}
-.fenetre .boutons button { flex: 1; }
-.separateur { width: 100%; border: none; border-top: 1px solid var(--trait); margin: 4px 0; }
-
-/* Bordé de rouge, jamais rempli : un bouton rouge plein attire le clic, et ce
-   n'est pas ce qu'on veut d'une suppression définitive. */
-.danger {
-  font: inherit; cursor: pointer; padding: 9px 14px; border-radius: 8px;
-  background: var(--fond); color: var(--alerte); border: 1px solid var(--alerte);
-}
-.danger:disabled { opacity: 0.45; cursor: default; }
-.refus { color: var(--alerte); font-size: 13px; margin: 0; }
-
-.porte {
-  max-width: 380px; margin: 15vh auto 0;
-  display: flex; flex-direction: column; gap: 12px;
-}
-.porte h1 { margin: 0; font-size: 20px; }
-.porte .principal {
-  font: inherit; cursor: pointer; padding: 10px 14px; border-radius: 8px;
-  background: var(--accent); border: 1px solid var(--accent); color: #fff;
-}
-.porte .principal:disabled { opacity: 0.5; cursor: default; }
-
-/* ── les pages de documentation ──────────────────────────────────────────── */
-
-/* Une colonne étroite : au-delà de 70 caractères par ligne, l'œil perd la ligne
-   suivante en revenant à la marge. */
-.document { max-width: 46rem; padding: 0; }
-.document .retour { display: inline-block; margin-bottom: 18px; color: var(--doux); font-size: 13px; }
-.document article { line-height: 1.65; }
-.document h1 { font-size: 24px; margin: 0 0 6px; }
-.document h2 { font-size: 17px; margin: 30px 0 8px; padding-top: 14px; border-top: 1px solid var(--trait); }
-.document h3 { font-size: 15px; margin: 20px 0 6px; }
-.document table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
-.document th, .document td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--trait); vertical-align: top; }
-.document th { color: var(--doux); font-weight: 600; font-size: 12px; }
-.document code { font-family: var(--mono); font-size: 12px; background: var(--carte); padding: 1px 5px; border-radius: 4px; }
-.document pre { overflow-x: auto; background: var(--carte); border: 1px solid var(--trait); border-radius: 8px; padding: 13px; }
-.document pre code { background: none; padding: 0; }
-.document blockquote { margin: 14px 0; padding-left: 14px; border-left: 2px solid var(--accent); color: var(--doux); }
-.document a { color: var(--accent); }
-.document hr { border: none; border-top: 1px solid var(--trait); margin: 26px 0; }
-
-/* Les tags rangés par sous-groupe. Vingt tags à plat se lisent comme une liste
-   de courses ; rangés par famille, on sait où chercher. */
-.tags-groupe { margin-top: 12px; }
-.tags-groupe:first-of-type { margin-top: 4px; }
-.tags-groupe h4 {
-  margin: 0 0 6px; font-size: 11px; font-weight: 600;
-  letter-spacing: 0.06em; text-transform: uppercase; color: var(--doux);
+/* Le Markdown des pages de documentation arrive en HTML brut depuis `marked` :
+   aucune classe utilitaire ne peut lui être posée à la volée. Il se met donc en
+   forme ici, une fois. */
+@layer components {
+  .prose-mip {
+    @apply leading-relaxed;
+  }
+  .prose-mip h1 {
+    @apply mt-0 mb-4 text-3xl font-semibold tracking-tight;
+  }
+  .prose-mip h2 {
+    @apply mt-10 mb-3 border-b pb-2 text-xl font-semibold tracking-tight;
+  }
+  .prose-mip h3 {
+    @apply mt-7 mb-2 text-base font-semibold;
+  }
+  .prose-mip p {
+    @apply my-3.5;
+  }
+  .prose-mip ul,
+  .prose-mip ol {
+    @apply my-3.5 space-y-1.5 pl-6;
+  }
+  .prose-mip ul {
+    @apply list-disc;
+  }
+  .prose-mip ol {
+    @apply list-decimal;
+  }
+  .prose-mip a {
+    @apply text-primary underline underline-offset-2;
+  }
+  .prose-mip strong {
+    @apply font-semibold;
+  }
+  .prose-mip blockquote {
+    @apply border-primary/40 text-muted-foreground my-4 border-l-2 pl-4 italic;
+  }
+  .prose-mip code {
+    @apply bg-muted rounded px-1.5 py-0.5 font-mono text-[0.85em];
+  }
+  .prose-mip pre {
+    @apply bg-muted my-4 overflow-x-auto rounded-lg p-4;
+  }
+  .prose-mip pre code {
+    @apply bg-transparent p-0 text-[0.85em];
+  }
+  .prose-mip table {
+    @apply my-4 w-full border-collapse text-sm;
+  }
+  .prose-mip th,
+  .prose-mip td {
+    @apply border-b px-3 py-2 text-left align-top;
+  }
+  .prose-mip th {
+    @apply text-muted-foreground text-xs font-semibold tracking-wide uppercase;
+  }
+  .prose-mip hr {
+    @apply my-8;
+  }
+  .prose-mip details {
+    @apply bg-card my-4 rounded-lg border p-4;
+  }
+  .prose-mip summary {
+    @apply cursor-pointer font-medium;
+  }
 }

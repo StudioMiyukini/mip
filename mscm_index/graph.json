@@ -42,10 +42,15 @@
     "mip.suggestion.essais",
     "mip.web",
     "mip.web.accueil",
+    "mip.web.appareil",
     "mip.web.cadrage",
+    "mip.web.cadrage.etat",
+    "mip.web.cadrage.mobile",
+    "mip.web.capture",
     "mip.web.champ",
     "mip.web.compte",
     "mip.web.coque",
+    "mip.web.coque.mobile",
     "mip.web.document",
     "mip.web.entree",
     "mip.web.equipe",
@@ -55,7 +60,9 @@
     "mip.web.routeur",
     "mip.web.tags",
     "mip.web.tags_groupes",
+    "mip.web.theme",
     "mip.web.types",
+    "mip.web.utils",
     "mscm",
     "mscm.balisage",
     "mscm.essais",
@@ -270,7 +277,17 @@
     },
     {
       "from": "mip.web",
+      "to": "mip.web.appareil",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web",
       "to": "mip.web.cadrage",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web",
+      "to": "mip.web.capture",
       "type": "parent"
     },
     {
@@ -335,7 +352,32 @@
     },
     {
       "from": "mip.web",
+      "to": "mip.web.theme",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web",
       "to": "mip.web.types",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web",
+      "to": "mip.web.utils",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web.cadrage",
+      "to": "mip.web.cadrage.etat",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web.cadrage",
+      "to": "mip.web.cadrage.mobile",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web.coque",
+      "to": "mip.web.coque.mobile",
       "type": "parent"
     },
     {

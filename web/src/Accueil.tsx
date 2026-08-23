@@ -4,6 +4,12 @@
 // @human La présentation : ce qu'on y gagne, comment ça marche, par où commencer
 // @do presenter_le_mip_a_quelqu_un_qui_arrive_sans_rien_savoir
 
+import { ArrowRight, Check, Layers, ScanSearch, Terminal, Users } from "lucide-react";
+
+import { Badge } from "@/composants/ui/badge";
+import { Button } from "@/composants/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/composants/ui/card";
+
 import { surClicInterne } from "./routeur";
 import type { Formulaire } from "./types";
 
@@ -38,128 +44,157 @@ export function Accueil({ formulaire, aller }: Props) {
   const referentiels = formulaire?.certifications.length ?? 0;
 
   return (
-    <div className="accueil">
-      <header className="hero">
-        <h1>
+    <div className="space-y-14">
+      <header className="mx-auto max-w-3xl pt-4 text-center sm:pt-10">
+        <Badge variant="secondary" className="mb-5 font-mono text-[11px]">
+          gratuit · sans inscription
+        </Badge>
+        <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-5xl">
           Bien guidée, votre IA va beaucoup plus loin.
-          <br />
-          <span className="hero-suite">Le même modèle. Dix minutes de cadrage.</span>
+          <span className="text-muted-foreground mt-2 block text-xl font-normal sm:text-2xl">
+            Le même modèle. Dix minutes de cadrage.
+          </span>
         </h1>
-        <p className="hero-texte">
-          Une IA travaille avec ce qu'on lui donne. Plus elle sait pour qui c'est,
-          jusqu'où aller et ce qui compte le plus, plus elle vise juste — et ces
-          réponses-là, c'est vous qui les avez.
+        <p className="text-muted-foreground mx-auto mt-6 max-w-2xl leading-relaxed text-pretty">
+          Une IA travaille avec ce qu'on lui donne. Plus elle sait pour qui c'est, jusqu'où
+          aller et ce qui compte le plus, plus elle vise juste — et ces réponses-là, c'est
+          vous qui les avez.
         </p>
-        <p className="hero-texte">
-          <strong>
-            MIP Studio pose les questions qu'un chef de projet poserait, et met vos réponses
-            dans une forme qu'un agent suit.
-          </strong>
+        <p className="mx-auto mt-4 max-w-2xl font-medium text-pretty">
+          MIP Studio pose les questions qu'un chef de projet poserait, et met vos réponses
+          dans une forme qu'un agent suit.
         </p>
-        <div className="hero-boutons">
-          <a href="/cadrage" className="bouton-principal" onClick={(e) => surClicInterne(e, aller)}>
-            Commencer un cadrage
-          </a>
-          <a href="/exemples" className="bouton-second" onClick={(e) => surClicInterne(e, aller)}>
-            Voir un exemple
-          </a>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Button size="lg" asChild>
+            <a href="/cadrage" onClick={(e) => surClicInterne(e, aller)}>
+              Commencer un cadrage
+              <ArrowRight className="size-4" />
+            </a>
+          </Button>
+          <Button size="lg" variant="outline" asChild>
+            <a href="/exemples" onClick={(e) => surClicInterne(e, aller)}>
+              Voir un exemple
+            </a>
+          </Button>
         </div>
-        <p className="hero-note">
-          Gratuit, sans inscription. Quatre questions suffisent pour repartir avec quelque
-          chose d'utilisable.
+        <p className="text-muted-foreground mt-5 text-sm">
+          Quatre questions suffisent pour repartir avec quelque chose d'utilisable.
         </p>
       </header>
 
-      <section className="cartes">
-        <Carte valeur={sections} libelle="sections de conception" detail="Design Thinking, SCAMPER, Six Thinking Hats" />
-        <Carte valeur={questions} libelle="questions au total" detail="filtrées selon l'ampleur du projet" />
-        <Carte valeur={agents} libelle="rôles spécialisés" detail="chargés au moment où ils servent" />
-        <Carte valeur={referentiels} libelle="référentiels" detail="ISO, ITIL, RGPD — à joindre au besoin" />
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Chiffre
+          icone={<Layers className="size-4" />}
+          valeur={sections}
+          libelle="sections de conception"
+          detail="Design Thinking, SCAMPER, Six Thinking Hats"
+        />
+        <Chiffre
+          icone={<ScanSearch className="size-4" />}
+          valeur={questions}
+          libelle="questions au total"
+          detail="filtrées selon l'ampleur du projet"
+        />
+        <Chiffre
+          icone={<Users className="size-4" />}
+          valeur={agents}
+          libelle="rôles spécialisés"
+          detail="chargés au moment où ils servent"
+        />
+        <Chiffre
+          icone={<Check className="size-4" />}
+          valeur={referentiels}
+          libelle="référentiels"
+          detail="ISO, ITIL, RGPD — à joindre au besoin"
+        />
       </section>
 
-      <section className="bloc">
-        <h2>En trois temps</h2>
-        <ol className="temps">
-          <li>
-            <strong>Décrivez votre projet</strong>
-            <span>
-              Comme vous le diriez à quelqu'un. L'outil en déduit des réponses, que vous
-              relisez — <em>une proposition n'est pas une réponse tant que vous ne l'avez
-              pas confirmée</em>.
-            </span>
-          </li>
-          <li>
-            <strong>Répondez à quatre questions</strong>
-            <span>
-              Le problème, l'utilisateur, la limite, le premier pas. Quatre angles, et le
-              minimum sous lequel un prompt cesse d'être meilleur qu'une discussion libre.
-            </span>
-          </li>
-          <li>
-            <strong>Copiez le prompt</strong>
-            <span>
-              Dans Claude, ChatGPT, Cursor, Copilot — n'importe lequel. Vous pouvez vous
-              arrêter là, ou approfondir.
-            </span>
-          </li>
+      <section className="mx-auto max-w-4xl">
+        <h2 className="mb-6 text-center text-xl font-semibold tracking-tight">En trois temps</h2>
+        <ol className="grid gap-4 md:grid-cols-3">
+          {TEMPS.map((temps, index) => (
+            <li key={temps.titre}>
+              <Card className="h-full">
+                <CardHeader>
+                  <span className="bg-primary text-primary-foreground mb-1 flex size-7 items-center justify-center rounded-full text-sm font-semibold">
+                    {index + 1}
+                  </span>
+                  <CardTitle className="text-base">{temps.titre}</CardTitle>
+                </CardHeader>
+                <CardContent className="text-muted-foreground text-sm leading-relaxed">
+                  {temps.texte}
+                </CardContent>
+              </Card>
+            </li>
+          ))}
         </ol>
       </section>
 
-      <section className="bloc">
-        <h2>Ce que le prompt contient</h2>
-        <ul className="liste-marquee">
-          <li>
-            <strong>Ce qu'il faut construire</strong>, et pour qui.
-          </li>
-          <li>
-            <strong>Ce qui a été décidé</strong>, avec vos mots.
-          </li>
-          <li>
-            <strong>Ce qui ne l'a pas été</strong> — pour que l'agent pose la question au
-            lieu de deviner. C'est la section qu'on est tenté de retirer parce qu'elle fait
-            désordre ; elle reste, parce qu'un cadrage muet sur le risque n'est pas un
-            cadrage sans risque : c'est un cadrage où personne n'a regardé.
-          </li>
-          <li>
-            <strong>Où s'arrêter</strong> et vous demander votre accord.
-          </li>
+      <section className="mx-auto max-w-3xl">
+        <h2 className="mb-5 text-xl font-semibold tracking-tight">Ce que le prompt contient</h2>
+        <ul className="space-y-3">
+          {CONTENU.map((ligne, index) => (
+            <li key={index} className="flex gap-3 text-sm leading-relaxed">
+              <Check className="text-primary mt-0.5 size-4 shrink-0" />
+              <span>{ligne}</span>
+            </li>
+          ))}
         </ul>
       </section>
 
-      <section className="deux-colonnes">
-        <div className="bloc">
-          <h2>Ce que ce n'est pas</h2>
-          <p className="explication">
-            Ni un générateur de code, ni un agent. Ça ne remplace ni Claude Code, ni
-            Cursor, ni Copilot.
-          </p>
-          <p>
-            <strong>MIP Studio prépare le travail. C'est votre IA qui le fait.</strong>
-          </p>
-        </div>
-        <div className="bloc">
-          <h2>Et le balisage MSCM</h2>
-          <p className="explication">
-            Le second morceau : cinq annotations dans vos commentaires, un index
-            reconstruit à partir d'elles, et un contrôle qui échoue quand la carte ne
-            correspond plus au terrain.
-          </p>
-          <p className="commande">npx @mip/mscm</p>
-          <p>
-            <a href="/mscm" onClick={(e) => surClicInterne(e, aller)}>
-              Comment ça s'annote
-            </a>
-          </p>
-        </div>
+      <section className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Ce que ce n'est pas</CardTitle>
+            <CardDescription>
+              Ni un générateur de code, ni un agent. Ça ne remplace ni Claude Code, ni Cursor,
+              ni Copilot.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm font-medium">
+              MIP Studio prépare le travail. C'est votre IA qui le fait.
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Et le balisage MSCM</CardTitle>
+            <CardDescription>
+              Le second morceau : cinq annotations dans vos commentaires, un index reconstruit
+              à partir d'elles, et un contrôle qui échoue quand la carte ne correspond plus au
+              terrain.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="bg-muted flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs">
+              <Terminal className="size-3.5 shrink-0" />
+              npx @mip/mscm
+            </p>
+            <Button variant="link" className="h-auto p-0 text-sm" asChild>
+              <a href="/mscm" onClick={(e) => surClicInterne(e, aller)}>
+                Comment ça s'annote
+                <ArrowRight className="size-3.5" />
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
       </section>
 
-      <footer className="accueil-pied">
-        <a href="/cadrage" className="bouton-principal" onClick={(e) => surClicInterne(e, aller)}>
-          Commencer un cadrage
-        </a>
-        <span className="explication">
+      <footer className="flex flex-col items-center gap-3 border-t pt-10 pb-4 text-center">
+        <Button size="lg" asChild>
+          <a href="/cadrage" onClick={(e) => surClicInterne(e, aller)}>
+            Commencer un cadrage
+            <ArrowRight className="size-4" />
+          </a>
+        </Button>
+        <span className="text-muted-foreground text-sm">
           Aucune donnée n'est conservée si vous n'avez pas de compte —{" "}
-          <a href="/confidentialite" onClick={(e) => surClicInterne(e, aller)}>
+          <a
+            href="/confidentialite"
+            onClick={(e) => surClicInterne(e, aller)}
+            className="text-primary underline underline-offset-2"
+          >
             ce qu'on garde, et pourquoi
           </a>
           .
@@ -169,14 +204,83 @@ export function Accueil({ formulaire, aller }: Props) {
   );
 }
 
-function Carte({ valeur, libelle, detail }: { valeur: number; libelle: string; detail: string }) {
+const TEMPS: Array<{ titre: string; texte: React.ReactNode }> = [
+  {
+    titre: "Décrivez votre projet",
+    texte: (
+      <>
+        Comme vous le diriez à quelqu'un. L'outil en déduit des réponses, que vous relisez —{" "}
+        <em>une proposition n'est pas une réponse tant que vous ne l'avez pas confirmée</em>.
+      </>
+    ),
+  },
+  {
+    titre: "Répondez à quatre questions",
+    texte: (
+      <>
+        Le problème, l'utilisateur, la limite, le premier pas. Quatre angles, et le minimum
+        sous lequel un prompt cesse d'être meilleur qu'une discussion libre.
+      </>
+    ),
+  },
+  {
+    titre: "Copiez le prompt",
+    texte: (
+      <>
+        Dans Claude, ChatGPT, Cursor, Copilot — n'importe lequel. Vous pouvez vous arrêter là,
+        ou approfondir.
+      </>
+    ),
+  },
+];
+
+const CONTENU: React.ReactNode[] = [
+  <>
+    <strong>Ce qu'il faut construire</strong>, et pour qui.
+  </>,
+  <>
+    <strong>Ce qui a été décidé</strong>, avec vos mots.
+  </>,
+  <>
+    <strong>Le protocole en bref</strong> — les phases, leurs points d'arrêt, et le
+    vocabulaire. Un agent ne peut pas suivre ce qu'on ne lui a jamais décrit.
+  </>,
+  <>
+    <strong>Ce qui n'a pas été tranché</strong> — pour que l'agent pose la question au lieu de
+    deviner. C'est la section qu'on est tenté de retirer parce qu'elle fait désordre ; elle
+    reste, parce qu'un cadrage muet sur le risque n'est pas un cadrage sans risque : c'est un
+    cadrage où personne n'a regardé.
+  </>,
+  <>
+    <strong>Où s'arrêter</strong> et vous demander votre accord.
+  </>,
+];
+
+function Chiffre({
+  icone,
+  valeur,
+  libelle,
+  detail,
+}: {
+  icone: React.ReactNode;
+  valeur: number;
+  libelle: string;
+  detail: string;
+}) {
   return (
-    <div className="carte">
-      {/* Le chiffre vient du protocole chargé, jamais du code : une page qui
-          annonce « 32 questions » en dur ment le jour où il en compte 34. */}
-      <strong className="carte-valeur">{valeur || "—"}</strong>
-      <span className="carte-libelle">{libelle}</span>
-      <span className="carte-detail">{detail}</span>
-    </div>
+    <Card className="gap-2 py-5">
+      <CardContent className="space-y-1">
+        <span className="text-muted-foreground flex items-center gap-2 text-xs">
+          {icone}
+          {libelle}
+        </span>
+        {/* Le chiffre vient du protocole chargé, jamais du code : une page qui
+            annonce « 32 questions » en dur ment le jour où il en compte 34. */}
+        <strong className="block text-3xl font-semibold tracking-tight tabular-nums">
+          {valeur || "—"}
+        </strong>
+        <span className="text-muted-foreground block text-xs leading-snug">{detail}</span>
+      </CardContent>
+    </Card>
   );
 }

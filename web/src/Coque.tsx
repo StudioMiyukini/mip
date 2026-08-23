@@ -1,20 +1,28 @@
 // @id mip.web.coque
 // @role ui
 // @layer ui
-// @human La coque du tableau de bord : la barre latérale, et ce qu'elle contient
+// @human La coque grand écran : la barre latérale, et ce qu'elle contient
 // @do encadrer_les_pages_dans_une_navigation_laterale
 
-import { surClicInterne } from "./routeur";
-import type { EtatCompte } from "./Compte";
+import { Moon, MonitorSmartphone, Sun } from "lucide-react";
 
-interface Entree {
+import { Button } from "@/composants/ui/button";
+import { Separator } from "@/composants/ui/separator";
+import { cn } from "@/lib/utils";
+
+import { useAppareil } from "./appareil";
+import type { EtatCompte } from "./Compte";
+import { surClicInterne } from "./routeur";
+import { useTheme } from "./theme";
+
+export interface Entree {
   chemin: string;
   libelle: string;
   /** Un compteur discret, à droite. Absent quand il n'y a rien à compter. */
   compte?: number;
 }
 
-interface Groupe {
+export interface Groupe {
   titre: string;
   entrees: Entree[];
 }
@@ -29,28 +37,26 @@ interface Props {
 }
 
 /** Les pages légales, ramassées en une ligne au pied du flanc. */
-const LEGAL: Entree[] = [
+export const LEGAL: Entree[] = [
   { chemin: "confidentialite", libelle: "Confidentialité" },
   { chemin: "mentions", libelle: "Mentions légales" },
   { chemin: "cgu", libelle: "CGU" },
 ];
 
 /**
- * La coque.
+ * Les groupes de navigation, partagés par les deux coques.
  *
  * **Les groupes disent à quel moment on est, pas où sont rangés les fichiers.**
  * « Découvrir » puis « Cadrer » puis « Documentation » suit le trajet réel d'un
  * visiteur : il arrive sans rien savoir, il essaie, il creuse. Un menu rangé par
- * type de contenu — pages, outils, documents — n'aiderait que celui qui connaît
- * déjà.
+ * type de contenu n'aiderait que celui qui connaît déjà.
  *
- * **Le légal est en pied, pas dans un groupe.** Ce sont des pages qu'on doit
- * pouvoir atteindre depuis n'importe où — c'est une obligation — et que
- * personne ne vient lire. Leur donner un rang égal aux autres mentirait sur ce
- * qu'on attend du visiteur ; les cacher serait illégal. Le pied règle les deux.
+ * Les deux parcours lisent la même liste : une entrée ajoutée d'un côté et
+ * oubliée de l'autre serait une page joignable sur PC et introuvable sur
+ * téléphone.
  */
-export function Coque({ route, aller, compte, mesCadrages, enfants, surCompte }: Props) {
-  const groupes: Groupe[] = [
+export function groupesDe(mesCadrages: number): Groupe[] {
+  return [
     {
       titre: "Découvrir",
       entrees: [
@@ -66,11 +72,7 @@ export function Coque({ route, aller, compte, mesCadrages, enfants, surCompte }:
         { chemin: "cadrage", libelle: "Nouveau cadrage" },
         // Le compteur n'apparaît que s'il y a quelque chose : un « 0 » perpétuel
         // devant « Mes cadrages » ressemble à une fonction cassée.
-        {
-          chemin: "cadrages",
-          libelle: "Mes cadrages",
-          compte: mesCadrages || undefined,
-        },
+        { chemin: "cadrages", libelle: "Mes cadrages", compte: mesCadrages || undefined },
       ],
     },
     {
@@ -85,67 +87,109 @@ export function Coque({ route, aller, compte, mesCadrages, enfants, surCompte }:
       ],
     },
   ];
+}
+
+/**
+ * La coque grand écran : une colonne de navigation, une scène qui change.
+ *
+ * **Le légal est en pied, pas dans un groupe.** Ce sont des pages qu'on doit
+ * pouvoir atteindre depuis n'importe où — c'est une obligation — et que
+ * personne ne vient lire. Leur donner un rang égal aux autres mentirait sur ce
+ * qu'on attend du visiteur ; les cacher serait illégal. Le pied règle les deux.
+ */
+export function Coque({ route, aller, compte, mesCadrages, enfants, surCompte }: Props) {
+  const { rouvrir } = useAppareil();
+  const { sombre, basculer } = useTheme();
+  const groupes = groupesDe(mesCadrages);
 
   return (
-    <div className="coque">
-      <aside className="flanc">
-        <a
-          className="marque"
-          href="/accueil"
-          onClick={(e) => surClicInterne(e, aller)}
-        >
-          <strong>MIP Studio</strong>
-          <span>cadrer avant de coder</span>
+    <div className="grid min-h-dvh grid-cols-[248px_minmax(0,1fr)]">
+      <aside className="bg-card sticky top-0 flex h-dvh flex-col gap-5 overflow-y-auto border-r px-4 py-5">
+        <a href="/accueil" onClick={(e) => surClicInterne(e, aller)} className="block no-underline">
+          <strong className="block text-base tracking-tight">MIP Studio</strong>
+          <span className="text-muted-foreground block text-xs">cadrer avant de coder</span>
         </a>
 
-        <nav>
+        <nav className="flex flex-col gap-5">
           {groupes.map((groupe) => (
-            <div className="flanc-groupe" key={groupe.titre}>
-              <h2>{groupe.titre}</h2>
-              {groupe.entrees.map((entree) => (
-                <a
-                  key={entree.chemin}
-                  href={`/${entree.chemin}`}
-                  className={route === entree.chemin ? "flanc-lien actif" : "flanc-lien"}
-                  aria-current={route === entree.chemin ? "page" : undefined}
-                  onClick={(e) => surClicInterne(e, aller)}
-                >
-                  {entree.libelle}
-                  {entree.compte !== undefined && <span className="flanc-compte">{entree.compte}</span>}
-                </a>
-              ))}
+            <div key={groupe.titre}>
+              <h2 className="text-muted-foreground mb-1.5 px-2 text-[11px] font-semibold tracking-wider uppercase">
+                {groupe.titre}
+              </h2>
+              <div className="flex flex-col gap-0.5">
+                {groupe.entrees.map((entree) => (
+                  <Lien
+                    key={entree.chemin}
+                    entree={entree}
+                    actif={route === entree.chemin}
+                    aller={aller}
+                  />
+                ))}
+              </div>
             </div>
           ))}
         </nav>
 
-        <footer className="flanc-pied">
+        <footer className="mt-auto flex flex-col items-start gap-2 border-t pt-3 text-xs">
           {compte.connecte ? (
             <>
-              <span className="flanc-adresse" title={compte.adresse}>
+              <span className="max-w-full truncate font-mono text-[11px]" title={compte.adresse}>
                 {compte.adresse}
               </span>
-              <button type="button" className="lien" onClick={surCompte}>
+              <Button variant="link" className="h-auto p-0 text-xs" onClick={surCompte}>
                 mon compte
-              </button>
+              </Button>
             </>
           ) : (
             <>
-              <span className="flanc-offre">Aucun compte n'est nécessaire.</span>
-              <button type="button" className="lien" onClick={surCompte}>
+              <span className="text-muted-foreground leading-snug">
+                Aucun compte n'est nécessaire.
+              </span>
+              <Button variant="link" className="h-auto p-0 text-xs" onClick={surCompte}>
                 se connecter
-              </button>
+              </Button>
             </>
           )}
-          <a className="flanc-source" href="https://github.com/StudioMiyukini/mip" target="_blank" rel="noreferrer">
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground -ml-2 h-auto gap-1.5 py-1 text-xs"
+            onClick={basculer}
+          >
+            {sombre ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+            {sombre ? "Passer au clair" : "Passer au sombre"}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground -ml-2 h-auto gap-1.5 py-1 text-xs"
+            onClick={rouvrir}
+          >
+            <MonitorSmartphone className="size-3.5" />
+            Changer de parcours
+          </Button>
+
+          <Separator />
+
+          <a
+            href="https://github.com/StudioMiyukini/mip"
+            target="_blank"
+            rel="noreferrer"
+            className="text-muted-foreground hover:text-primary no-underline"
+          >
             Code source · MIT
           </a>
-          <nav className="flanc-legal" aria-label="Informations légales">
+          <nav aria-label="Informations légales" className="flex flex-wrap gap-x-2 gap-y-0.5">
             {LEGAL.map((entree) => (
               <a
                 key={entree.chemin}
                 href={`/${entree.chemin}`}
-                className={route === entree.chemin ? "actif" : undefined}
                 onClick={(e) => surClicInterne(e, aller)}
+                className={cn(
+                  "text-[11px] no-underline hover:underline",
+                  route === entree.chemin ? "text-foreground" : "text-muted-foreground",
+                )}
               >
                 {entree.libelle}
               </a>
@@ -154,7 +198,40 @@ export function Coque({ route, aller, compte, mesCadrages, enfants, surCompte }:
         </footer>
       </aside>
 
-      <main className="scene">{enfants}</main>
+      <main className="min-w-0 px-7 pt-6 pb-16">
+        <div className="mx-auto max-w-[1500px]">{enfants}</div>
+      </main>
     </div>
+  );
+}
+
+function Lien({
+  entree,
+  actif,
+  aller,
+}: {
+  entree: Entree;
+  actif: boolean;
+  aller: (chemin: string) => void;
+}) {
+  return (
+    <a
+      href={`/${entree.chemin}`}
+      aria-current={actif ? "page" : undefined}
+      onClick={(e) => surClicInterne(e, aller)}
+      className={cn(
+        "flex items-center justify-between rounded-md px-2 py-1.5 text-sm no-underline transition-colors",
+        actif
+          ? "bg-accent text-accent-foreground font-semibold"
+          : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+      )}
+    >
+      {entree.libelle}
+      {entree.compte !== undefined && (
+        <span className="bg-background text-muted-foreground rounded-full px-1.5 font-mono text-[11px]">
+          {entree.compte}
+        </span>
+      )}
+    </a>
   );
 }
