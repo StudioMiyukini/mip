@@ -624,6 +624,66 @@ serveur.delete<{ Params: { id: string } }>("/api/cadrages/:id", async (requete, 
 });
 
 /**
+ * Un cadrage d'exemple, et le prompt qu'il produit.
+ *
+ * **La page d'accueil montre une sortie réelle, pas une capture recopiée.**
+ * C'est la même règle que pour ses compteurs — « 32 questions » écrit en dur
+ * ment le jour où le protocole en compte 34 — et que pour `docs/exemples.md`,
+ * dont la page entière est engendrée. Un extrait collé à la main cesse d'être
+ * vrai à la première évolution de l'assembleur, sans que rien ne le signale ;
+ * c'est arrivé le jour où la section « Le protocole, en bref » est apparue.
+ *
+ * **Mémoïsé** : le prompt ne dépend que du protocole en base, qui ne bouge
+ * qu'à une ré-ingestion. Le recalculer à chaque visite ferait une requête SQL
+ * par curieux, pour un texte rigoureusement identique.
+ */
+const CADRAGE_EXEMPLE: Cadrage = {
+  titre: "Suivi de lectures",
+  demande:
+    "Une petite application pour noter ce que je lis et retrouver ce que j'en ai pensé, " +
+    "six mois plus tard.",
+  classe: "T3",
+  mode: "BIG_STEPS",
+  reponses: {
+    "1.1": {
+      valeur:
+        "Je lis beaucoup et j'oublie. Retrouver mon avis sur un livre me demande de " +
+        "fouiller trois carnets.",
+      etat: "repondu",
+    },
+    "1.3": { valeur: "Moi seul, sur mon téléphone, le soir.", etat: "repondu" },
+    "2.2": {
+      valeur:
+        "INCLUS : ajouter un livre, noter, écrire un avis, rechercher. " +
+        "EXCLUS : les prêts, les statistiques, le partage.",
+      etat: "repondu",
+    },
+    "5.1": { valeur: "Une liste, un formulaire d'ajout, une recherche par titre.", etat: "repondu" },
+  },
+  agents: ["maria", "denis", "lise"],
+  skills: [],
+  modules: [],
+  certifications: [],
+  formats: ["app-web"],
+  techniques: ["typescript", "react", "sqlite"],
+};
+
+let exempleEnCache: string | null = null;
+
+serveur.get("/api/exemple", async (_requete, reponse) => {
+  if (exempleEnCache === null) {
+    const donnees = await matiere();
+    if (!donnees.sections.length) {
+      // Pas de protocole en base : la page d'accueil a son propre repli, et
+      // elle doit rester lisible plutôt que d'afficher une fenêtre vide.
+      return reponse.code(503).send({ erreur: "protocole_absent" });
+    }
+    exempleEnCache = assembler(CADRAGE_EXEMPLE, donnees);
+  }
+  return { prompt: exempleEnCache, titre: CADRAGE_EXEMPLE.titre };
+});
+
+/**
  * Combien de questions une classe pose réellement.
  *
  * Affiché avant de commencer : passer de T3 à T4 fait passer de douze à vingt

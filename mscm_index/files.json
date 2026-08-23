@@ -160,6 +160,9 @@
   "web/src/Document.tsx": [
     "mip.web.document"
   ],
+  "web/src/Editeur.tsx": [
+    "mip.web.editeur"
+  ],
   "web/src/Equipe.tsx": [
     "mip.web.equipe"
   ],

@@ -101,6 +101,7 @@
     "mip.web.coque",
     "mip.web.coque.mobile",
     "mip.web.document",
+    "mip.web.editeur",
     "mip.web.entree",
     "mip.web.equipe",
     "mip.web.etages",

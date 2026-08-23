@@ -74,6 +74,7 @@
     "mip.web.compte",
     "mip.web.coque",
     "mip.web.document",
+    "mip.web.editeur",
     "mip.web.entree",
     "mip.web.equipe",
     "mip.web.etages",

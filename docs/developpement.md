@@ -150,6 +150,8 @@ ce registre sous `@21st`, avec sa clé en variable d'environnement.
 ```
 appareil.tsx      la gate PC / téléphone, et le choix mémorisé
 useCadrage.ts     TOUT l'état d'un cadrage, hors mise en page
+Hero.tsx          la présentation : un vrai cadrage qui s'écrit
+Editeur.tsx       CodeMirror 6, en lecture seule, chargé à la demande
 Cadrage.tsx       parcours PC     — le formulaire entier, l'aperçu en vis-à-vis
 CadrageMobile.tsx parcours mobile — une section par écran, l'aperçu en tiroir
 Coque.tsx         coque PC + `groupesDe()`, la navigation partagée
@@ -167,6 +169,28 @@ jusqu'à ce qu'un utilisateur le rencontre.
 
 Même raison pour `groupesDe()` : une entrée de menu ajoutée d'un côté et oubliée
 de l'autre serait une page joignable sur PC et introuvable sur téléphone.
+
+### Le hero montre une sortie réelle
+
+`GET /api/exemple` assemble un cadrage de démonstration avec le protocole
+**réellement en base**, et le mémoïse. La page d'accueil en tape les premières
+lignes dans un éditeur CodeMirror.
+
+C'est la même règle que pour les compteurs de la page — « 32 questions » écrit
+en dur ment le jour où le protocole en compte 34 — et que pour
+`docs/exemples.md`, engendré pour la même raison. Un extrait recopié à la main
+cesse d'être vrai à la première évolution de l'assembleur, sans que rien ne le
+signale : c'est arrivé le jour où la section « Le protocole, en bref » est
+apparue.
+
+**CodeMirror est chargé par `import()` dynamique.** Il pèse plus de deux cents
+kilo-octets ; sorti du premier rendu, il ne coûte rien à qui n'atteint jamais la
+page d'accueil, et le paquet principal n'a bougé que de trois kilo-octets. Tant
+qu'il n'est pas arrivé, le texte s'affiche dans un `<pre>` — une décoration qui
+échoue ne doit pas emporter le contenu.
+
+Ses couleurs viennent des jetons du site (`var(--primary)`, `var(--foreground)`)
+et non d'un thème importé, qui jurerait avec le reste de la page en mode clair.
 
 ### Regarder le résultat, pas le supposer
 

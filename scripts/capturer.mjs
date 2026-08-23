@@ -70,6 +70,7 @@ await page("gate-mobile", { largeur: 390, hauteur: 844, tactile: true, theme: "c
 // Les deux parcours, choix déjà fait.
 await page("pc-accueil", { largeur: 1440, hauteur: 1000, tactile: false, appareil: "pc", theme: "sombre", chemin: "/accueil" });
 await page("pc-cadrage", { largeur: 1440, hauteur: 1000, tactile: false, appareil: "pc", theme: "sombre", chemin: "/cadrage" });
+await page("pc-accueil-clair", { largeur: 1440, hauteur: 1000, tactile: false, appareil: "pc", theme: "clair", chemin: "/accueil" });
 await page("pc-doc", { largeur: 1440, hauteur: 1000, tactile: false, appareil: "pc", theme: "clair", chemin: "/guide" });
 await page("mobile-accueil", { largeur: 390, hauteur: 844, tactile: true, appareil: "mobile", theme: "clair", chemin: "/accueil" });
 await page("mobile-cadrage", { largeur: 390, hauteur: 844, tactile: true, appareil: "mobile", theme: "sombre", chemin: "/cadrage" });
