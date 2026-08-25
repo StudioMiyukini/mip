@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 import { useAppareil } from "./appareil";
 import type { EtatCompte } from "./Compte";
+import { Evitement } from "./Evitement";
 import { surClicInterne } from "./routeur";
 import { useTheme } from "./theme";
 
@@ -104,6 +105,7 @@ export function Coque({ route, aller, compte, mesCadrages, enfants, surCompte }:
 
   return (
     <div className="grid min-h-dvh grid-cols-[248px_minmax(0,1fr)]">
+      <Evitement />
       <aside className="bg-card sticky top-0 flex h-dvh flex-col gap-5 overflow-y-auto border-r px-4 py-5">
         <a href="/accueil" onClick={(e) => surClicInterne(e, aller)} className="block no-underline">
           <strong className="block text-base tracking-tight">MIP Studio</strong>
@@ -198,7 +200,7 @@ export function Coque({ route, aller, compte, mesCadrages, enfants, surCompte }:
         </footer>
       </aside>
 
-      <main className="min-w-0 px-7 pt-6 pb-16">
+      <main id="contenu" className="min-w-0 px-7 pt-6 pb-16">
         <div className="mx-auto max-w-[1500px]">{enfants}</div>
       </main>
     </div>

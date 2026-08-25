@@ -1,0 +1,7 @@
+# MIP Studio — cadrer avant de coder
+# Site public, entièrement indexable. Les routes /api ne servent rien à indexer.
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://mip.miyukini.org/sitemap.xml

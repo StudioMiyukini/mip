@@ -1,0 +1,30 @@
+# @id mip.ci
+# @do verifier_typage_essais_et_integrite_a_chaque_poussee
+# Vérifie ce qui peut l'être sans base ni réseau : typage, essais, intégrité
+# MSCM, construction. La base PostgreSQL et le modèle local ne sont pas requis —
+# les 93 essais tournent hors ligne, par conception.
+
+name: CI
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typage des quatre paquets
+        run: npm run verifier
+      - name: Essais (113, sans base ni réseau)
+        run: npm run essais
+      - name: Intégrité de l'index MSCM
+        run: npm run mscm:verifier
+      - name: Construction du client
+        run: npm run -w web build

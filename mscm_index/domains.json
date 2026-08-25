@@ -35,7 +35,8 @@
     "mip.doc.mscm",
     "mip.doc.prompt",
     "mip.doc.protocole",
-    "mip.doc.questions"
+    "mip.doc.questions",
+    "mip.doc.registre"
   ],
   "essais": [
     "mscm.essais"
@@ -105,6 +106,7 @@
     "mip.web.entree",
     "mip.web.equipe",
     "mip.web.etages",
+    "mip.web.evitement",
     "mip.web.hero",
     "mip.web.mes_cadrages",
     "mip.web.porte",

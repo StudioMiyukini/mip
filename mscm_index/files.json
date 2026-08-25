@@ -43,6 +43,9 @@
   "docs/questions.md": [
     "mip.doc.questions"
   ],
+  "docs/registre-traitements.md": [
+    "mip.doc.registre"
+  ],
   "extraction/src/champs.ts": [
     "mip.extraction.champ"
   ],
@@ -171,6 +174,9 @@
   ],
   "web/src/Etages.tsx": [
     "mip.web.etages"
+  ],
+  "web/src/Evitement.tsx": [
+    "mip.web.evitement"
   ],
   "web/src/Hero.tsx": [
     "mip.web.hero"

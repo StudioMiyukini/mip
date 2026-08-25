@@ -109,11 +109,18 @@ CREATE TABLE IF NOT EXISTS utilisateur (
   -- « jean@exemple.fr » sont deux comptes, et le second échoue en disant que
   -- l'adresse est prise.
   adresse    TEXT NOT NULL UNIQUE,
-  -- `sel$empreinte`. Le sel est propre au compte : un sel fixe permettrait de
-  -- casser tous les comptes d'un coup avec une seule table précalculée.
+  -- Empreinte Argon2id (`$argon2id$…`), sel inclus. Les comptes d'avant la
+  -- migration portent encore l'ancien format scrypt `sel$empreinte` et sont
+  -- réécrits en Argon2 à leur prochaine connexion — voir comptes.ts.
   empreinte  TEXT NOT NULL,
   cree_le    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Dernière connexion, pour la limitation de conservation (RGPD art. 5.1.e) :
+-- un compte inactif au-delà du délai est purgé. `DEFAULT now()` évite de
+-- purger les comptes existants dès la migration — ils repartent avec un
+-- horodatage frais, pas avec une valeur nulle qui les condamnerait aussitôt.
+ALTER TABLE utilisateur ADD COLUMN IF NOT EXISTS derniere_connexion TIMESTAMPTZ NOT NULL DEFAULT now();
 
 -- ── le travail, qui ne se régénère pas ──────────────────────────────────
 

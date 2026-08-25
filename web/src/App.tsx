@@ -34,6 +34,7 @@ const DOCUMENTS = new Set([
   "mscm",
   "developpement",
   "confidentialite",
+  "registre",
   "mentions",
   "cgu",
   "licence",

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Les pages publiques de MIP Studio. Le cadrage et « mes cadrages » ne sont
+     pas listés : l'un est un outil, l'autre demande un compte. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://mip.miyukini.org/accueil</loc><priority>1.0</priority></url>
+  <url><loc>https://mip.miyukini.org/guide</loc><priority>0.8</priority></url>
+  <url><loc>https://mip.miyukini.org/exemples</loc><priority>0.8</priority></url>
+  <url><loc>https://mip.miyukini.org/faq</loc><priority>0.7</priority></url>
+  <url><loc>https://mip.miyukini.org/protocole</loc><priority>0.7</priority></url>
+  <url><loc>https://mip.miyukini.org/questions</loc><priority>0.6</priority></url>
+  <url><loc>https://mip.miyukini.org/prompt</loc><priority>0.6</priority></url>
+  <url><loc>https://mip.miyukini.org/mscm</loc><priority>0.6</priority></url>
+  <url><loc>https://mip.miyukini.org/developpement</loc><priority>0.5</priority></url>
+  <url><loc>https://mip.miyukini.org/documentation</loc><priority>0.5</priority></url>
+  <url><loc>https://mip.miyukini.org/confidentialite</loc><priority>0.3</priority></url>
+  <url><loc>https://mip.miyukini.org/mentions</loc><priority>0.3</priority></url>
+  <url><loc>https://mip.miyukini.org/cgu</loc><priority>0.3</priority></url>
+</urlset>

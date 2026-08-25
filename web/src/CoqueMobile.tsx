@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { useAppareil } from "./appareil";
 import type { EtatCompte } from "./Compte";
 import { groupesDe, LEGAL } from "./Coque";
+import { Evitement } from "./Evitement";
 import { surClicInterne } from "./routeur";
 import { useTheme } from "./theme";
 
@@ -56,6 +57,7 @@ export function CoqueMobile({ route, aller, compte, mesCadrages, enfants, surCom
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <Evitement />
       <header className="bg-background/95 supports-[backdrop-filter]:bg-background/80 sticky top-0 z-40 flex items-center gap-2 border-b px-4 py-2.5 backdrop-blur">
         <a
           href="/accueil"
@@ -218,7 +220,7 @@ export function CoqueMobile({ route, aller, compte, mesCadrages, enfants, surCom
         </Sheet>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-5">{enfants}</main>
+      <main id="contenu" className="mx-auto w-full max-w-3xl flex-1 px-4 py-5">{enfants}</main>
     </div>
   );
 }

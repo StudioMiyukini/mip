@@ -237,7 +237,8 @@ structurelle, pas circonstancielle.
 
 ## Ce qui manque encore
 
-- **Aucune CI.** Les essais et `mscm:verifier` sont prêts à y entrer.
+- ~~Aucune CI~~ — une GitHub Action lance typage, essais, intégrité MSCM et
+  construction à chaque poussée (`.github/workflows/ci.yml`).
 - **Les sessions vivent en mémoire.** Un redémarrage déconnecte tout le monde.
 - **Aucune sauvegarde de la base.** Ce n'est pas un défaut caché : la
   confidentialité l'annonce.

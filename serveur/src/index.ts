@@ -483,6 +483,10 @@ serveur.post("/api/compte/entrer", async (requete, reponse) => {
       // même et on réessaiera au prochain passage.
     }
   }
+  // La connexion réussit : on horodate, pour la limitation de conservation.
+  await bassin.query("UPDATE utilisateur SET derniere_connexion = now() WHERE id = $1", [
+    ligne.rows[0].id,
+  ]);
   poserLaSession(reponse, ligne.rows[0].id);
   return { ok: true };
 });
@@ -801,6 +805,7 @@ const DOCUMENTS: Record<string, string> = {
   mscm: "docs/mscm.md",
   developpement: "docs/developpement.md",
   confidentialite: "CONFIDENTIALITE.md",
+  registre: "docs/registre-traitements.md",
   mentions: "MENTIONS-LEGALES.md",
   cgu: "CGU.md",
   licence: "LICENSE",
@@ -845,12 +850,45 @@ async function servirLeClient(): Promise<void> {
   });
 }
 
+/**
+ * La purge des comptes inactifs — limitation de conservation (RGPD art. 5.1.e).
+ *
+ * **Une donnée n'a pas à rester « au cas où ».** Un compte sans connexion depuis
+ * deux ans est supprimé, cadrages compris (cascade déclarée au schéma). La
+ * politique de confidentialité l'annonce ; ici on l'applique.
+ *
+ * Pas de courriel d'avertissement préalable : le service n'a pas d'envoi de
+ * courriel, et en inventer un pour cette seule fonction ajouterait une
+ * dépendance et une adresse d'expéditeur à gérer. Le délai large (24 mois) et
+ * l'annonce dans la politique tiennent lieu de préavis.
+ */
+const RETENTION_MOIS = 24;
+
+async function purgerLesInactifs(): Promise<void> {
+  try {
+    const partis = await bassin.query(
+      `DELETE FROM utilisateur WHERE derniere_connexion < now() - interval '${RETENTION_MOIS} months'`,
+    );
+    if (partis.rowCount) {
+      serveur.log.info(`purge RGPD : ${partis.rowCount} compte(s) inactif(s) depuis ${RETENTION_MOIS} mois`);
+    }
+  } catch (erreur) {
+    // La purge est un devoir, pas un service : si elle échoue, on le note et le
+    // serveur continue. On réessaiera au prochain cycle.
+    serveur.log.error({ err: erreur }, "purge RGPD échouée");
+  }
+}
+
 async function demarrer(): Promise<void> {
   await servirLeClient();
   // Écoute locale uniquement. La publication passe par un tunnel, qui se
   // connecte en local — aucun port n'est ouvert sur le réseau.
   await serveur.listen({ port: PORT, host: "127.0.0.1" });
   serveur.log.info("MIP Studio - http://127.0.0.1:" + PORT);
+  // La rétention s'applique au démarrage puis une fois par jour. `unref` : ce
+  // minuteur ne doit pas, à lui seul, empêcher le processus de s'arrêter.
+  await purgerLesInactifs();
+  setInterval(purgerLesInactifs, 24 * 3600 * 1000).unref();
   if (porte.configuree()) {
     serveur.log.warn("MIP_EMPREINTE posée : le site est FERMÉ au public, mot de passe exigé");
   } else {

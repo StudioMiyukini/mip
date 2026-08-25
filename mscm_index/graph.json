@@ -22,6 +22,7 @@
     "mip.doc.prompt",
     "mip.doc.protocole",
     "mip.doc.questions",
+    "mip.doc.registre",
     "mip.extraction",
     "mip.extraction.champ",
     "mip.extraction.encodage",
@@ -56,6 +57,7 @@
     "mip.web.entree",
     "mip.web.equipe",
     "mip.web.etages",
+    "mip.web.evitement",
     "mip.web.hero",
     "mip.web.mes_cadrages",
     "mip.web.porte",
@@ -224,6 +226,11 @@
       "type": "parent"
     },
     {
+      "from": "mip.doc",
+      "to": "mip.doc.registre",
+      "type": "parent"
+    },
+    {
       "from": "mip.doc.exemples",
       "to": "mip.doc.exemples.engendrement",
       "type": "parent"
@@ -331,6 +338,11 @@
     {
       "from": "mip.web",
       "to": "mip.web.etages",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web",
+      "to": "mip.web.evitement",
       "type": "parent"
     },
     {

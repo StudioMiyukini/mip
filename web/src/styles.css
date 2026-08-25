@@ -38,7 +38,10 @@
   --secondary: oklch(0.955 0.01 257);
   --secondary-foreground: oklch(0.28 0.03 258);
   --muted: oklch(0.955 0.01 257);
-  --muted-foreground: oklch(0.52 0.03 258);
+  /* 0.47 et non 0.52 : à 0.52 le texte secondaire frôlait le 4,5:1 exigé (WCAG
+     1.4.3). Assombri d'un cran pour passer la marge du côté sûr, sans toucher au
+     thème sombre qui est large. */
+  --muted-foreground: oklch(0.47 0.032 258);
   --accent: oklch(0.94 0.02 274);
   --accent-foreground: oklch(0.35 0.08 274);
   --destructive: oklch(0.6 0.19 25);

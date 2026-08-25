@@ -60,8 +60,8 @@ sel propre à votre compte. Nous ne pouvons pas le lire, ni vous le rappeler.
 
 | Traitement | Finalité | Base légale | Conservation |
 | --- | --- | --- | --- |
-| Compte (adresse, empreinte, date) | vous permettre de retrouver vos cadrages | **exécution du contrat** que vous formez en créant le compte (art. 6.1.b) | jusqu'à suppression par vous |
-| Cadrages | conserver votre travail | idem | idem |
+| Compte (adresse, empreinte, dates) | vous permettre de retrouver vos cadrages | **exécution du contrat** que vous formez en créant le compte (art. 6.1.b) | jusqu'à suppression par vous, ou **24 mois sans connexion** |
+| Cadrages | conserver votre travail | idem | idem — supprimés avec le compte |
 | Adresse IP en mémoire vive | limiter la cadence pour protéger un service partagé | **intérêt légitime** (art. 6.1.f) | la fenêtre glissante — 10 min ou 1 h, puis effacée |
 | Cookie de session | vous garder connecté d'une page à l'autre | strictement nécessaire au service demandé | à la déconnexion, ou 30 jours |
 
@@ -69,10 +69,15 @@ Il n'y a **pas d'autre traitement**. Pas de mesure d'audience, pas de journal de
 navigation conservé, pas de profilage, pas de décision automatisée au sens de
 l'article 22.
 
-**Un compte inactif n'est pas supprimé d'office.** Nous ne surveillons pas
-l'activité, donc nous ne saurions pas quand le faire — et supprimer le travail
-de quelqu'un sur la foi d'un compteur nous semble pire que de le garder. Si vous
-voulez que ça disparaisse, le bouton est dans votre compte.
+**Un compte sans connexion depuis 24 mois est supprimé**, cadrages compris.
+C'est le principe de limitation de conservation (RGPD art. 5.1.e) : une donnée
+ne reste pas « au cas où ». Le délai est large et il court à partir de votre
+**dernière connexion**, pas de la création — se connecter le remet à zéro.
+
+Il n'y a pas de courriel d'avertissement avant : le service n'envoie aucun
+courriel, et nous n'allions pas créer une liste de diffusion pour cette seule
+fin. Si un cadrage compte pour vous, connectez-vous de temps en temps, ou
+exportez-le — le bouton est dans votre compte.
 
 ### Vos cadrages contiennent ce que vous y mettez
 
@@ -198,4 +203,5 @@ Pour toute question sur vos données :
 [miyukini@gmail.com](mailto:miyukini@gmail.com)
 
 À lire aussi : [mentions légales](MENTIONS-LEGALES.md) ·
-[conditions d'utilisation](CGU.md)
+[conditions d'utilisation](CGU.md) ·
+[registre des traitements](docs/registre-traitements.md)

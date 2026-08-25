@@ -17,6 +17,11 @@ confiance dans l'économie numérique (LCEN).
 
 Contact : [miyukini@gmail.com](mailto:miyukini@gmail.com)
 
+**Adresse postale** : communiquée sur demande à l'adresse électronique
+ci-dessus. En tant qu'éditeur non professionnel auto-hébergé, l'adresse
+personnelle n'est pas publiée en ligne, mais elle est fournie à toute personne
+justifiant d'un motif légitime — autorité, ayant droit, mise en demeure.
+
 **Directeur de la publication** : NGUYEN « Miyukini » Van Jean.
 
 Ce site n'est pas une activité commerciale. Il n'y a ni société, ni numéro
