@@ -9,10 +9,10 @@
    `.flanc`. Ça tenait tant que l'interface tenait, et chaque composant ajouté
    demandait sa poignée de règles, écrites au même endroit que toutes les autres.
 
-   Le socle est désormais celui qu'attendent les registres de composants
-   (shadcn/ui, 21st.dev) : des variables CSS nommées par *rôle* — `--primary`,
-   `--muted`, `--border` — et non par couleur. Un composant recopié depuis un
-   registre s'habille alors tout seul, sans retouche.
+   Le socle est désormais celui de shadcn/ui : des variables CSS nommées par
+   *rôle* — `--primary`, `--muted`, `--border` — et non par couleur. Un
+   composant ajouté par `npx shadcn add` s'habille alors tout seul, sans
+   retouche, et il en va de même de tout composant écrit ici qui s'y tient.
 
    **Les couleurs, elles, ne changent pas.** Le bleu nuit et l'accent périwinkle
    de la version précédente sont repris tels quels : c'est l'identité du site,

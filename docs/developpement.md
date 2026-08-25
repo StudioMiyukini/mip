@@ -143,9 +143,11 @@ et d'angles distincts.
 L'interface est bâtie sur **Tailwind v4 et shadcn/ui**. Les composants de base
 vivent dans `web/src/composants/ui/` : ils sont **recopiés dans le dépôt**, pas
 importés d'un paquet — c'est la façon de faire de shadcn, et elle a l'avantage
-qu'on peut les modifier. Le socle est aussi celui qu'attendent les registres de
-composants comme [21st.dev](https://21st.dev) ; `components.json` déclare déjà
-ce registre sous `@21st`, avec sa clé en variable d'environnement.
+qu'on peut les modifier.
+
+Tout le reste est écrit ici. Un registre de composants tiers a été essayé puis
+abandonné : ses composants se paient à l'abonnement, et une interface dont les
+morceaux sont loués n'est pas une interface qu'on possède.
 
 ```
 appareil.tsx      la gate PC / téléphone, et le choix mémorisé
@@ -216,9 +218,6 @@ Deux règles de commentaire :
 
 - **Aucune CI.** Les essais et `mscm:verifier` sont prêts à y entrer.
 - **Les sessions vivent en mémoire.** Un redémarrage déconnecte tout le monde.
-- **Aucun composant de 21st.dev n'est encore posé.** Le registre demande une
-  authentification (`403 authentication_required`) : `npx shadcn add @21st/<nom>`
-  marchera dès que `TWENTYFIRST_API_KEY` sera dans l'environnement.
 - **Aucune sauvegarde de la base.** Ce n'est pas un défaut caché : la
   confidentialité l'annonce.
 - **Le pré-remplissage dépend d'un LM Studio local**, partagé avec un autre

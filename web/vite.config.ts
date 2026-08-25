@@ -8,10 +8,10 @@ import { defineConfig } from "vite";
 // que l'adresse du front est la meme en developpement et en production.
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  // `@/` pointe sur src/ : c'est la convention qu'attendent les composants
-  // recopies depuis un registre shadcn (21st.dev en produit avec cet import).
-  // Sans elle, chaque composant ajoute demanderait une reecriture de ses
-  // imports — et la reecriture serait a refaire a chaque mise a jour.
+  // `@/` pointe sur src/ : c'est la convention qu'attend la CLI shadcn, et
+  // celle qu'utilisent les composants qu'elle recopie. Sans elle, chaque ajout
+  // demanderait une reecriture de ses imports — reecriture a refaire a chaque
+  // mise a jour du composant.
   resolve: { alias: { "@": resolve(import.meta.dirname, "src") } },
   server: {
     // 127.0.0.1 explicitement : par defaut Vite ne s'attache qu'a ::1, et
