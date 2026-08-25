@@ -214,6 +214,27 @@ Deux règles de commentaire :
 - **Un défaut corrigé se raconte.** Ce dépôt en compte une dizaine, chacun avec
   la mesure qui l'a révélé. Le prochain lecteur évite de le réintroduire.
 
+## La sécurité, en bref
+
+Trois lignes de défense, posées après l'audit du 2026-08-25 :
+
+- **En-têtes HTTP** — un hook `onSend` pose CSP, HSTS, `X-Frame-Options: DENY`,
+  `X-Content-Type-Options`, `Referrer-Policy` et `Permissions-Policy` sur chaque
+  réponse. La CSP est stricte (`default-src 'self'`) parce que tout est
+  même-origine ; c'est aussi pourquoi le script de thème est un fichier externe
+  et non un bloc en ligne.
+- **Cadence de connexion** — `/api/compte/entrer` est plafonné (10 essais /
+  15 min / IP) au même titre que l'inscription et les suggestions. Sans lui, un
+  mot de passe faible tombait à la force brute en ligne.
+- **Mots de passe en Argon2id** — sel par compte inclus dans l'empreinte. Les
+  comptes d'avant la migration (scrypt) se reconnaissent au format `sel$…` et
+  sont **re-hachés à la volée** à leur prochaine connexion. Aucune campagne à
+  lancer.
+
+Le Markdown des pages de documentation est **assaini par DOMPurify** avant
+rendu — la source est de confiance aujourd'hui, mais la garde est désormais
+structurelle, pas circonstancielle.
+
 ## Ce qui manque encore
 
 - **Aucune CI.** Les essais et `mscm:verifier` sont prêts à y entrer.

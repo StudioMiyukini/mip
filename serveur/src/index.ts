@@ -19,6 +19,7 @@ import { AGENTS, phasesEnClair } from "./glossaire.js";
 import { assembler, etageDe, etagesDe, QUESTIONS_ESSENTIELLES, type Cadrage } from "./prompt.js";
 import {
   adresseValide,
+  doitRehacher,
   empreindre,
   motDePasseAcceptable,
   normaliserAdresse,
@@ -33,6 +34,47 @@ const PORT = Number(process.env.MIP_PORT ?? 8976);
 
 const serveur = Fastify({ logger: { level: process.env.MIP_LOG ?? "info" } });
 const porte = new Porte();
+
+/**
+ * Les en-têtes de sécurité, sur chaque réponse.
+ *
+ * **L'audit du 2026-08-25 les donnait tous manquants** — constat élevé. Écrits
+ * à la main dans un hook plutôt qu'importés d'un greffon : ils tiennent en
+ * quelques lignes, et une dépendance de plus pour poser sept en-têtes coûte
+ * plus qu'elle ne rapporte.
+ *
+ * La CSP est **stricte parce que l'application le permet** : tout est servi
+ * depuis la même origine — le client construit, l'API, les polices système. Rien
+ * n'est chargé d'un CDN, aucun script en ligne (le thème est passé dans un
+ * fichier externe pour cette raison). `frame-ancestors 'none'` interdit
+ * l'encadrement par un tiers ; `'unsafe-inline'` ne survit que pour les styles,
+ * que React pose en attribut (`style={{…}}`) et que Tailwind injecte.
+ */
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+].join("; ");
+
+serveur.addHook("onSend", async (_requete, reponse, charge) => {
+  reponse.header("Content-Security-Policy", CSP);
+  reponse.header("X-Content-Type-Options", "nosniff");
+  reponse.header("X-Frame-Options", "DENY");
+  reponse.header("Referrer-Policy", "strict-origin-when-cross-origin");
+  reponse.header("Permissions-Policy", "geolocation=(), microphone=(), camera=(), interest-cohort=()");
+  // HSTS : deux ans, sous-domaines compris. Le site n'est joignable qu'en HTTPS
+  // par le tunnel ; annoncer qu'il ne faut plus jamais tenter le HTTP ferme la
+  // fenêtre d'un détournement au premier accès.
+  reponse.header("Strict-Transport-Security", "max-age=63072000; includeSubDomains");
+  return charge;
+});
 
 // -- la porte -------------------------------------------------------------
 
@@ -208,6 +250,15 @@ serveur.post("/api/apercu", async (requete) => {
  */
 const CADENCE_SUGGESTION = new Cadence(20, 10 * 60_000);
 const CADENCE_INSCRIPTION = new Cadence(5, 60 * 60_000);
+/**
+ * La cadence de connexion. **Contre la force brute** (audit du 2026-08-25,
+ * constat élevé) : la connexion était la seule action modifiante sans plafond,
+ * et scrypt/Argon2 ralentissent une attaque hors ligne, pas une attaque en
+ * ligne sur un mot de passe faible. Dix essais par quart d'heure et par IP —
+ * large pour qui se trompe, étroit pour qui devine en boucle. Le comptage est
+ * en mémoire, par IP, et se purge tout seul, comme les deux autres.
+ */
+const CADENCE_CONNEXION = new Cadence(10, 15 * 60_000);
 
 /** Le modèle local. Jamais distant : rien de ce qui est saisi ne sort d'ici. */
 const MODELE = process.env.MIP_MODELE ?? "qwen/qwen3.5-9b";
@@ -376,7 +427,7 @@ serveur.post("/api/compte/creer", async (requete, reponse) => {
   try {
     const ligne = await bassin.query(
       "INSERT INTO utilisateur (adresse, empreinte) VALUES ($1, $2) RETURNING id",
-      [normalisee, empreindre(corps.mot_de_passe!)],
+      [normalisee, await empreindre(corps.mot_de_passe!)],
     );
     poserLaSession(reponse, ligne.rows[0].id);
     return reponse.code(201).send({ ok: true, adresse: normalisee });
@@ -395,6 +446,17 @@ serveur.post("/api/compte/creer", async (requete, reponse) => {
 
 serveur.post("/api/compte/entrer", async (requete, reponse) => {
   const corps = (requete.body ?? {}) as { adresse?: string; mot_de_passe?: string };
+  // Le plafond passe avant la requête : une IP qui martèle ne doit pas même
+  // déclencher un accès base. Refuser franchement — la connexion est une action,
+  // et savoir qu'elle est bloquée vaut mieux qu'un échec silencieux.
+  const qui = demandeur(requete.headers as Record<string, unknown>, requete.ip);
+  if (!CADENCE_CONNEXION.accepte(qui)) {
+    return reponse.code(429).send({
+      erreur: "cadence",
+      message: "Trop de tentatives de connexion. Réessayez dans un quart d'heure.",
+    });
+  }
+
   const ligne = await bassin.query("SELECT id, empreinte FROM utilisateur WHERE adresse = $1", [
     normaliserAdresse(corps.adresse ?? ""),
   ]);
@@ -402,8 +464,24 @@ serveur.post("/api/compte/entrer", async (requete, reponse) => {
   // distinguer dirait à un inconnu quelles adresses ont un compte ici.
   const refus = { erreur: "refuse", message: "Adresse ou mot de passe incorrect." };
   if (!ligne.rowCount) return reponse.code(401).send(refus);
-  if (!motCorrespond(corps.mot_de_passe ?? "", ligne.rows[0].empreinte)) {
+  const empreinte = ligne.rows[0].empreinte as string;
+  if (!(await motCorrespond(corps.mot_de_passe ?? "", empreinte))) {
     return reponse.code(401).send(refus);
+  }
+  // **Migration transparente vers Argon2id.** Un compte d'avant la migration se
+  // connecte avec son ancienne empreinte scrypt ; on la réécrit ici, une fois,
+  // pendant qu'on tient le mot de passe en clair. Aucune campagne de migration
+  // à lancer : les comptes se convertissent au fil des connexions.
+  if (doitRehacher(empreinte)) {
+    try {
+      await bassin.query("UPDATE utilisateur SET empreinte = $1 WHERE id = $2", [
+        await empreindre(corps.mot_de_passe!),
+        ligne.rows[0].id,
+      ]);
+    } catch {
+      // Le re-hachage est un bonus : s'il échoue, la connexion réussit quand
+      // même et on réessaiera au prochain passage.
+    }
   }
   poserLaSession(reponse, ligne.rows[0].id);
   return { ok: true };
@@ -470,7 +548,7 @@ serveur.post("/api/compte/adresse", async (requete, reponse) => {
   }
 
   const ligne = await bassin.query("SELECT empreinte FROM utilisateur WHERE id = $1", [utilisateur]);
-  if (!ligne.rowCount || !motCorrespond(corps.mot_de_passe ?? "", ligne.rows[0].empreinte)) {
+  if (!ligne.rowCount || !(await motCorrespond(corps.mot_de_passe ?? "", ligne.rows[0].empreinte))) {
     return reponse.code(401).send({ erreur: "refuse", message: "Mot de passe incorrect." });
   }
 
@@ -508,7 +586,7 @@ serveur.post("/api/compte/supprimer", async (requete, reponse) => {
 
   const corps = (requete.body ?? {}) as { mot_de_passe?: string };
   const ligne = await bassin.query("SELECT empreinte FROM utilisateur WHERE id = $1", [utilisateur]);
-  if (!ligne.rowCount || !motCorrespond(corps.mot_de_passe ?? "", ligne.rows[0].empreinte)) {
+  if (!ligne.rowCount || !(await motCorrespond(corps.mot_de_passe ?? "", ligne.rows[0].empreinte))) {
     return reponse.code(401).send({ erreur: "refuse", message: "Mot de passe incorrect." });
   }
 

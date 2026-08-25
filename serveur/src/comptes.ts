@@ -20,11 +20,28 @@
  * ne collecte pas ne fuit pas, ne se supprime pas, et ne se déclare pas.
  */
 
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { scryptSync, timingSafeEqual } from "node:crypto";
 
-/** Le coût du hachage. ~100 ms : assez pour qu'un dictionnaire coûte, assez peu
- *  pour qu'une connexion reste instantanée. */
-const COUT = { N: 16384, r: 8, p: 1 };
+import { Algorithm, hash as argonHash, verify as argonVerify } from "@node-rs/argon2";
+
+/**
+ * Le paramétrage Argon2id.
+ *
+ * **Argon2id, pas scrypt.** L'audit du 2026-08-25 l'a classé en défense en
+ * profondeur : scrypt était correct — sel par compte, comparaison à durée
+ * constante — mais Argon2id résiste mieux à une attaque par matériel dédié,
+ * parce qu'il coûte de la *mémoire* et pas seulement du temps. C'est le choix
+ * recommandé aujourd'hui.
+ *
+ * Les valeurs sont celles que l'OWASP recommande : 19 Mio de mémoire, deux
+ * passes. Argon2 gère son propre sel — inutile d'en tirer un à la main, il est
+ * inclus dans l'empreinte encodée.
+ */
+const ARGON = { algorithm: Algorithm.Argon2id, memoryCost: 19456, timeCost: 2, parallelism: 1 };
+
+/** L'ancien coût scrypt. Gardé pour **vérifier** les comptes créés avant la
+ *  migration ; plus jamais pour en écrire. Voir [`verifier`]. */
+const COUT_SCRYPT = { N: 16384, r: 8, p: 1 };
 
 /**
  * La longueur minimale d'un mot de passe. **Une longueur, pas une composition.**
@@ -69,31 +86,49 @@ export function motDePasseAcceptable(mot: string): boolean {
 // ── le mot de passe ───────────────────────────────────────────────────────
 
 /**
- * L'empreinte d'un mot de passe : `sel$empreinte`, en hexadécimal.
+ * L'empreinte Argon2id d'un mot de passe.
  *
- * **Le sel est propre à chaque compte**, et c'est le point qui compte. La porte
- * du site utilise un sel fixe, ce qui est acceptable pour un secret unique et
- * partagé ; ici, un sel fixe permettrait de casser **tous** les comptes d'un
- * coup avec une seule table précalculée. Deux personnes qui choisissent le même
- * mot de passe doivent avoir deux empreintes différentes.
+ * La chaîne rendue porte tout ce qu'il faut pour la revérifier — algorithme,
+ * paramètres et **sel** — au format standard `$argon2id$v=19$m=…$sel$empreinte`.
+ * Le sel est propre à chaque compte : deux personnes qui choisissent le même
+ * mot de passe obtiennent deux empreintes différentes, et une table précalculée
+ * ne casse pas tous les comptes d'un coup.
  */
-export function empreindre(mot: string): string {
-  const sel = randomBytes(16).toString("hex");
-  return `${sel}$${scryptSync(mot, sel, 32, COUT).toString("hex")}`;
+export function empreindre(mot: string): Promise<string> {
+  return argonHash(mot, ARGON);
+}
+
+/**
+ * Une empreinte relève-t-elle de l'ancien format scrypt ?
+ *
+ * Sert à **re-hacher à la volée** : quand un compte d'avant la migration se
+ * connecte, on vérifie avec scrypt puis on réécrit son empreinte en Argon2id.
+ * Une empreinte Argon2 commence par `$argon2` ; l'ancienne était `sel$empreinte`
+ * en hexadécimal, sans le `$` de tête.
+ */
+export function doitRehacher(empreinte: string): boolean {
+  return !empreinte.startsWith("$argon2");
 }
 
 /**
  * Le mot de passe correspond-il à l'empreinte ?
  *
- * Comparaison à durée constante, et **aucune exception qui remonte** : une
- * entrée de base tronquée doit refuser la connexion, pas faire tomber le
- * serveur. Refuser est le comportement sûr ; lever ne l'est pas.
+ * **Deux formats, une seule porte.** Argon2id pour les empreintes récentes,
+ * scrypt pour celles d'avant la migration — la connexion doit continuer de
+ * marcher pour les comptes existants, sans quoi la migration les enfermerait
+ * dehors. Le format se lit sur l'empreinte, jamais sur une colonne à part.
+ *
+ * **Aucune exception qui remonte** : une entrée de base tronquée doit refuser
+ * la connexion, pas faire tomber le serveur. Refuser est le comportement sûr.
  */
-export function verifier(mot: string, empreinte: string): boolean {
-  const [sel, attendu] = empreinte.split("$");
-  if (!sel || !attendu) return false;
+export async function verifier(mot: string, empreinte: string): Promise<boolean> {
   try {
-    const propose = scryptSync(mot, sel, 32, COUT);
+    if (empreinte.startsWith("$argon2")) return await argonVerify(empreinte, mot);
+
+    // Ancien format scrypt : `sel$empreinte`, en hexadécimal.
+    const [sel, attendu] = empreinte.split("$");
+    if (!sel || !attendu) return false;
+    const propose = scryptSync(mot, sel, 32, COUT_SCRYPT);
     const reference = Buffer.from(attendu, "hex");
     return propose.length === reference.length && timingSafeEqual(propose, reference);
   } catch {

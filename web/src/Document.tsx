@@ -4,6 +4,7 @@
 // @human Les pages en Markdown : confidentialité, licence, documentation
 // @do rendre_un_document_markdown_du_depot
 
+import DOMPurify from "dompurify";
 import { marked } from "marked";
 import { useEffect, useState } from "react";
 
@@ -19,10 +20,12 @@ import { Skeleton } from "@/composants/ui/skeleton";
  * bloc depuis `marked` : aucune classe utilitaire ne peut lui être posée à la
  * volée, donc il se met en forme une fois, au niveau du parent.
  *
- * *Une réserve, pour le jour où :* le HTML n'est pas assaini, et c'est sans
- * danger tant que la source est une liste blanche de fichiers du dépôt. Le jour
- * où l'on rendrait du texte écrit par quelqu'un d'autre — un cadrage partagé,
- * un commentaire — l'assainissement devient obligatoire, pas optionnel.
+ * **Le HTML est assaini avant rendu.** La source est aujourd'hui une liste
+ * blanche de fichiers du dépôt — donc sûre — mais l'audit du 2026-08-25 a noté
+ * que la garde était circonstancielle : le jour où l'on rendrait du texte écrit
+ * par un tiers (un cadrage partagé, un commentaire), l'oubli deviendrait un XSS
+ * stocké. DOMPurify rend la garde structurelle maintenant, pour le coût nul
+ * d'un passage sur un texte de confiance.
  */
 export function Document({ nom }: { nom: string }) {
   const [html, setHtml] = useState<string | null>(null);
@@ -33,7 +36,9 @@ export function Document({ nom }: { nom: string }) {
     setAbsent(false);
     fetch(`/api/document/${nom}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("absent"))))
-      .then((d: { markdown: string }) => setHtml(marked.parse(d.markdown) as string))
+      .then((d: { markdown: string }) =>
+        setHtml(DOMPurify.sanitize(marked.parse(d.markdown) as string)),
+      )
       .catch(() => setAbsent(true));
   }, [nom]);
 

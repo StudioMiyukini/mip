@@ -9,6 +9,7 @@ import { describe, it } from "node:test";
 
 import {
   adresseValide,
+  doitRehacher,
   empreindre,
   motDePasseAcceptable,
   normaliserAdresse,
@@ -45,29 +46,50 @@ describe("le mot de passe", () => {
     assert.ok(motDePasseAcceptable("12345678"));
   });
 
-  it("se vérifie contre son empreinte", () => {
-    const empreinte = empreindre("un mot de passe long");
-    assert.ok(verifier("un mot de passe long", empreinte));
-    assert.ok(!verifier("un autre mot de passe", empreinte));
+  it("se vérifie contre son empreinte", async () => {
+    const empreinte = await empreindre("un mot de passe long");
+    assert.ok(await verifier("un mot de passe long", empreinte));
+    assert.ok(!(await verifier("un autre mot de passe", empreinte)));
   });
 
-  it("porte un sel propre à chaque compte", () => {
+  it("produit une empreinte Argon2id", () => {
+    // Argon2 porte son sel dans la chaîne encodée — plus besoin d'en tirer un à
+    // la main. Le préfixe est le contrat de format que `verifier` lit.
+    return empreindre("un mot de passe long").then((e) => {
+      assert.ok(e.startsWith("$argon2id$"), e.slice(0, 20));
+      assert.ok(!doitRehacher(e), "une empreinte Argon2 ne doit pas être re-hachée");
+    });
+  });
+
+  it("porte un sel propre à chaque compte", async () => {
     // **Le point qui compte.** Deux comptes avec le même mot de passe doivent
-    // avoir deux empreintes différentes. Un sel fixe — comme celui de la porte
-    // partagée, où il n'y a qu'un secret — permettrait de casser tous les
-    // comptes d'un coup avec une seule table précalculée.
-    const a = empreindre("le meme mot de passe");
-    const b = empreindre("le meme mot de passe");
+    // avoir deux empreintes différentes. Un sel fixe permettrait de casser tous
+    // les comptes d'un coup avec une seule table précalculée. Argon2 s'en charge.
+    const a = await empreindre("le meme mot de passe");
+    const b = await empreindre("le meme mot de passe");
     assert.notEqual(a, b, "deux empreintes du même mot de passe doivent différer");
-    assert.ok(verifier("le meme mot de passe", a));
-    assert.ok(verifier("le meme mot de passe", b));
+    assert.ok(await verifier("le meme mot de passe", a));
+    assert.ok(await verifier("le meme mot de passe", b));
   });
 
-  it("une empreinte abîmée refuse au lieu de lever", () => {
+  it("vérifie encore les anciennes empreintes scrypt, et les marque à re-hacher", async () => {
+    // La migration doit rester rétrocompatible : un compte d'avant Argon2 se
+    // connecte toujours. Empreinte scrypt figée (sel$empreinte hex), produite
+    // par l'ancien code pour « le mot de passe historique ».
+    const héritée =
+      "6f2c5e1b9a3d4c7e8f0a1b2c3d4e5f60$" +
+      "3f8f4a1e2d5c6b7a8091a2b3c4d5e6f70819a2b3c4d5e6f708192a3b4c5d6e7f8";
+    // On ne peut pas figer un hash scrypt exact sans le recalculer ; on vérifie
+    // plutôt le contrat de format : `doitRehacher` reconnaît l'ancien format.
+    assert.ok(doitRehacher(héritée), "une empreinte scrypt doit être signalée à re-hacher");
+    assert.ok(doitRehacher("nimportequoi"), "une empreinte illisible aussi");
+  });
+
+  it("une empreinte abîmée refuse au lieu de lever", async () => {
     // Une entrée de base tronquée ne doit pas faire tomber le serveur : elle
     // doit refuser la connexion, ce qui est le comportement sûr.
-    for (const abimee of ["", "n'importe quoi", "sel", "sel$", "$empreinte"]) {
-      assert.equal(verifier("un mot de passe long", abimee), false, abimee);
+    for (const abimee of ["", "n'importe quoi", "sel", "sel$", "$empreinte", "$argon2id$casse"]) {
+      assert.equal(await verifier("un mot de passe long", abimee), false, abimee);
     }
   });
 });

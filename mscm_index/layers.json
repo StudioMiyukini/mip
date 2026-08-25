@@ -76,6 +76,7 @@
     "mip.web.tags",
     "mip.web.tags_groupes",
     "mip.web.theme",
+    "mip.web.theme.init",
     "mip.web.types",
     "mip.web.utils"
   ]

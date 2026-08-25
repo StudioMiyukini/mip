@@ -133,6 +133,9 @@
   "serveur/src/suggestion.ts": [
     "mip.suggestion"
   ],
+  "web/public/theme-init.js": [
+    "mip.web.theme.init"
+  ],
   "web/src/Accueil.tsx": [
     "mip.web.accueil"
   ],

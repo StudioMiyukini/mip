@@ -63,6 +63,7 @@
     "mip.web.tags",
     "mip.web.tags_groupes",
     "mip.web.theme",
+    "mip.web.theme.init",
     "mip.web.types",
     "mip.web.utils",
     "mscm",
@@ -390,6 +391,11 @@
     {
       "from": "mip.web.coque",
       "to": "mip.web.coque.mobile",
+      "type": "parent"
+    },
+    {
+      "from": "mip.web.theme",
+      "to": "mip.web.theme.init",
       "type": "parent"
     },
     {

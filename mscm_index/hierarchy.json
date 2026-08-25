@@ -95,6 +95,9 @@
   "mip.web.coque": [
     "mip.web.coque.mobile"
   ],
+  "mip.web.theme": [
+    "mip.web.theme.init"
+  ],
   "mscm": [
     "mscm.balisage",
     "mscm.essais",
